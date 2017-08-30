@@ -23,7 +23,7 @@
 
 * [ ] Permutation cipher
 * [ ] Column permutation cipher 
-* [ ] Double-Transposition cipher
+* [ ] Double transposition cipher
 
 ### Stream ciphers
 
@@ -52,10 +52,24 @@
 
 * [ ] DH
 
-## Communication
+## Files
 
-* [ ] Socket
+* [ ] Encrypt files
+* [ ] Decrypt files
+* [ ] Send files
+* [ ] Receive files
+
+## Socket
+
+* [ ] Server: transform messages
+* [ ] Server: transform files
+* [ ] Client: send messages
+* [ ] Client: send files
+* [ ] Client: receive messages
+* [ ] Client: receive files
 
 ## UI
 
-* [ ] UI
+* [ ] Basic UI
+* [ ] Advanced UI
+* [ ] Actions
