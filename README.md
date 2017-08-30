@@ -27,7 +27,7 @@
 
 ### Stream ciphers
 
-* [ ] RC4
+* [x] RC4
 * [ ] CA
 
 ### Block ciphers
