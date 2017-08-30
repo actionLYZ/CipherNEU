@@ -26,20 +26,11 @@
     <Compile Include="Cipher\Caesar.py">
       <SubType>Code</SubType>
     </Compile>
-<<<<<<< HEAD
     <Compile Include="Cipher\RC4.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Cipher\Column.py">
-=======
-<<<<<<< HEAD
-    <Compile Include="Cipher\RC4.py">
->>>>>>> 9ead0da96ac70b1179034d68f0183e54a16c5eeb
-      <SubType>Code</SubType>
-    </Compile>
-=======
     <Compile Include="Cipher\Column.py" />
->>>>>>> 高启元
+
     <Compile Include="Cipher\__init__.py">
       <SubType>Code</SubType>
     </Compile>
