@@ -9,7 +9,9 @@ Decrypt(ciphertext, key) -> plaintext
 
 def Encrypt(plaintext, key):
     ciphertext = ""
-
+    for letter in plaintext:
+        if letter.islower():
+            ord(letter)
     return ciphertext
 
 def Decrypt(ciphertext, key):
