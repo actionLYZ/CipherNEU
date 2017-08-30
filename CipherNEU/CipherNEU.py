@@ -1,7 +1,7 @@
-import Cipher.Caesar
+import Cipher.Keyword
 plaintext = "Hello, World!"
-key = 3
+key = "success"
 print(plaintext)
-ciphertext = Cipher.Caesar.Encrypt(plaintext, key)
+ciphertext = Cipher.Keyword.Encrypt(plaintext, key)
 print(ciphertext)
-print(Cipher.Caesar.Decrypt(ciphertext, key))
+print(Cipher.Keyword.Decrypt(ciphertext, key))
