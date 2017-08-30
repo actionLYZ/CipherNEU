@@ -5,8 +5,8 @@
 ### Mono-alphabetic substitution ciphers
 
 * [x] Caesar cipher
-* [ ] Keyword cipher
-* [ ] Affine cipher
+* [x] Keyword cipher
+* [x] Affine cipher
 * [ ] Multiliteral cipher
 
 ### Poly-alphabetic substitution ciphers

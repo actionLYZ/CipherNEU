@@ -1,7 +1,7 @@
-import Cipher.Keyword
-plaintext = "Hello, World!"
-key = "success"
+import Cipher.Affine
+plaintext = "hot"
+key = (7, 3)
 print(plaintext)
-ciphertext = Cipher.Keyword.Encrypt(plaintext, key)
+ciphertext = Cipher.Affine.Encrypt(plaintext, key)
 print(ciphertext)
-print(Cipher.Keyword.Decrypt(ciphertext, key))
+print(Cipher.Affine.Decrypt(ciphertext, key))
