@@ -7,7 +7,7 @@ def TranspositionCipher(key, message):
         print("key is less than 0,can not work")
         return message   
     else:  
-        # ·µ»Ø¼ÓÃÜºóµÄÃÜÎÄ
+        # ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½Üºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         return "".join([message[i::key] for i in range(key)])
 
 
@@ -28,7 +28,7 @@ def DecryptTranspositionCipher(key, message):
         if (col == numOfColumns) or (col == numOfColumns - 1 and row >= numOfRows - numOfShadeBoxes):  
             col = 0  
             row += 1  
-    # ·µ»Ø½âÃÜºóµÄÃ÷ÎÄ
+    # ï¿½ï¿½ï¿½Ø½ï¿½ï¿½Üºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     return ''.join(plaintext)  
 
 plaintext = input("Input the plaitext \n")
@@ -52,7 +52,7 @@ def TranspositionCipher(key, message):
         print("key is less than 0,can not work")
         return message   
     else:  
-        # ·µ»Ø¼ÓÃÜºóµÄÃÜÎÄ
+        # ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½Üºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         return "".join([message[i::key] for i in range(key)])
 
 
@@ -73,7 +73,7 @@ def DecryptTranspositionCipher(key, message):
         if (col == numOfColumns) or (col == numOfColumns - 1 and row >= numOfRows - numOfShadeBoxes):  
             col = 0  
             row += 1  
-    # ·µ»Ø½âÃÜºóµÄÃ÷ÎÄ
+    # ï¿½ï¿½ï¿½Ø½ï¿½ï¿½Üºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     return ''.join(plaintext)  
 
 plaintext = input("Input the plaitext \n")
