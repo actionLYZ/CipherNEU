@@ -26,6 +26,7 @@
     <Compile Include="Cipher\Caesar.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Cipher\Column.py" />
     <Compile Include="Cipher\__init__.py">
       <SubType>Code</SubType>
     </Compile>
