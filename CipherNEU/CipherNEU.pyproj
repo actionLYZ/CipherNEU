@@ -29,6 +29,8 @@
     <Compile Include="Cipher\RC4.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Cipher\Column.py" />
+
     <Compile Include="Cipher\__init__.py">
       <SubType>Code</SubType>
     </Compile>
