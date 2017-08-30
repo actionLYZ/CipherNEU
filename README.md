@@ -4,7 +4,7 @@
 
 ### Mono-alphabetic substitution ciphers
 
-* [ ] Caesar cipher
+* [x] Caesar cipher
 * [ ] Keyword cipher
 * [ ] Affine cipher
 * [ ] Multiliteral cipher
