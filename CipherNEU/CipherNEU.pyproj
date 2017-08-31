@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>63e17389-0c77-456e-831e-4ad69cc6c609</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Cipher\Vigenere.py</StartupFile>
+    <StartupFile>Cipher\PlayfairCipher.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
