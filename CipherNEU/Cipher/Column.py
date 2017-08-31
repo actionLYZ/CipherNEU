@@ -6,8 +6,13 @@ def TranspositionCipher(key, message):
     if key <= 0: # the algorithm can't work
         print("key is less than 0,can not work")
         return message   
+<<<<<<< Updated upstream
     else:  
         # ���ؼ��ܺ������
+=======
+    else: 
+        # 返回加密后的密文 
+>>>>>>> Stashed changes
         return "".join([message[i::key] for i in range(key)])
 
 
@@ -27,8 +32,13 @@ def DecryptTranspositionCipher(key, message):
       
         if (col == numOfColumns) or (col == numOfColumns - 1 and row >= numOfRows - numOfShadeBoxes):  
             col = 0  
+<<<<<<< Updated upstream
             row += 1  
     # ���ؽ��ܺ������
+=======
+            row += 1
+    # 返回解密后的明文  
+>>>>>>> Stashed changes
     return ''.join(plaintext)  
 
 plaintext = input("Input the plaitext \n")
