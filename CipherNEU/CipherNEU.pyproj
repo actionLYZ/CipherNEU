@@ -26,6 +26,12 @@
     <Compile Include="Cipher\Affine.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Cipher\AutokeyCiphertext.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Cipher\AutokeyPlaintext.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Cipher\Caesar.py">
       <SubType>Code</SubType>
     </Compile>
