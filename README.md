@@ -11,7 +11,7 @@
 
 ### Poly-alphabetic substitution ciphers
 
-* [ ] Vigenere cipher
+* [x] Vigenere cipher
 * [ ] Autokey ciphertext
 * [ ] Autokey plaintext
 
