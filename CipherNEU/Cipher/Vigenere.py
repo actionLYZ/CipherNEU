@@ -1,5 +1,5 @@
 '''
-cipher: VigenereCipher
+Cipher: VigenereCipher
 Programmer: TSM
 Date: 2017-08-30
 Function:

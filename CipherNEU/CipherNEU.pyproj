@@ -23,7 +23,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CipherNEU.py" />
+    <Compile Include="Cipher\CA.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Cipher\Caesar.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Cipher\PlayfairCipher.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Cipher\Vigenere.py">
