@@ -4,16 +4,16 @@
 
 ### Mono-alphabetic substitution ciphers
 
-* [ ] Caesar cipher
-* [ ] Keyword cipher
-* [ ] Affine cipher
-* [ ] Multiliteral cipher
+* [x] Caesar cipher
+* [x] Keyword cipher
+* [x] Affine cipher
+* [x] Multiliteral cipher
 
 ### Poly-alphabetic substitution ciphers
 
-* [ ] Vigenere cipher
-* [ ] Autokey ciphertext
-* [ ] Autokey plaintext
+* [x] Vigenere cipher
+* [x] Autokey ciphertext
+* [x] Autokey plaintext
 
 ### Poly-graphic substitution cipher
 
@@ -22,7 +22,7 @@
 ### Permutation ciphers
 
 * [ ] Permutation cipher
-* [ ] Column permutation cipher 
+* [x] Column permutation cipher 
 * [ ] Double-Transposition cipher
 
 ### Stream ciphers

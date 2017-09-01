@@ -24,13 +24,18 @@
   <ItemGroup>
     <Compile Include="CipherNEU.py" />
     <Compile Include="Cipher\Affine.py" />
+    <Compile Include="Cipher\AutokeyCiphertext.py" />
+    <Compile Include="Cipher\AutokeyPlaintext.py" />
     <Compile Include="Cipher\Caesar.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Cipher\Keyword.py" />
+    <Compile Include="Cipher\Multiliteral.py" />
     <Compile Include="Cipher\RC4.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Cipher\Column.py" />
+    <Compile Include="Cipher\Vigenere.py" />
     <Compile Include="Cipher\__init__.py">
       <SubType>Code</SubType>
     </Compile>
