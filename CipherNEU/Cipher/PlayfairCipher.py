@@ -1,3 +1,6 @@
+##################################################
+#未完待续, 期待李远志的新程序！（本程序函数可用）#
+##################################################
 '''
 cipher: PlayfairCipher
 Programmer: TSM
@@ -87,6 +90,7 @@ def Encrypt(plaintext, key):
     ciphertext = ['\0',]*50
     #去掉原始明文字符串中非字母符号
     num = 0     #原始明文字符串有效字符个数
+    inNum = 0   #填充无效字符个数
     for i in range(0,len(plaintext)):
         if(97<=ord(plaintext[i])<=122):  #原始明文为小写字母
             tempPlaintext[num] = plaintext[i]
@@ -104,10 +108,12 @@ def Encrypt(plaintext, key):
             for j in range(0,num-2*i-1):
                 tempPlaintext[num-j] = tempPlaintext[num-j-1]
             tempPlaintext[2*i+1] = 'q'  #填充无效字符q
+            inNum += 1
             num += 1
     #若有效明文为基数末尾加上无效字符
     if(num%2==1):
         tempPlaintext[num] = 'q'
+        inNum += 1
         num += 1
     #加密有效字符串
     for i in range(0,int(num/2)):
@@ -125,7 +131,7 @@ def Encrypt(plaintext, key):
             tempCiphertext[2*i+1] = encryptMatrix[r2][c1]
     #转换密文字符串
     num = 0
-    for i in range(0,len(plaintext)):
+    for i in range(0,len(plaintext)+inNum):
         if((97<=ord(plaintext[i])<=122)|(65<=ord(plaintext[i])<=90)):
             ciphertext[i] = tempCiphertext[num]
             num += 1
@@ -134,7 +140,6 @@ def Encrypt(plaintext, key):
     ciphertext = ciphertext[:len(plaintext)]
     ciphertext = ''.join(ciphertext)
     return ciphertext
-
 
 ciphertext = Encrypt("apccdefg","apple")
 print(ciphertext)
