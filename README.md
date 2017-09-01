@@ -33,7 +33,7 @@
 ### Block ciphers
 
 * [ ] DES
-* [ ] AES
+* [x] AES
 
 ### Public key ciphers
 
