@@ -1,141 +1,210 @@
-'''
-cipher: PlayfairCipher
-Programmer: TSM
-Date: 2017-08-30
-Function:
-Encrypt(plaintext, key)
-Decrypt(ciphertext, key)  
-'''
-#生成加密矩阵函数
-def CreateMatrix(key):
-    index = 0   #keyword有效位
-    for i in range(0,len(key)):
-        if(key[i] == 'j'):
-            key[i] = 'i'
-    tempLetters = ['\0',]*25
-    num = 0     #tempLetters字母个数
-    encryptMatrix = [([0] * 5) for i in range(5)]
-    for i in range(0,5):
-        for j in range(0,5):
-            if(index<len(key)):
-                for k in range(index,len(key)):
-                    if(key[k] in tempLetters):
-                        index += 1
-                    else:
-                        encryptMatrix[i][j] = key[k]
-                        index += 1
-                        tempLetters[num] = key[k]
-                        num += 1
-                        break
+'''-----------------------------------------------------------------------
+文件名称：		PlayFair
+文件描述：		实现PlayFair密码的加解密编写
+操作系统：		win10
+调试软件名称：  DeBug
+编译环境：		VS2015
+最后修改：		2017/8/31   <李远志>
+-------------------------------------------------------------------------'''
+
+#--------------------------------------------模块引入------------------------------------------#
+import sys
+
+#--------------------------------------------函数定义------------------------------------------#
+
+'''-----------------------------------------------------------------------------------
+函数定义	：    加密PlayFair密码
+函数参数	：    plaintext(string)为明文,key为密钥(string)
+函数返回值  ：    加密后结果(string)
+--------------------------------------------------------------------------------------'''
+def Encrypt(plainText,key):
+    cipherText = ""
+    (plainText,ifAdd) = Norm(plainText)             #规范明文格式
+    keyList = makeKeyList(key)                      #生成密钥二维列表
+    cipherText = Plain2Cipher(plainText,keyList)    #将明文加密成密文
+    return cipherText
+
+    '''-----------------------------------------------------------------------------------
+函数定义	：    规范明文格式
+函数参数	：    plaintext(string)为明文
+函数返回值  ：    (string)plainText :  规范后明文
+                  (Bool)ifAdd       :  是否在尾部加入了'q'，是为true
+规范方式    ：    当相连两个字母相同时，中间加'q'，如果这两个字母为q，则加't'
+--------------------------------------------------------------------------------------'''
+def Norm(plainText):
+
+    numOfLetter = 0             #字符串中字母的数量(用于判断字母奇偶)
+
+    #在两个相同字母之间加入'q'或't'
+    i = 0
+    while i < len(plainText) - 1:
+        if not plainText[i].isalpha():            #取到了非字母的值
+            i += 1
+            continue
+
+        numOfLetter += 1               
+        if plainText[i] == plainText[i+1]:                              
+            if plainText[i] != 'q':
+                plainText = plainText[:i+1] + 'q' + plainText[i+1:]       #插入'q'
             else:
-                for k in range(0,26):
-                    if(k==9):
-                        continue
-                    if(chr(k+97) in tempLetters):
-                        continue
-                    else:
-                        encryptMatrix[i][j] = chr(k+97)
-                        tempLetters[num] = chr(k+97)
-                        num += 1
-                        break
-    return encryptMatrix
+                plainText = plainText[:i+1] + 't' + plainText[i+1:]       #插入't'
+        i += 1
 
-#判断字母是否在矩阵一行/列
-def InSameRC(mode, encryptMatrix, x, y):    #mode = 0: row, mode = 1: coloum
-    if(mode==0):
-        for i in range(0,5):
-            if((x in encryptMatrix[i])&(y in encryptMatrix[i])):
-                return 1
-    elif(mode==1):
-        col = 0
-        for i in range(0,5):
-            for j in range(0,5):
-                if(encryptMatrix[i][j]==x):
-                    col = j
-                    break
-            break
-        for i in range(0,5):
-            if(encryptMatrix[i][col]==y):
-                return 1
-    return 0
-#字母上/下/左/右边一位
-def NextLetter(mode, encryptMatrix, x):
-    for i in range(0,5):
-        for j in range(0,5):
-            if(encryptMatrix[i][j]==x):
-                if(mode==3):
-                    return encryptMatrix[i][(j+1)%5]
-                elif(mode==1):
-                    return encryptMatrix[(i+1)%5][j]
-#找到字母行列坐标
-def Position(encryptMatrix, letter):
-    p = [0,0]
-    for i in range(0,5):
-        for j in range(0,5):
-            if(encryptMatrix[i][j]==letter):
-                p[0] = i
-                p[1] = j
-                return p
-#加密函数
-def Encrypt(plaintext, key):
-    #生成加密矩阵
-    encryptMatrix = [([0] * 5) for i in range(5)]
-    encryptMatrix = CreateMatrix(key)
-    #处理明文字符串
-    tempPlaintext = ['\0',]*50
-    tempCiphertext = ['\0',]*50
-    ciphertext = ['\0',]*50
-    #去掉原始明文字符串中非字母符号
-    num = 0     #原始明文字符串有效字符个数
-    for i in range(0,len(plaintext)):
-        if(97<=ord(plaintext[i])<=122):  #原始明文为小写字母
-            tempPlaintext[num] = plaintext[i]
-            num += 1
-        elif(65<=ord(plaintext[i])<=90): #原始明文为大写字母
-            tempPlaintext[num] = chr(ord(plaintext[i])+32)
-            num += 1
-    #将有效明文中的j换成i
-    for i in range(0,num):
-        if(tempPlaintext[i] == 'j'):
-            tempPlaintext[i] = 'i'
-    #若有效明文中有相邻重复字母插入无效字符
-    for i in range(0,int(num/2)):
-        if(tempPlaintext[2*i]==tempPlaintext[2*i+1]):
-            for j in range(0,num-2*i-1):
-                tempPlaintext[num-j] = tempPlaintext[num-j-1]
-            tempPlaintext[2*i+1] = 'q'  #填充无效字符q
-            num += 1
-    #若有效明文为基数末尾加上无效字符
-    if(num%2==1):
-        tempPlaintext[num] = 'q'
-        num += 1
-    #加密有效字符串
-    for i in range(0,int(num/2)):
-        if(InSameRC(0, encryptMatrix, tempPlaintext[2*i], tempPlaintext[2*i+1])==1):  #字符对在同一行
-            tempCiphertext[2*i] = NextLetter(3, encryptMatrix, tempPlaintext[2*i])
-            tempCiphertext[2*i+1] = NextLetter(3, encryptMatrix, tempPlaintext[2*i+1])
-        elif(InSameRC(1, encryptMatrix, tempPlaintext[2*i], tempPlaintext[2*i+1])==1):    #字符对在同一列
-            tempCiphertext[2*i] = NextLetter(1, encryptMatrix, tempPlaintext[2*i])
-            tempCiphertext[2*i+1] = NextLetter(1, encryptMatrix, tempPlaintext[2*i+1])
+    if plainText[-1].isalpha():
+        numOfLetter += 1
+    if numOfLetter % 2 == 1:
+        if plainText[-1:-1] != 'q':
+            plainText = plainText + 'q'
         else:
-            r1 = r2 = c1 = c2 = 0
-            [r1,c1] = Position(encryptMatrix, tempPlaintext[2*i])
-            [r2,c2] = Position(encryptMatrix, tempPlaintext[2*i+1])
-            tempCiphertext[2*i] = encryptMatrix[r1][c2]
-            tempCiphertext[2*i+1] = encryptMatrix[r2][c1]
-    #转换密文字符串
-    num = 0
-    for i in range(0,len(plaintext)):
-        if((97<=ord(plaintext[i])<=122)|(65<=ord(plaintext[i])<=90)):
-            ciphertext[i] = tempCiphertext[num]
-            num += 1
-        else:
-            ciphertext[i] = plaintext[i]
-    ciphertext = ciphertext[:len(plaintext)]
-    ciphertext = ''.join(ciphertext)
-    return ciphertext
+            plainText = plainText + 't'
+        return (plainText,True)
 
+    else:
+        return (plainText,False)
 
-ciphertext = Encrypt("apccdefg","apple")
-print(ciphertext)
+'''-----------------------------------------------------------------------------------
+函数定义	：    生成密钥二维列表
+函数参数	：    key(string)密钥
+函数返回值  ：    keyList(list)   :   密钥二维列表
+--------------------------------------------------------------------------------------'''
+def makeKeyList(key):
+    keyList = [[0 for col in range(5)] for row in range(5)]     #生成5*5二维列表
 
+    #将密钥写入二维数组
+    for letter in key:
+        if List2DFind(keyList,letter) == False:         #列表中无该字符
+            Letter2List(keyList,letter)                 #插入字符到列表
+
+    #补全剩余二维数组
+    letter = 'a'
+    while List2DFind(keyList,0) == True:
+
+        if (letter > 'z'):                              #错误判断
+            print("密钥生成错误！")
+            sys.exit()
+
+        if letter == 'j':
+             letter = chr(ord(letter) + 1)
+        if List2DFind(keyList,letter) == False:         #列表中无该字符
+            Letter2List(keyList,letter)                 #插入字符到列表
+        letter = chr(ord(letter) + 1)
+
+    return keyList
+
+'''-----------------------------------------------------------------------------------
+函数定义	：    判断二维数组中是否存在某一字符
+函数参数	：    keyList(list)    :   目标二维数组
+                  letter(string)   :   目标字符
+函数返回值  ：    存在：true ; 不存在：false
+--------------------------------------------------------------------------------------'''
+def List2DFind(keyList,letter):
+    for i in range(len(keyList)):
+        if letter in keyList[i]:
+            return True
+    return False
+
+'''-----------------------------------------------------------------------------------
+函数定义	：    将字符写入二维列表(写入位置为第一个未赋值的地方)
+函数参数	：    keyList(list)    :   目标二维数组
+                  letter(string)   :   目标字符
+函数返回值  ：    存在：true ; 不存在：false
+--------------------------------------------------------------------------------------'''
+def Letter2List(keyList,letter):
+    if List2DFind(keyList,0) == False:
+        print("二维数组溢出!")
+        sys.exit()
+    for i in range(len(keyList)):
+        for j in range(len(keyList[i])):
+            if keyList[i][j] == 0:
+                keyList[i][j] = letter
+                return
+
+'''-----------------------------------------------------------------------------------
+函数定义	：    将明文加密成密文
+函数参数	：    plainText(string)    :   明文
+                  keyList(list)        :   密钥二维列表
+函数返回值  ：    密文(string)
+--------------------------------------------------------------------------------------'''
+def Plain2Cipher(plainText,keyList):
+    cipherText = []
+
+    # 将密文长度与明文一致，并且初始化为0
+    for i in range(len(plainText)):
+        cipherText.append(0)
+
+    exchange = 0
+    for loc in range(len(plainText)):
+
+        #如果不是字母，直接赋值给密文
+        if plainText[loc].isalpha() == False:
+             cipherText[loc] = plainText[loc]
+             continue
+
+         #如果是字母，依次分配给letter1和letter2
+        if exchange == 0:
+            letter1 = plainText[loc]
+            loc1 = loc
+            exchange = 0.5
+        elif exchange == 0.5:
+            letter2 = plainText[loc]
+            loc2 = loc
+            exchange = 1
+
+        #将两个字母依据规则放到密文
+        if exchange == 1:
+            (letter1,letter2) = ChangeCipherText(letter1,letter2,keyList)
+            cipherText[loc1] = letter1
+            cipherText[loc2] = letter2
+            exchange = 0;
+
+    cipherTextstr = ''.join(cipherText)
+    print(cipherTextstr)
+    return cipherTextstr
+
+'''-----------------------------------------------------------------------------------
+函数定义	：    将两个字母依据规则变换成密文中的对应字母
+函数参数	：    letter1,letter2(string)   :   两个字母
+                  keyList(2Dlist)           ;   密钥二维数组
+函数返回值  ：    密文中的对应的两个字母
+--------------------------------------------------------------------------------------'''
+def ChangeCipherText(letter1,letter2,keyList):
+
+    #找到两个字母在密钥列表中的坐标
+    (locx1,locy1) = FindLocOfList(letter1,keyList)
+    (locx2,locy2) = FindLocOfList(letter2,keyList)
+
+    #如果在同一行
+    if locx1 == locx2:
+        letter1 = keyList[locx1][(locy1 + 1) % 5]
+        letter2 = keyList[locx2][(locy2 + 1) % 5]
+
+    #如果在同一列
+    elif locy1 == locy2:
+        letter1 = keyList[(locx1 + 1) % 5][locy1]
+        letter2 = keyList[(locx2 + 1) % 5][locy2]
+
+    #如果既不在同一行也不再同一列
+    else:
+        letter1 = keyList[locx1][locy2]
+        letter2 = keyList[locx2][locy1]
+    return (letter1,letter2)
+'''-----------------------------------------------------------------------------------
+函数定义	：    找到一个字母在一个二维数组中的坐标
+函数参数	：    letter1(string)   :   字母
+                  keyList(2Dlist)   ;   二维数组
+函数返回值  ：    坐标(x,y)
+--------------------------------------------------------------------------------------'''
+def FindLocOfList(letter,keyList):
+    for i in range(len(keyList)):
+        if letter in keyList[i]:
+            return (i,keyList[i].index(letter))
+
+'''-----------------------------------------主函数测试用------------------------------------------
+from Cipher.PlayFair  import*
+str = "hell world!"
+key = "hello"
+a = makeKeyList(key)
+for list in a:
+    print(list)
+Encrypt(str,key)
+---------------------------------------------主函数测试用-----------------------------------------'''
