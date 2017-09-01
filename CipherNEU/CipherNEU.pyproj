@@ -27,6 +27,9 @@
     <Compile Include="Cipher\Caesar.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Cipher\PlayFair.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Cipher\RC4.py">
       <SubType>Code</SubType>
     </Compile>
