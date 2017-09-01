@@ -41,3 +41,17 @@ def IsValid(key, type):
     elif type == "AES-256":
         return isinstance(key, str) and len(key) == 32
     return False
+
+# Read bytes from the file
+def FileToBytes(file):
+    fin = open(file, "rb")
+    text = fin.read()
+    fin.close()
+    return text
+
+#Write bytes to a file
+def BytesToFile(text, file):
+    fout = open(file, "wb")
+    fout.write(text)
+    fout.close()
+    return
