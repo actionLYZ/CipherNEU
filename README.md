@@ -21,9 +21,9 @@
 
 ### Permutation ciphers
 
-* [ ] Permutation cipher
-* [ ] Column permutation cipher 
-* [ ] Double transposition cipher
+* [x] Permutation cipher
+* [x] Column permutation cipher 
+* [x] Double transposition cipher
 
 ### Stream ciphers
 
@@ -32,8 +32,8 @@
 
 ### Block ciphers
 
-* [ ] AES
 * [ ] DES
+* [ ] AES
 
 ### Public key ciphers
 

@@ -35,10 +35,19 @@
     <Compile Include="Cipher\Caesar.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Cipher\ColumnPermutation.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Cipher\DoubleTransposition.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Cipher\Keyword.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Cipher\Multiliteral.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Cipher\Permutation.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Cipher\Playfair.py">
