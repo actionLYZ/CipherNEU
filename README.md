@@ -54,8 +54,8 @@
 
 ## Files
 
-* [ ] Encrypt files
-* [ ] Decrypt files
+* [x] Read files
+* [x] Write files
 * [ ] Send files
 * [ ] Receive files
 
