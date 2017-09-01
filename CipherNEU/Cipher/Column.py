@@ -1,4 +1,4 @@
-#GQY/Cipher/Column permution cipher (include double)
+#GQY/Cipher/Column permutation cipher (include double)
 
 # -*- coding: utf-8 -*-
 

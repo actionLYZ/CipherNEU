@@ -31,6 +31,7 @@
     </Compile>
     <Compile Include="Cipher\Keyword.py" />
     <Compile Include="Cipher\Multiliteral.py" />
+    <Compile Include="Cipher\Playfair.py" />
     <Compile Include="Cipher\RC4.py">
       <SubType>Code</SubType>
     </Compile>

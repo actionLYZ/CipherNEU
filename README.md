@@ -17,7 +17,7 @@
 
 ### Poly-graphic substitution cipher
 
-* [ ] Playfair cipher
+* [x] Playfair cipher
 
 ### Permutation ciphers
 
