@@ -11,16 +11,16 @@ Decrypt(ciphertext, key)
 #加密函数
 def Encrypt(dimension, plaintext, key):
     if(dimension==1):
-        ciphertext = OneDCA(plaintext, key)
+        ciphertext = OneDEncrypt(plaintext, key)
     elif(dimension==2):
-        ciphertext = TwoDCA(plaintext, key)
+        ciphertext = TwoDEncrypt(plaintext, key)
     else:
         print("!dimension 参数错误")
         return False
     return ciphertext
 
 #一维CA加密
-def OneDCA(plaintext, key):
+def OneDEncrypt(plaintext, key):
     ciphertext = ['\0',]*50
     tempPlaintext = ['\0',]*50
     tempCiphertext = ['\0',]*50
@@ -65,7 +65,7 @@ def OneDCA(plaintext, key):
     ciphertext = ''.join(ciphertext)
     return ciphertext
 
-#加密函数
+#规则加密函数
 def RuleEncrypt(ruleStr, plaintextStream):
     ciphertextStream = ['\0',]*len(plaintextStream)
     for i in range(0,len(plaintextStream)):
@@ -73,8 +73,22 @@ def RuleEncrypt(ruleStr, plaintextStream):
         ciphertextStream[i] = ruleStr[int(tempStream,2)]
     return ciphertextStream
 
+#二维CA加密
+def TwoDEncrypt(plaintext, key):
+    ciphertext = [([0] * len(plaintext)) for i in range(len(plaintext))]
+    #加密规则
+    ruleStr = str(bin(key))
+    ruleStr = "0"*(8-len(ruleStr))+ruleStr[2:]
+
+    X = input("请输入自定义X（0/1）:")
+    for i in range(0,len(plaintext)):
+        for j in range(0,len(plaintext)):
+            ciphertext[i][j] = (int(ruleStr[0])*int(X))^(int(ruleStr[1])*plaintext[i][j])^(int(ruleStr[2])*plaintext[(i-1)%len(plaintext)][j])^(int(ruleStr[3])*plaintext[(i+1)%len(plaintext)][j])^(int(ruleStr[4])*plaintext[i][(j-1)%len(plaintext)])^(int(ruleStr[5])*plaintext[i][(j+1)%len(plaintext)])
+    return ciphertext
+
 #测试数据
-ciphertext = OneDCA('ABC D',46)
+plaintext = [[0,0,1],[0,0,0],[0,1,0]]
+ciphertext = TwoDEncrypt(plaintext,14)
 print(ciphertext)
 
 
