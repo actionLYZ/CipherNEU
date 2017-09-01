@@ -1,11 +1,80 @@
 '''
 Cipher: CA 
 Principle: Stream Cipher
-Types: one dimension, two dimension(moore neighbour)
+Types: one dimension, two dimension(moore neighbourhood)
 Programmer: TSM
-Date: 2017-08-30
+Date: 2017-09-01
 Function:
 Encrypt(plaintext, key)
 Decrypt(ciphertext, key)  
 '''
+#加密函数
+def Encrypt(dimension, plaintext, key):
+    if(dimension==1):
+        ciphertext = OneDCA(plaintext, key)
+    elif(dimension==2):
+        ciphertext = TwoDCA(plaintext, key)
+    else:
+        print("!dimension 参数错误")
+        return False
+    return ciphertext
+
+#一维CA加密
+def OneDCA(plaintext, key):
+    ciphertext = ['\0',]*50
+    tempPlaintext = ['\0',]*50
+    tempCiphertext = ['\0',]*50
+
+    #处理原始明文字符串
+    num = 0;    #有效明文字数
+    for i in range(0,len(plaintext)):
+        if(97<=ord(plaintext[i])<=122):  #原始明文为小写字母
+            tempPlaintext[num] = plaintext[i]
+            num += 1
+        elif(65<=ord(plaintext[i])<=90): #原始明文为大写字母
+            tempPlaintext[num] = chr(ord(plaintext[i])+32)
+            num += 1
+
+    #原始明文字母转换为0/1流
+    plaintextStream = ""
+    for i in range(0,num):
+        tempStream = str(bin(ord(tempPlaintext[i])))
+        tempStream = tempStream[2:]
+        plaintextStream = plaintextStream + tempStream
+
+    #加密规则
+    ruleStr = str(bin(key))
+    ruleStr = "0"*(10-len(ruleStr))+ruleStr[2:]
+     
+    #根据规则加密
+    ciphertextStream = RuleEncrypt(ruleStr, plaintextStream)
+    for i in range(0,int(len(ciphertextStream)/7)):
+        tempC = ciphertextStream[i*7:(i+1)*7]
+        tempC = ''.join(tempC)
+        tempCiphertext[i] = chr(int(tempC,2))
+
+    #转换密文字符串
+    num = 0
+    for i in range(0,len(plaintext)):
+        if((97<=ord(plaintext[i])<=122)|(65<=ord(plaintext[i])<=90)):
+            ciphertext[i] = tempCiphertext[num]
+            num += 1
+        else:
+            ciphertext[i] = plaintext[i]
+    ciphertext = ciphertext[:len(plaintext)]
+    ciphertext = ''.join(ciphertext)
+    return ciphertext
+
+#加密函数
+def RuleEncrypt(ruleStr, plaintextStream):
+    ciphertextStream = ['\0',]*len(plaintextStream)
+    for i in range(0,len(plaintextStream)):
+        tempStream = plaintextStream[i-1] + plaintextStream[i] + plaintextStream[(i+1)%len(plaintextStream)]
+        ciphertextStream[i] = ruleStr[int(tempStream,2)]
+    return ciphertextStream
+
+#测试数据
+ciphertext = OneDCA('ABC D',46)
+print(ciphertext)
+
 
