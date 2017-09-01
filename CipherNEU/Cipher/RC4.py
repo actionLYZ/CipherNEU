@@ -9,6 +9,8 @@ _KSA(key) -> permutation
 _PRG(permutation, i, j) -> z, i, j
 '''
 
+import base64
+
 MODULO = 256
 
 def Encrypt(plaintext, key):
@@ -18,12 +20,15 @@ def Encrypt(plaintext, key):
     for letter in plaintext:
         z, i, j = _PRG(permutation, i, j)
         ciphertext += chr(ord(letter) ^ z)
+    ciphertext = bytes.decode(base64.b64encode(str.encode(ciphertext)))
     return ciphertext
 
 def Decrypt(ciphertext, key):
     plaintext = ""
     permutation = _KSA(key)
     i, j = 0, 0
+    ciphertext = bytes.decode(base64.b64decode(str.encode(ciphertext)))
+
     for letter in ciphertext:
         z, i, j = _PRG(permutation, i, j)
         plaintext += chr(ord(letter) ^ z)
