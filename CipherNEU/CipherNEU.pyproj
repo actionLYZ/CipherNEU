@@ -62,9 +62,16 @@
     <Compile Include="Cipher\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Library\Ai.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Library\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Cipher\" />
+    <Folder Include="Library\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
