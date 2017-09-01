@@ -7,7 +7,7 @@
 * [x] Caesar cipher
 * [x] Keyword cipher
 * [x] Affine cipher
-* [ ] Multiliteral cipher
+* [x] Multiliteral cipher
 
 ### Poly-alphabetic substitution ciphers
 

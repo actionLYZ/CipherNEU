@@ -38,6 +38,9 @@
     <Compile Include="Cipher\Keyword.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Cipher\Multiliteral.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Cipher\RC4.py">
       <SubType>Code</SubType>
     </Compile>
