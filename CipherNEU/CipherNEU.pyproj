@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>63e17389-0c77-456e-831e-4ad69cc6c609</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>CipherNEU.py</StartupFile>
+    <StartupFile>Cipher\CA.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -24,6 +24,9 @@
   <ItemGroup>
     <Compile Include="CipherNEU.py" />
     <Compile Include="Cipher\Affine.py" />
+    <Compile Include="Cipher\CA.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Cipher\Caesar.py">
       <SubType>Code</SubType>
     </Compile>
@@ -37,6 +40,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Cipher\Column.py" />
+    <Compile Include="Cipher\Vigenere.py">
+      <SubType>Code</SubType>
+    </Compile>
+
     <Compile Include="Cipher\__init__.py">
       <SubType>Code</SubType>
     </Compile>
