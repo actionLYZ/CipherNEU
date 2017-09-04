@@ -37,7 +37,7 @@
 
 ### Public key ciphers
 
-* [ ] RSA
+* [x] RSA
 * [ ] ECC
 
 ## Hash function
