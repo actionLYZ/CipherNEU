@@ -21,18 +21,18 @@
 
 ### Permutation ciphers
 
-* [ ] Permutation cipher
+* [x] Permutation cipher
 * [x] Column permutation cipher 
-* [ ] Double-Transposition cipher
+* [x] Double-Transposition cipher
 
 ### Stream ciphers
 
 * [x] RC4
-* [ ] CA
+* [x] CA
 
 ### Block ciphers
 
-* [ ] AES
+* [x] AES
 * [ ] DES
 
 ### Public key ciphers
@@ -42,7 +42,7 @@
 
 ## Hash function
 
-* [ ] MD5
+* [x] MD5
 
 ## Public key digital signature algorithm
 
