@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>63e17389-0c77-456e-831e-4ad69cc6c609</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Cipher\CA.py</StartupFile>
+    <StartupFile>Cipher\DH.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -27,6 +27,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Cipher\Caesar.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Cipher\DH.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Cipher\PlayfairCipher.py">
