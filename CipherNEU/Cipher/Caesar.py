@@ -11,10 +11,20 @@ def Encrypt(plaintext, key):
     ciphertext = ""
     for letter in plaintext:
         if letter.islower():
-            ord(letter)
+            ciphertext += chr((ord(letter) - ord('a') + key) % 26 + ord('a'))
+        elif letter.isupper():
+            ciphertext += chr((ord(letter) - ord('A') + key) % 26 + ord('A'))
+        else:
+            ciphertext += letter
     return ciphertext
 
 def Decrypt(ciphertext, key):
     plaintext = ""
-
+    for letter in ciphertext:
+        if letter.islower():
+            plaintext += chr((ord(letter) - ord('a') - key + 26) % 26 + ord('a'))
+        elif letter.isupper():
+            plaintext += chr((ord(letter) - ord('A') - key + 26) % 26 + ord('A'))
+        else:
+            plaintext += letter
     return plaintext
