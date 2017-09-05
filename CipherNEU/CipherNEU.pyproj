@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>63e17389-0c77-456e-831e-4ad69cc6c609</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>CipherNEU.py</StartupFile>
+    <StartupFile>Cipher\DH.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -28,6 +28,7 @@
     <Compile Include="Cipher\AutokeyCiphertext.py" />
     <Compile Include="Cipher\AutokeyPlaintext.py" />
     <Compile Include="Cipher\CA.py" />
+    <Compile Include="Cipher\DH.py" />
     <Compile Include="Cipher\Caesar.py">
       <SubType>Code</SubType>
     </Compile>
