@@ -73,7 +73,7 @@ class Ui_Login(object):
         self.b = QtWidgets.QListWidget(Login)
         self.b.setGeometry(QtCore.QRect(-5, -9, 371, 201))
         self.b.setStyleSheet("border-image: url(:/images/background.png);")
-        self.b.setObjectName("b")
+        self.b.setObjectName("background")
         self.b.raise_()
         self.layoutWidget.raise_()
 

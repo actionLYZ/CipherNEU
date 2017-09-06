@@ -28,6 +28,7 @@
     <Compile Include="QTtest.py" />
     <Compile Include="register.py" />
     <Compile Include="resource.py" />
+    <Compile Include="Setting.py" />
     <Compile Include="untitled.py" />
   </ItemGroup>
   <PropertyGroup>
