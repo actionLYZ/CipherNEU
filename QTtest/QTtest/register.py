@@ -91,27 +91,50 @@ class Ui_register(object):
 
     def AddUser(self):
 
-        ifpass = True
         if self.line_nickname.text() == "" or self.line_password.text() == "":
             message = QtWidgets.QMessageBox()
             message.warning(self,"Error","用户名或密码不能为空！",QtWidgets.QMessageBox.Yes)
-            ifpass = False
 
-        if self.line_password.text() != self.line_reenter.text():
+        elif not self.line_nickname.text().isalnum() and self.line_password.text().isalnum():
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","用户名和密码必须由字母与数字组成！",QtWidgets.QMessageBox.Yes)
+
+        elif self.IfHasRegister():
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","该用户名已经被注册过了！",QtWidgets.QMessageBox.Yes)
+
+        elif self.line_password.text() != self.line_reenter.text():
             message = QtWidgets.QMessageBox()
             message.warning(self,"Error","两次输入的密码不一致！",QtWidgets.QMessageBox.Yes)
-            ifpass = False
 
-        if not self.checkBox.isChecked():
+        elif not self.checkBox.isChecked():
             message = QtWidgets.QMessageBox()
             message.warning(self,"Error","请勾选NEU协议！",QtWidgets.QMessageBox.Yes)
-            ifpass = False
 
-        if ifpass == True:
+        else:
+            self.AddUser2dir()
             message = QtWidgets.QMessageBox()
             message.information(self,"Pass","注册成功！",QtWidgets.QMessageBox.Yes)
             GlobalStay.SetUser(self.line_nickname.text())
-             
+            
+    #判断用户名是否已经被注册过
+    def IfHasRegister(self):
+        document = open("User.txt","r")
+        for context in document.readlines():
+            if self.line_nickname.text() == context[:context.find(' ')]:
+                document.close()
+                return True
+        return False
+
+    #将注册成功的用户登记在User.txt中
+    def AddUser2dir(self):
+        document = open("User.txt","a")
+        document.write(self.line_nickname.text())
+        document.write(" ")
+        document.write(self.line_password.text())
+        document.write("\n")
+        document.close()
+
     def retranslateUi(self, register_2):
         _translate = QtCore.QCoreApplication.translate
         register_2.setWindowTitle(_translate("register_2", "Register"))

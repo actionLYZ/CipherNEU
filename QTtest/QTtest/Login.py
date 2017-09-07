@@ -86,13 +86,36 @@ class Ui_Login(object):
 
     #判断用户是否允许登陆
     def IfLogin(self):
-        if self.line_nickname.text() in GlobalStay.GetUser() and self.line_password.text() == "123456":
-            message = QtWidgets.QMessageBox()
-            message.information(self,"Pass","登陆成功！",QtWidgets.QMessageBox.Ok)
-        else:
-            message = QtWidgets.QMessageBox()
-            message.warning(self,"Error","登录失败！",QtWidgets.QMessageBox.Ok)
 
+        if not self.line_nickname.text().isalnum() and self.line_password.text().isalnum():
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","用户名和密码必须由字母与数字组成！",QtWidgets.QMessageBox.Yes)
+            ifpass = False
+
+        else:
+            a = self.IfLoginRight()
+
+    #输入的用户名密码是否正确
+    def IfLoginRight(self):
+        document = open("User.txt","r")
+        for context in document.readlines():
+            if self.line_nickname.text() == context[:context.find(' ')]:
+                if self.line_password.text() == context[context.find(' ')+1:-1]:
+                    message = QtWidgets.QMessageBox()
+                    message.information(self,"Pass","登陆成功！",QtWidgets.QMessageBox.Ok)
+                    document.close()
+                    return True
+
+                else:
+                    message = QtWidgets.QMessageBox()
+                    message.warning(self,"Error","用户名与密码不匹配！",QtWidgets.QMessageBox.Ok)
+                    document.close()
+                    return False
+
+        message = QtWidgets.QMessageBox()
+        message.warning(self,"Error","用户名不存在！",QtWidgets.QMessageBox.Ok)
+        document.close()
+        return False
 
     def retranslateUi(self, Login):
         _translate = QtCore.QCoreApplication.translate
