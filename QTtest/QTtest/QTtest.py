@@ -2,7 +2,9 @@ from PyQt5 import QtWidgets,QtCore
 from Login import Ui_Login
 from register import Ui_register
 from Setting import Ui_Setting
-    
+
+
+
 #登陆窗口对象
 class LoginWindow(QtWidgets.QWidget,Ui_Login):  
     def __init__(self):    
@@ -40,11 +42,9 @@ if __name__=="__main__":
     loginWindow = LoginWindow()
     registerWindow = RegisterWindow()
     settingWindow = SettingWindow()
-
+    
     #给登陆窗口对象中的成员分配槽
     loginWindow.but_register.clicked.connect(registerWindow.show)
     loginWindow.but_setting.clicked.connect(settingWindow.show)
-    
-
     loginWindow.show()          #打开登陆窗口   
     sys.exit(app.exec_()) 

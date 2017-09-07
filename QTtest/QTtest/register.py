@@ -7,8 +7,10 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from GlobalStay import GlobalStay
 
 class Ui_register(object):
+
     def setupUi(self, register_2):
         register_2.setObjectName("register_2")
         register_2.resize(360, 186)
@@ -84,8 +86,32 @@ class Ui_register(object):
         self.layoutWidget.raise_()
         self.retranslateUi(register_2)
         self.but_cancel.clicked.connect(register_2.close)
+        self.but_register.clicked.connect(self.AddUser)
         QtCore.QMetaObject.connectSlotsByName(register_2)
 
+    def AddUser(self):
+
+        ifpass = True
+        if self.line_nickname.text() == "" or self.line_password.text() == "":
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","用户名或密码不能为空！",QtWidgets.QMessageBox.Yes)
+            ifpass = False
+
+        if self.line_password.text() != self.line_reenter.text():
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","两次输入的密码不一致！",QtWidgets.QMessageBox.Yes)
+            ifpass = False
+
+        if not self.checkBox.isChecked():
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","请勾选NEU协议！",QtWidgets.QMessageBox.Yes)
+            ifpass = False
+
+        if ifpass == True:
+            message = QtWidgets.QMessageBox()
+            message.information(self,"Pass","注册成功！",QtWidgets.QMessageBox.Yes)
+            GlobalStay.SetUser(self.line_nickname.text())
+             
     def retranslateUi(self, register_2):
         _translate = QtCore.QCoreApplication.translate
         register_2.setWindowTitle(_translate("register_2", "Register"))

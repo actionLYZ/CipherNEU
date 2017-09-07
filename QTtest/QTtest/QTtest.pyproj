@@ -23,6 +23,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GlobalStay.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Login.py" />
     <Compile Include="main.py" />
     <Compile Include="QTtest.py" />

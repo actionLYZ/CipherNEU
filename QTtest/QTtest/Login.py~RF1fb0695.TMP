@@ -87,11 +87,9 @@ class Ui_Login(object):
     #判断用户是否允许登陆
     def IfLogin(self):
         if self.line_nickname.text() in GlobalStay.GetUser() and self.line_password.text() == "123456":
-            message = QtWidgets.QMessageBox()
-            message.information(self,"Pass","登陆成功！",QtWidgets.QMessageBox.Ok)
+            print("登陆成功")
         else:
-            message = QtWidgets.QMessageBox()
-            message.warning(self,"Error","登录失败！",QtWidgets.QMessageBox.Ok)
+            print("登陆失败")
 
 
     def retranslateUi(self, Login):
