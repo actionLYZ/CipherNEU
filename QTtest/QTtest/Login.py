@@ -81,7 +81,8 @@ class Ui_Login(object):
         
         self.retranslateUi(Login)
         self.but_cancel.clicked.connect(Login.close)
-        #self.but_login.clicked.connect(self.IfLogin(self.line_nickname.text(),self.line_password.text()))
+
+
         self.but_login.clicked.connect(self.IfLogin)
         QtCore.QMetaObject.connectSlotsByName(Login)
 
@@ -103,7 +104,9 @@ class Ui_Login(object):
             if self.line_nickname.text() == context[:context.find(' ')]:
                 if self.line_password.text() == context[context.find(' ')+1:-1]:
                     message = QtWidgets.QMessageBox()
-                    message.information(self,"Pass","登陆成功！",QtWidgets.QMessageBox.Ok)
+                    message.information(self,"Pass","登陆成功！")
+                    message.setStandardButtons(QtWidgets.QMessageBox.Ok)
+                    message.button(QtWidgets.QMessageBox.Ok).setText("确定")      #bug
                     document.close()
                     return True
 
