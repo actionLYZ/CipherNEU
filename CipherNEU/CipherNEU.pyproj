@@ -35,6 +35,7 @@
     <Compile Include="Cipher\ColumnPermutation.py" />
     <Compile Include="Cipher\DES.py" />
     <Compile Include="Cipher\DoubleTransposition.py" />
+    <Compile Include="Cipher\ECC.py" />
     <Compile Include="Cipher\Keyword.py" />
     <Compile Include="Cipher\MD5.py" />
     <Compile Include="Cipher\Multiliteral.py" />
