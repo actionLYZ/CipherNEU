@@ -22,14 +22,31 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AES.py" />
+    <Compile Include="Affine.py" />
+    <Compile Include="AutokeyCiphertext.py" />
+    <Compile Include="AutokeyPlaintext.py" />
+    <Compile Include="CA.py" />
     <Compile Include="Caesar.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CaesarPYQT.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ColumnPermutation.py" />
+    <Compile Include="DES.py" />
+    <Compile Include="DH.py" />
+    <Compile Include="DoubleTransposition.py" />
+    <Compile Include="Keyword.py" />
+    <Compile Include="MD5.py" />
+    <Compile Include="Multiliteral.py" />
+    <Compile Include="Permutation.py" />
+    <Compile Include="Playfair.py" />
     <Compile Include="PyqtTest1.py" />
+    <Compile Include="RC4.py" />
     <Compile Include="resource.py" />
+    <Compile Include="RSA.py" />
+    <Compile Include="Vigenere.py" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
