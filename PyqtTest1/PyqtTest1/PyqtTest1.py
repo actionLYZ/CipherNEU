@@ -7,6 +7,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QCoreApplication
 from resource import *
+from PyQt5.QtWidgets import QToolTip
+from PyQt5.QtGui import QFont
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -142,7 +144,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "NEU Encrypted Chatting Room"))
         self.pushButton_2.setText(_translate("Dialog", "Login"))
         self.pushButton_3.setText(_translate("Dialog", "Register"))
         self.pushButton.setText(_translate("Dialog", "Settings"))
@@ -160,13 +162,30 @@ class Ui_Dialog(object):
 class mywindow(QtWidgets.QWidget,Ui_Dialog):    
     def __init__(self):    
         super(mywindow,self).__init__()    
-        self.setupUi(self)  
-        self.pushButton_2.clicked.connect(QCoreApplication.instance().quit)   
-        self.pushButton.clicked.connect(self.EncryptPrint)
-        self.pushButton_3.clicked.connect(self.DecryptPrint)
+        self.setupUi(self) 
+        self.initUI()
+        self.pushButton_8.clicked.connect(self.EncryptPrint)
+        #self.pushButton_2.clicked.connect(QCoreApplication.instance().quit)   
+        #self.pushButton.clicked.connect(self.EncryptPrint)
+        #self.pushButton_3.clicked.connect(self.DecryptPrint)
+
+    def initUI(self): 
+        QToolTip.setFont(QFont('SansSerif', 10)) 
+        self.toolButton_3.setToolTip('encryption setting')
+        self.toolButton_2.setToolTip('decryption setting')
+        self.toolButton_4.setToolTip('export file')
+        self.toolButton.setToolTip('download file')
+
+    def keyPressEvent(self, QKeyEvent):
+        
+        return super().keyPressEvent(QKeyEvent)
     def EncryptPrint(self):
-        ciphertext = Encrypt(self.lineEdit_2.text(),int(self.lineEdit.text()))
-        self.textBrowser.setText(ciphertext)
+        if(self.comboBox.currentText()=='Encryption'):
+            self.textBrowser.setText('encrypt '+self.textEdit.toPlainText())
+        elif(self.comboBox.currentText()=='Decryption'):
+            self.textBrowser.setText('decrypt '+self.textEdit.toPlainText())
+        #ciphertext = Encrypt(self.lineEdit_2.text(),int(self.lineEdit.text()))
+        #self.textBrowser.setText(ciphertext)
     def DecryptPrint(self):
         plaintext = Decrypt(self.lineEdit_2.text(),int(self.lineEdit.text()))
         self.textBrowser.setText(plaintext)
