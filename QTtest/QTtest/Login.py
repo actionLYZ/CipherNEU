@@ -49,6 +49,7 @@ class Ui_Login(object):
         self.horizontalLayout_5.addItem(spacerItem3)
         self.line_password = QtWidgets.QLineEdit(self.layoutWidget)
         self.line_password.setObjectName("line_password")
+        self.line_password.setEchoMode(QtWidgets.QLineEdit.Password)
         self.horizontalLayout_5.addWidget(self.line_password)
         self.verticalLayout_4.addLayout(self.horizontalLayout_5)
         self.verticalLayout_3.addLayout(self.verticalLayout_4)
@@ -93,7 +94,7 @@ class Ui_Login(object):
             ifpass = False
 
         else:
-            a = self.IfLoginRight()
+            ifLoginRight = self.IfLoginRight()
 
     #输入的用户名密码是否正确
     def IfLoginRight(self):
