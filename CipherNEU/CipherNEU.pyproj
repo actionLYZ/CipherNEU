@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>63e17389-0c77-456e-831e-4ad69cc6c609</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Cipher\DH.py</StartupFile>
+    <StartupFile>CipherNEU.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -49,9 +49,16 @@
     <Compile Include="Cipher\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Socket\Protocol.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Socket\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Cipher\" />
+    <Folder Include="Socket\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
