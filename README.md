@@ -4,45 +4,45 @@
 
 ### Mono-alphabetic substitution ciphers
 
-* [ ] Caesar cipher
-* [ ] Keyword cipher
-* [ ] Affine cipher
-* [ ] Multiliteral cipher
+* [x] Caesar cipher
+* [x] Keyword cipher
+* [x] Affine cipher
+* [x] Multiliteral cipher
 
 ### Poly-alphabetic substitution ciphers
 
-* [ ] Vigenere cipher
-* [ ] Autokey ciphertext
-* [ ] Autokey plaintext
+* [x] Vigenere cipher
+* [x] Autokey ciphertext
+* [x] Autokey plaintext
 
 ### Poly-graphic substitution cipher
 
-* [ ] Playfair cipher
+* [x] Playfair cipher
 
 ### Permutation ciphers
 
-* [ ] Permutation cipher
-* [ ] Column permutation cipher 
-* [ ] Double-Transposition cipher
+* [x] Permutation cipher
+* [x] Column permutation cipher 
+* [x] Double-Transposition cipher
 
 ### Stream ciphers
 
 * [x] RC4
-* [ ] CA
+* [x] CA
 
 ### Block ciphers
 
-* [ ] AES
-* [ ] DES
+* [x] AES
+* [x] DES
 
 ### Public key ciphers
 
-* [ ] RSA
+* [x] RSA
 * [ ] ECC
 
 ## Hash function
 
-* [ ] MD5
+* [x] MD5
 
 ## Public key digital signature algorithm
 

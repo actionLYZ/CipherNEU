@@ -3,15 +3,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>63e17389-0c77-456e-831e-4ad69cc6c609</ProjectGuid>
+    <ProjectGuid>0ea9a14e-ae4e-4e4f-9889-c290679156dd</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Cipher\DH.py</StartupFile>
+    <StartupFile>EncryptionSetting.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>CipherNEU</Name>
-    <RootNamespace>CipherNEU</RootNamespace>
+    <Name>EncryptionSetting</Name>
+    <RootNamespace>EncryptionSetting</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,35 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CipherNEU.py" />
-    <Compile Include="Cipher\AES.py" />
-    <Compile Include="Cipher\Affine.py" />
-    <Compile Include="Cipher\AutokeyCiphertext.py" />
-    <Compile Include="Cipher\AutokeyPlaintext.py" />
-    <Compile Include="Cipher\CA.py" />
-    <Compile Include="Cipher\DH.py" />
-    <Compile Include="Cipher\Caesar.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Cipher\ColumnPermutation.py" />
-    <Compile Include="Cipher\DES.py" />
-    <Compile Include="Cipher\DoubleTransposition.py" />
-    <Compile Include="Cipher\Keyword.py" />
-    <Compile Include="Cipher\MD5.py" />
-    <Compile Include="Cipher\Multiliteral.py" />
-    <Compile Include="Cipher\Permutation.py" />
-    <Compile Include="Cipher\Playfair.py" />
-    <Compile Include="Cipher\RC4.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Cipher\RSA.py" />
-    <Compile Include="Cipher\Vigenere.py" />
-    <Compile Include="Cipher\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Cipher\" />
+    <Compile Include="EncryptionSetting.py" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
