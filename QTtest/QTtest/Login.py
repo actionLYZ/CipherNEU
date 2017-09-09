@@ -7,7 +7,10 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import register
+import Setting
 from GlobalStay import GlobalStay
+
 
 class Ui_Login(object):
     def setupUi(self, Login):
@@ -81,8 +84,8 @@ class Ui_Login(object):
         
         self.retranslateUi(Login)
         self.but_cancel.clicked.connect(Login.close)
-
-
+        self.but_setting.clicked.connect(self.OpenSetting)
+        self.but_register.clicked.connect(self.OpenRegister)
         self.but_login.clicked.connect(self.IfLogin)
         QtCore.QMetaObject.connectSlotsByName(Login)
 
@@ -121,6 +124,14 @@ class Ui_Login(object):
         document.close()
         return False
 
+    def OpenRegister(self):
+        self.registerWindow = register.RegisterWindow()
+        self.registerWindow.show()
+
+    def OpenSetting(self):
+        self.settingWindow = Setting.SettingWindow()
+        self.settingWindow.show()
+
     def retranslateUi(self, Login):
         _translate = QtCore.QCoreApplication.translate
         Login.setWindowTitle(_translate("Login", "Login"))
@@ -133,3 +144,12 @@ class Ui_Login(object):
 
 
 import resource
+
+#登陆窗口对象
+class LoginWindow(QtWidgets.QWidget,Ui_Login):  
+    def __init__(self):    
+        super(LoginWindow,self).__init__()  
+        self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint
+                            |QtCore.Qt.WindowCloseButtonHint
+                            |QtCore.Qt.MSWindowsFixedSizeDialogHint )        #只允许最小和关闭，不允许最大化,不允许调整大小
+        self.setupUi(self)  

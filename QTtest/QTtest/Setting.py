@@ -76,3 +76,12 @@ class Ui_Setting(object):
         self.but_login.setText(_translate("Setting", "Enter"))
 
 import resource
+
+#设置窗口对象
+class SettingWindow(QtWidgets.QWidget,Ui_Setting):  
+    def __init__(self):    
+        super(SettingWindow,self).__init__()  
+        self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint
+                            |QtCore.Qt.WindowCloseButtonHint
+                            |QtCore.Qt.MSWindowsFixedSizeDialogHint)        #只允许最小和关闭，不允许最大化,不允许调整大小
+        self.setupUi(self)  

@@ -9,6 +9,8 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from GlobalStay import GlobalStay
 
+
+
 class Ui_register(object):
 
     def setupUi(self, register_2):
@@ -148,3 +150,12 @@ class Ui_register(object):
         self.but_cancel.setText(_translate("register_2", "Cancel"))
 
 import resource
+
+#注册窗口对象
+class RegisterWindow(QtWidgets.QWidget,Ui_register):  
+    def __init__(self):    
+        super(RegisterWindow,self).__init__()  
+        self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint
+                            |QtCore.Qt.WindowCloseButtonHint
+                            |QtCore.Qt.MSWindowsFixedSizeDialogHint)        #只允许最小和关闭，不允许最大化,不允许调整大小
+        self.setupUi(self) 
