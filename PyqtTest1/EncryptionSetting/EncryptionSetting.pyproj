@@ -3,15 +3,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>68da9300-755f-4401-87ac-4f55958cee45</ProjectGuid>
+    <ProjectGuid>0ea9a14e-ae4e-4e4f-9889-c290679156dd</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>DecryptionSetting.py</StartupFile>
+    <StartupFile>EncryptionSetting.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>PyqtTest1</Name>
-    <RootNamespace>PyqtTest1</RootNamespace>
+    <Name>EncryptionSetting</Name>
+    <RootNamespace>EncryptionSetting</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,37 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AES.py" />
-    <Compile Include="Affine.py" />
-    <Compile Include="AutokeyCiphertext.py" />
-    <Compile Include="AutokeyPlaintext.py" />
-    <Compile Include="CA.py" />
-    <Compile Include="Caesar.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CaesarPYQT.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ColumnPermutation.py" />
-    <Compile Include="DecryptionSetting.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DES.py" />
-    <Compile Include="DH.py" />
-    <Compile Include="DoubleTransposition.py" />
-    <Compile Include="EncryptionSetting.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Keyword.py" />
-    <Compile Include="MD5.py" />
-    <Compile Include="Multiliteral.py" />
-    <Compile Include="Permutation.py" />
-    <Compile Include="Playfair.py" />
-    <Compile Include="PyqtTest1.py" />
-    <Compile Include="RC4.py" />
-    <Compile Include="resource.py" />
-    <Compile Include="RSA.py" />
-    <Compile Include="Vigenere.py" />
+    <Compile Include="EncryptionSetting.py" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

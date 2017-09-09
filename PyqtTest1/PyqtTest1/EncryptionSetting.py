@@ -3,10 +3,10 @@
 # Form implementation generated from reading ui file 'EncryptionSetting.ui'
 #
 # Created by: PyQt5 UI code generator 5.9
-#
-# WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QCoreApplication
+from resource import *
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -90,4 +90,22 @@ class Ui_Dialog(object):
         self.comboBox.setItemText(18, _translate("Dialog", "DH"))
         self.label.setText(_translate("Dialog", "Secret Key:"))
 
-import resource_rc
+class mywindow(QtWidgets.QWidget,Ui_Dialog):    
+    def __init__(self):    
+        super(mywindow,self).__init__()    
+        self.setupUi(self) 
+        #self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setDefault(True)
+        self.buttonBox.accepted.connect(self.Accept)
+        self.buttonBox.clicked.connect(QCoreApplication.instance().quit)
+    def Accept(self):
+        cipherType = self.comboBox.currentText()
+        encryptKey = self.lineEdit.text()
+        print(cipherType,encryptKey)
+
+if __name__=="__main__":  
+    import sys  
+    app=QtWidgets.QApplication(sys.argv)
+    myshow=mywindow()  
+    myshow.show()
+    sys.exit(app.exec_())
+

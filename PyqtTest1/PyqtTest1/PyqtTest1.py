@@ -6,9 +6,9 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QCoreApplication
-from resource import *
 from PyQt5.QtWidgets import QToolTip
 from PyQt5.QtGui import QFont, QKeyEvent
+from resource import *
 import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, RSA, Vigenere
 
 
