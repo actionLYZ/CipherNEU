@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>844d2a15-538a-4e79-807f-1f82e95b43a0</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>NEUChpher.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>NEUChpher</Name>
+    <RootNamespace>NEUChpher</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Cipher\AES.py" />
+    <Compile Include="Cipher\Affine.py" />
+    <Compile Include="Cipher\AutokeyCiphertext.py" />
+    <Compile Include="Cipher\AutokeyPlaintext.py" />
+    <Compile Include="Cipher\CA.py" />
+    <Compile Include="Cipher\Caesar.py" />
+    <Compile Include="Cipher\ColumnPermutation.py" />
+    <Compile Include="Cipher\DES.py" />
+    <Compile Include="Cipher\DH.py" />
+    <Compile Include="Cipher\DoubleTransposition.py" />
+    <Compile Include="Cipher\ECC.py" />
+    <Compile Include="Cipher\Keyword.py" />
+    <Compile Include="Cipher\MD5.py" />
+    <Compile Include="Cipher\Multiliteral.py" />
+    <Compile Include="Cipher\Permutation.py" />
+    <Compile Include="Cipher\Playfair.py" />
+    <Compile Include="Cipher\RC4.py" />
+    <Compile Include="Cipher\RSA.py" />
+    <Compile Include="Cipher\Vigenere.py" />
+    <Compile Include="Cipher\__init__.py" />
+    <Compile Include="NEUChpher.py" />
+    <Compile Include="QT\Chat.py" />
+    <Compile Include="QT\ChatResource.py" />
+    <Compile Include="QT\DecryptionSetting.py" />
+    <Compile Include="QT\EncryptionSetting.py" />
+    <Compile Include="QT\FilePath.py" />
+    <Compile Include="QT\Login.py" />
+    <Compile Include="QT\LogResource.py" />
+    <Compile Include="QT\PyqtTest1.py" />
+    <Compile Include="QT\QTtest.py" />
+    <Compile Include="QT\Register.py" />
+    <Compile Include="QT\Setting.py" />
+    <Compile Include="QT\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Cipher\" />
+    <Folder Include="QT\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
+  </PropertyGroup>
+  <Import Condition="Exists($(PtvsTargetsFile))" Project="$(PtvsTargetsFile)" />
+  <Import Condition="!Exists($(PtvsTargetsFile))" Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>
