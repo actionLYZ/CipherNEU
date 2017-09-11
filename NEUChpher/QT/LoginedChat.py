@@ -5,27 +5,11 @@
 # Created by: PyQt5 UI code generator 5.9
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QCoreApplication
-from PyQt5.QtWidgets import QToolTip
-from PyQt5.QtGui import QFont, QKeyEvent
-import QT.ChatResource
-#import Cipher.RSA
-import Cipher.Caesar, Cipher.Affine, Cipher.Keyword, Cipher.CA, Cipher.ColumnPermutation, Cipher.DES
-import Cipher.DH, Cipher.DoubleTransposition, Cipher.AutokeyPlaintext, Cipher.AutokeyCiphertext, Cipher.MD5
-import Cipher.Multiliteral, Cipher.Permutation, Cipher.Playfair, Cipher.RC4, Cipher.Vigenere
-
-
-def Global():
-    global cipherType, encryptKey, decryptKey, plaintext, ciphertext
-    cipherType = 'Caesar'
-    encryptKey = '12'
-    decryptKey = '12'
-    plaintext = ''
-    ciphertext = ''
-    return
+import Resource.LogedResource
+from QT import Login
 
 class Ui_Dialog(object):
-    def setupUi(self, Dialog):
+    def setupUi(self,Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(707, 493)
         self.layoutWidget = QtWidgets.QWidget(Dialog)
@@ -72,15 +56,21 @@ class Ui_Dialog(object):
 "border-image: url(:/images/user1.png);")
         self.graphicsView.setObjectName("graphicsView")
         self.verticalLayout.addWidget(self.graphicsView)
-        self.pushButton_2 = QtWidgets.QPushButton(self.layoutWidget)
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.verticalLayout.addWidget(self.pushButton_2)
-        self.pushButton_3 = QtWidgets.QPushButton(self.layoutWidget)
-        self.pushButton_3.setObjectName("pushButton_3")
-        self.verticalLayout.addWidget(self.pushButton_3)
+        self.label_4 = QtWidgets.QLabel(self.layoutWidget)
+        self.label_4.setMaximumSize(QtCore.QSize(200, 60))
+        self.label_4.setText("")
+        self.label_4.setStyleSheet("color: rgb(255, 255, 255);\n"
+"font: 87 12pt \"Lucida Handwriting\";")
+        self.label_4.setObjectName("label_4")
+        self.verticalLayout.addWidget(self.label_4)
         self.pushButton = QtWidgets.QPushButton(self.layoutWidget)
+        self.pushButton.setMaximumSize(QtCore.QSize(100, 16777215))
         self.pushButton.setObjectName("pushButton")
         self.verticalLayout.addWidget(self.pushButton)
+        self.pushButton_2 = QtWidgets.QPushButton(self.layoutWidget)
+        self.pushButton_2.setSizeIncrement(QtCore.QSize(100, 0))
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.verticalLayout.addWidget(self.pushButton_2)
         spacerItem = QtWidgets.QSpacerItem(20, 50, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout.addItem(spacerItem)
         self.gridLayout.addLayout(self.verticalLayout, 0, 0, 6, 1)
@@ -163,74 +153,28 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
+
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        #self.label_4.setText(_translate("Dialog", "Welcome!\n"))
         self.comboBox.setItemText(0, _translate("Dialog", "Encryption"))
         self.comboBox.setItemText(1, _translate("Dialog", "Decryption"))
         self.label_3.setText(_translate("Dialog", "Messages:"))
-        self.pushButton_2.setText(_translate("Dialog", "Login"))
-        self.pushButton_3.setText(_translate("Dialog", "Register"))
         self.pushButton.setText(_translate("Dialog", "Settings"))
+        self.pushButton_2.setText(_translate("Dialog", "Logout"))
         self.label.setText(_translate("Dialog", "To:"))
         self.label_2.setText(_translate("Dialog", "My messages:"))
-        self.toolButton_3.setText(_translate("Dialog", ""))
-        self.toolButton_2.setText(_translate("Dialog", ""))
-        self.toolButton_4.setText(_translate("Dialog", ""))
-        self.toolButton.setText(_translate("Dialog", ""))
+        self.toolButton_3.setText(_translate("Dialog", "..."))
+        self.toolButton_2.setText(_translate("Dialog", "..."))
+        self.toolButton_4.setText(_translate("Dialog", "..."))
+        self.toolButton.setText(_translate("Dialog", "..."))
         self.pushButton_4.setText(_translate("Dialog", "Show Ciphertext"))
         self.pushButton_8.setText(_translate("Dialog", "Send"))
 
-class mywindow(QtWidgets.QWidget,Ui_Dialog):    
+#登陆窗口对象
+class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):  
     def __init__(self):    
-        super(mywindow,self).__init__()    
-        self.setupUi(self) 
-        self.initUI()
-        self.pushButton_8.clicked.connect(self.EncryptPrint)
-        self.pushButton_4.clicked.connect(self.ShowMessage)
-        self.toolButton_3.clicked.connect(self.ShowMessage)
-        #self.pushButton_2.clicked.connect(QCoreApplication.instance().quit)   
-        #self.pushButton.clicked.connect(self.EncryptPrint)
-        #self.pushButton_3.clicked.connect(self.DecryptPrint)
-
-    def initUI(self): 
-        QToolTip.setFont(QFont('SansSerif', 10)) 
-        self.toolButton_3.setToolTip('encryption setting')
-        self.toolButton_2.setToolTip('decryption setting')
-        self.toolButton_4.setToolTip('export file')
-        self.toolButton.setToolTip('download file')
-        #self.pushButton_4.setToolTip(self.textEdit.toPlainText())
-
-    def ShowMessage(self):
-        message = QtWidgets.QMessageBox()
-        str = self.textEdit.toPlainText()
-        l = len(self.textEdit.toPlainText())
-        for i in range(int(l/20)):
-            str = str[:i*22+20]+'\n'+str[i*22+20:]
-        message.information(self,"Ciphertext",str)
-
-    def keyPressEvent(self,QKeyEvent):
-        if QKeyEvent.key() == QtCore.Qt.Key_Space:
-            #self.textEdit.setToolTip('aaa')
-            print('aaa')
-        return super().keyPressEvent(QKeyEvent)
-
-    def EncryptPrint(self):
-        if(self.comboBox.currentText()=='Encryption'):
-            self.Encryption()
-        elif(self.comboBox.currentText()=='Decryption'):
-            self.Decryption()
-    def Encryption(self):
-        Global()
-        plaintext = self.textEdit.toPlainText()
-        self.textBrowser.setText(self.textBrowser.toPlainText()+'Plaintext: '+plaintext+'\n'+'Ciphertext: '+Caesar.Encrypt(plaintext,int(encryptKey))+'\n\n')
-
-    def Decryption(self):
-        Global()
-        ciphertext = self.textEdit.toPlainText()
-        self.textBrowser.setText(self.textBrowser.toPlainText()+'Ciphertext: '+ciphertext+'\n'+'Plaintext: '+Caesar.Decrypt(ciphertext,int(decryptKey))+'\n\n')
-
-if __name__=="__main__":  
-    import sys  
-    app=QtWidgets.QApplication(sys.argv)
-    myshow=mywindow()  
-    myshow.show()
-    sys.exit(app.exec_())
+        super(LoginedChatWindow,self).__init__() 
+        self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint
+                            |QtCore.Qt.WindowCloseButtonHint
+                            |QtCore.Qt.MSWindowsFixedSizeDialogHint )        #只允许最小和关闭，不允许最大化,不允许调整大小
+        self.setupUi(self)  

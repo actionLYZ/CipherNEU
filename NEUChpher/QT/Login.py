@@ -1,12 +1,10 @@
-
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-import QT.Register
-import QT.Setting
-import QT.LogResource
+from QT import Register,Setting, Chat, LoginedChat
+import Resource.LogResource
+
 
 class Ui_Login(object):
-    def setupUi(self, Login):
+    def setupUi(self, Login,logWindow,logedWindow):
         Login.setObjectName("Login")
         Login.resize(361, 185)
         Login.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
@@ -81,6 +79,8 @@ class Ui_Login(object):
         self.but_register.clicked.connect(self.OpenRegister)
         self.but_login.clicked.connect(self.IfLogin)
         QtCore.QMetaObject.connectSlotsByName(Login)
+        self.logWindow = logWindow
+        self.logedWindow = logedWindow
 
     #判断用户是否允许登陆
     def IfLogin(self):
@@ -103,8 +103,15 @@ class Ui_Login(object):
                     message.information(self,"Pass","登陆成功！")
                     message.setStandardButtons(QtWidgets.QMessageBox.Ok)
                     message.button(QtWidgets.QMessageBox.Ok).setText("确定")      #bug
+                    self.userName = self.line_nickname.text()
                     document.close()
                     self.close()
+                    self.logWindow.close()
+                    
+                    _translate = QtCore.QCoreApplication.translate
+                    self.logedWindow = LoginedChat.LoginedChatWindow()
+                    self.logedWindow.label_4.setText("Welcome!\n\n" + self.line_nickname.text())
+                    self.logedWindow.show()
                     return True
 
                 else:
@@ -119,11 +126,11 @@ class Ui_Login(object):
         return False
 
     def OpenRegister(self):
-        self.registerWindow = QT.Register.RegisterWindow()
+        self.registerWindow = Register.RegisterWindow()
         self.registerWindow.show()
 
     def OpenSetting(self):
-        self.settingWindow = QT.Setting.SettingWindow()
+        self.settingWindow = Setting.SettingWindow()
         self.settingWindow.show()
 
     def retranslateUi(self, Login):
@@ -140,9 +147,13 @@ class Ui_Login(object):
 
 #登陆窗口对象
 class LoginWindow(QtWidgets.QWidget,Ui_Login):  
-    def __init__(self):    
+    def __init__(self,logWindow,logedWindow):    
         super(LoginWindow,self).__init__()  
         self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint
                             |QtCore.Qt.WindowCloseButtonHint
                             |QtCore.Qt.MSWindowsFixedSizeDialogHint )        #只允许最小和关闭，不允许最大化,不允许调整大小
-        self.setupUi(self)  
+        self.setupUi(self,logWindow,logedWindow)  
+
+   # def closeEvent(self, QCloseEvent):
+        #self.mainwindow.close()
+        #self.mainwindow.show() 

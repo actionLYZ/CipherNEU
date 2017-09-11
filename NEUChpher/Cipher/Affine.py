@@ -19,9 +19,16 @@ import sys
 函数参数	：    plaintext(string)为明文,a,b取值范围[0,25],a与26互素
 函数返回值  ：    加密后结果(string)
 --------------------------------------------------------------------------------------'''
-def Encrypt(plainText,a,b):
+def Encrypt(plainText,key): #key = "a b"
     cipherText = ""
 
+    i = 0
+    for i in range(len(key)):
+        if(key[i]==' '):
+            break
+        i += 1
+    a = int(key[:i])
+    b = int(key[i+1:])
     #判断a与b是否符合输入规则
     if IfPass(a,b) == False:
         sys.exit()
@@ -40,9 +47,16 @@ def Encrypt(plainText,a,b):
 函数参数	：    ciphertext(string)为明文,a,b取值范围[0,25],a与26互素
 函数返回值  ：    解密后结果(string)
 --------------------------------------------------------------------------------------'''
-def Decrypt(cipherText,a,b):
+def Decrypt(cipherText,key):
     plainText = ""
 
+    i = 0
+    for i in range(len(key)):
+        if(key[i]==' '):
+            break
+        i += 1
+    a = int(key[:i])
+    b = int(key[i+1:])
     #判断a与b是否符合输入规则
     if IfPass(a,b) == False:
         sys.exit()
@@ -100,8 +114,8 @@ from Cipher.Affine import Encrypt
 from Cipher.Affine import Decrypt
 plaintext = "hello world!"
 a,b = 3,1
-ciphertext = Encrypt(plaintext,a,b)
+ciphertext = Encrypt(plaintext,"3 1")
 print(ciphertext)
-qwe = Decrypt(ciphertext,a,b)
+qwe = Decrypt(ciphertext,"3 1")
 print(qwe)
 -----------------------------------------------------------------------'''

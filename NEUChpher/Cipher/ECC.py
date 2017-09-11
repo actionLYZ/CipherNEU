@@ -26,8 +26,8 @@ import random
 r = random.randint(100,1000)
 k = random.randint(100,1000) # the k is private key
 
-message = "Hello World"
-result = ""
+#message = "Hello World"
+#result = ""
 
 def ECC_Decrypt(C1,C2,add):
     # print ("Finishing Encrypt")

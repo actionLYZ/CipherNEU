@@ -9,7 +9,9 @@ Encrypt(plaintext, key)
 Decrypt(ciphertext, key)  
 '''
 #加密函数
-def Encrypt(dimension, plaintext, key):
+def Encrypt(plaintext, key):
+    dimension = int(key[0])
+    key = int(key[2:])
     if(dimension==1):
         ciphertext = OneDEncrypt(plaintext, key)
     elif(dimension==2):
