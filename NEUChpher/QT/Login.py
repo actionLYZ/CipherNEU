@@ -2,7 +2,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from QT import Register,Setting, Chat, LoginedChat
 import Resource.LogResource
 
-
+import socket
+from Socket.Packet import *
+import NEUChpher
 class Ui_Login(object):
     def setupUi(self, Login,logWindow,logedWindow):
         Login.setObjectName("Login")
@@ -84,7 +86,6 @@ class Ui_Login(object):
 
     #判断用户是否允许登陆
     def IfLogin(self):
-
         if not self.line_nickname.text().isalnum() and self.line_password.text().isalnum():
             message = QtWidgets.QMessageBox()
             message.warning(self,"Error","用户名和密码必须由字母与数字组成！",QtWidgets.QMessageBox.Yes)
@@ -95,6 +96,43 @@ class Ui_Login(object):
 
     #输入的用户名密码是否正确
     def IfLoginRight(self):
+        #s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            NEUChpher.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            NEUChpher.s.connect((NEUChpher.host, NEUChpher.port))
+        except socket.error:
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","无法连接至服务器！",QtWidgets.QMessageBox.Ok)
+            return False
+        NEUChpher.s.sendall(PktToBytes(Packet(TYP_LOI, self.line_nickname.text(), b'server', self.line_password.text())))
+        recv_tmp = NEUChpher.s.recv(PKT_MAX_SIZE)
+        pkt = BytesToPkt(recv_tmp)
+        if pkt.typ == TYP_ERR:
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error",pkt.data.decode(),QtWidgets.QMessageBox.Ok)
+            NEUChpher.s.close()
+            return False
+        elif pkt.typ == TYP_ACK:
+            #print(recv_tmp)
+            message = QtWidgets.QMessageBox()
+            message.information(self,"Pass","登陆成功！")
+            message.setStandardButtons(QtWidgets.QMessageBox.Ok)
+            message.button(QtWidgets.QMessageBox.Ok).setText("确定")      #bug
+            NEUChpher.username = self.line_nickname.text().encode()
+            self.userName = self.line_nickname.text()
+            self.close()
+            self.logWindow.close()
+                    
+            _translate = QtCore.QCoreApplication.translate
+            self.logedWindow = LoginedChat.LoginedChatWindow()
+            self.logedWindow.label_4.setText("Welcome!\n\n" + self.line_nickname.text())
+            self.logedWindow.show()
+            return True
+        else:
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","登陆异常！请检查服务器设置。",QtWidgets.QMessageBox.Ok)
+            return False
+        '''
         document = open("User.txt","r")
         for context in document.readlines():
             if self.line_nickname.text() == context[:context.find(' ')]:
@@ -124,6 +162,7 @@ class Ui_Login(object):
         message.warning(self,"Error","用户名不存在！",QtWidgets.QMessageBox.Ok)
         document.close()
         return False
+        '''
 
     def OpenRegister(self):
         self.registerWindow = Register.RegisterWindow()

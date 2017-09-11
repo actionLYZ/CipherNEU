@@ -9,7 +9,9 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import Resource.LogResource
 
-
+import socket
+from Socket.Packet import *
+import NEUChpher
 
 class Ui_register(object):
 
@@ -94,7 +96,6 @@ class Ui_register(object):
         QtCore.QMetaObject.connectSlotsByName(register_2)
 
     def AddUser(self):
-
         if self.line_nickname.text() == "" or self.line_password.text() == "":
             message = QtWidgets.QMessageBox()
             message.warning(self,"Error","用户名或密码不能为空！",QtWidgets.QMessageBox.Yes)
@@ -102,11 +103,11 @@ class Ui_register(object):
         elif not self.line_nickname.text().isalnum() and self.line_password.text().isalnum():
             message = QtWidgets.QMessageBox()
             message.warning(self,"Error","用户名和密码必须由字母与数字组成！",QtWidgets.QMessageBox.Yes)
-
-        elif self.IfHasRegister():
-            message = QtWidgets.QMessageBox()
-            message.warning(self,"Error","该用户名已经被注册过了！",QtWidgets.QMessageBox.Yes)
-
+            '''
+            elif self.IfHasRegister():
+                message = QtWidgets.QMessageBox()
+                message.warning(self,"Error","该用户名已经被注册过了！",QtWidgets.QMessageBox.Yes)
+            '''
         elif self.line_password.text() != self.line_reenter.text():
             message = QtWidgets.QMessageBox()
             message.warning(self,"Error","两次输入的密码不一致！",QtWidgets.QMessageBox.Yes)
@@ -116,12 +117,23 @@ class Ui_register(object):
             message.warning(self,"Error","请勾选NEU协议！",QtWidgets.QMessageBox.Yes)
 
         else:
-            self.AddUser2dir()
-            message = QtWidgets.QMessageBox()
-            message.information(self,"Pass","注册成功！",QtWidgets.QMessageBox.Yes)
+            try:
+               
+                NEUChpher.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                NEUChpher.s.connect((NEUChpher.host, NEUChpher.port))
+            except socket.error:
+                message = QtWidgets.QMessageBox()
+                message.warning(self,"Error","无法连接至服务器！",QtWidgets.QMessageBox.Yes)
+                return
+            if self.AddUser2dir():
+                message = QtWidgets.QMessageBox()
+                message.information(self,"Pass","注册成功！",QtWidgets.QMessageBox.Yes)
+            NEUChpher.s.close()
             self.close()
+        
             
     #判断用户名是否已经被注册过
+    '''
     def IfHasRegister(self):
         document = open("User.txt","a")
         document.close()
@@ -131,15 +143,30 @@ class Ui_register(object):
                 document.close()
                 return True
         return False
-
+    '''
     #将注册成功的用户登记在User.txt中
     def AddUser2dir(self):
+        NEUChpher.s.sendall(PktToBytes(Packet(TYP_REG, self.line_nickname.text(), b'server', self.line_password.text())))
+        recv_tmp = NEUChpher.s.recv(PKT_MAX_SIZE)
+        pkt = BytesToPkt(recv_tmp)
+        if pkt.typ == TYP_ERR:
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","该用户名已经被注册过了！",QtWidgets.QMessageBox.Yes)
+            return False
+        elif pkt.typ == TYP_ACK:
+            return True
+        else:
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","注册异常！请检查服务器设置。",QtWidgets.QMessageBox.Yes)
+            return False
+        '''
         document = open("User.txt","a")
         document.write(self.line_nickname.text())
         document.write(" ")
         document.write(self.line_password.text())
         document.write("\n")
         document.close()
+        '''
 
     def retranslateUi(self, register_2):
         _translate = QtCore.QCoreApplication.translate
