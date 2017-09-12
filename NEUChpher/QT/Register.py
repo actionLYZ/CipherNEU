@@ -118,7 +118,7 @@ class Ui_register(object):
         else:
             self.AddUser2dir()
             message = QtWidgets.QMessageBox()
-            message.information(self,"Pass","注册成功！",QtWidgets.QMessageBox.Yes)
+            message.about(self,"Pass","注册成功！",QtWidgets.QMessageBox.Yes)
             self.close()
             
     #判断用户名是否已经被注册过

@@ -1,9 +1,8 @@
-
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-import QT.Register
-import QT.Setting
-import QT.LogResource
+from QT import Register,Setting, Chat, LoginedChat
+import Resource.LogResource
+import GlobalWindow
+
 
 class Ui_Login(object):
     def setupUi(self, Login):
@@ -100,10 +99,15 @@ class Ui_Login(object):
             if self.line_nickname.text() == context[:context.find(' ')]:
                 if self.line_password.text() == context[context.find(' ')+1:-1]:
                     message = QtWidgets.QMessageBox()
-                    message.information(self,"Pass","登陆成功！")
+                    message.about(self,"Pass","登陆成功！")
                     message.setStandardButtons(QtWidgets.QMessageBox.Ok)
                     message.button(QtWidgets.QMessageBox.Ok).setText("确定")      #bug
+                    self.userName = self.line_nickname.text()
                     document.close()
+                    
+                    GlobalWindow.globalWindow.logedwindow.label_4.setText("Welcome!\n\n" + self.line_nickname.text())
+                    GlobalWindow.globalWindow.logedwindow.show()
+                    GlobalWindow.globalWindow.chatwindow.close()
                     self.close()
                     return True
 
@@ -119,11 +123,11 @@ class Ui_Login(object):
         return False
 
     def OpenRegister(self):
-        self.registerWindow = QT.Register.RegisterWindow()
+        self.registerWindow = Register.RegisterWindow()
         self.registerWindow.show()
 
     def OpenSetting(self):
-        self.settingWindow = QT.Setting.SettingWindow()
+        self.settingWindow = Setting.SettingWindow()
         self.settingWindow.show()
 
     def retranslateUi(self, Login):
@@ -145,4 +149,5 @@ class LoginWindow(QtWidgets.QWidget,Ui_Login):
         self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint
                             |QtCore.Qt.WindowCloseButtonHint
                             |QtCore.Qt.MSWindowsFixedSizeDialogHint )        #只允许最小和关闭，不允许最大化,不允许调整大小
-        self.setupUi(self)  
+        self.setupUi(self)
+     

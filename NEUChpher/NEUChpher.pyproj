@@ -12,6 +12,7 @@
     <OutputPath>.</OutputPath>
     <Name>NEUChpher</Name>
     <RootNamespace>NEUChpher</RootNamespace>
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,6 +33,7 @@
     <Compile Include="Cipher\DES.py" />
     <Compile Include="Cipher\DH.py" />
     <Compile Include="Cipher\DoubleTransposition.py" />
+    <Compile Include="Cipher\ECC.py" />
     <Compile Include="Cipher\Keyword.py" />
     <Compile Include="Cipher\MD5.py" />
     <Compile Include="Cipher\Multiliteral.py" />
@@ -41,23 +43,29 @@
     <Compile Include="Cipher\RSA.py" />
     <Compile Include="Cipher\Vigenere.py" />
     <Compile Include="Cipher\__init__.py" />
+    <Compile Include="GlobalWindow.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="NEUChpher.py" />
     <Compile Include="QT\Chat.py" />
-    <Compile Include="QT\ChatResource.py" />
-    <Compile Include="QT\DecryptionSetting.py" />
-    <Compile Include="QT\EncryptionSetting.py" />
+    <Compile Include="QT\EnDecryptionSetting.py" />
     <Compile Include="QT\FilePath.py" />
     <Compile Include="QT\Login.py" />
-    <Compile Include="QT\LogResource.py" />
-    <Compile Include="QT\PyqtTest1.py" />
-    <Compile Include="QT\QTtest.py" />
+    <Compile Include="QT\LoginedChat.py" />
     <Compile Include="QT\Register.py" />
     <Compile Include="QT\Setting.py" />
     <Compile Include="QT\__init__.py" />
+    <Compile Include="Resource\ChatResource.py" />
+    <Compile Include="Resource\LogedResource.py" />
+    <Compile Include="Resource\LogResource.py" />
+    <Compile Include="Resource\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Cipher\" />
     <Folder Include="QT\" />
+    <Folder Include="Resource\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

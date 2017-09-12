@@ -5,27 +5,15 @@
 # Created by: PyQt5 UI code generator 5.9
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QCoreApplication
-from PyQt5.QtWidgets import QToolTip
-from PyQt5.QtGui import QFont, QKeyEvent
-import QT.ChatResource
-#import Cipher.RSA
-import Cipher.Caesar, Cipher.Affine, Cipher.Keyword, Cipher.CA, Cipher.ColumnPermutation, Cipher.DES
-import Cipher.DH, Cipher.DoubleTransposition, Cipher.AutokeyPlaintext, Cipher.AutokeyCiphertext, Cipher.MD5
-import Cipher.Multiliteral, Cipher.Permutation, Cipher.Playfair, Cipher.RC4, Cipher.Vigenere
+from QT import Login,Register,Setting,FilePath,LoginedChat,EnDecryptionSetting,LoginedChat
+import Resource.ChatResource
+from Cipher import RSA #ECC
+from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere#, AES
+import GlobalWindow
 
-
-def Global():
-    global cipherType, encryptKey, decryptKey, plaintext, ciphertext
-    cipherType = 'Caesar'
-    encryptKey = '12'
-    decryptKey = '12'
-    plaintext = ''
-    ciphertext = ''
-    return
 
 class Ui_Dialog(object):
-    def setupUi(self, Dialog):
+    def setupUi(self,Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(707, 493)
         self.layoutWidget = QtWidgets.QWidget(Dialog)
@@ -72,15 +60,21 @@ class Ui_Dialog(object):
 "border-image: url(:/images/user1.png);")
         self.graphicsView.setObjectName("graphicsView")
         self.verticalLayout.addWidget(self.graphicsView)
-        self.pushButton_2 = QtWidgets.QPushButton(self.layoutWidget)
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.verticalLayout.addWidget(self.pushButton_2)
-        self.pushButton_3 = QtWidgets.QPushButton(self.layoutWidget)
-        self.pushButton_3.setObjectName("pushButton_3")
-        self.verticalLayout.addWidget(self.pushButton_3)
+        self.label_4 = QtWidgets.QLabel(self.layoutWidget)
+        self.label_4.setMaximumSize(QtCore.QSize(200, 60))
+        self.label_4.setText("")
+        self.label_4.setStyleSheet("color: rgb(255, 255, 255);\n"
+"font: 87 12pt \"Lucida Handwriting\";")
+        self.label_4.setObjectName("label_4")
+        self.verticalLayout.addWidget(self.label_4)
         self.pushButton = QtWidgets.QPushButton(self.layoutWidget)
+        self.pushButton.setMaximumSize(QtCore.QSize(100, 16777215))
         self.pushButton.setObjectName("pushButton")
         self.verticalLayout.addWidget(self.pushButton)
+        self.pushButton_2 = QtWidgets.QPushButton(self.layoutWidget)
+        self.pushButton_2.setSizeIncrement(QtCore.QSize(100, 0))
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.verticalLayout.addWidget(self.pushButton_2)
         spacerItem = QtWidgets.QSpacerItem(20, 50, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout.addItem(spacerItem)
         self.gridLayout.addLayout(self.verticalLayout, 0, 0, 6, 1)
@@ -163,42 +157,92 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
+
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        #self.label_4.setText(_translate("Dialog", "Welcome!\n"))
         self.comboBox.setItemText(0, _translate("Dialog", "Encryption"))
         self.comboBox.setItemText(1, _translate("Dialog", "Decryption"))
         self.label_3.setText(_translate("Dialog", "Messages:"))
-        self.pushButton_2.setText(_translate("Dialog", "Login"))
-        self.pushButton_3.setText(_translate("Dialog", "Register"))
         self.pushButton.setText(_translate("Dialog", "Settings"))
+        self.pushButton_2.setText(_translate("Dialog", "Logout"))
         self.label.setText(_translate("Dialog", "To:"))
         self.label_2.setText(_translate("Dialog", "My messages:"))
-        self.toolButton_3.setText(_translate("Dialog", ""))
-        self.toolButton_2.setText(_translate("Dialog", ""))
-        self.toolButton_4.setText(_translate("Dialog", ""))
-        self.toolButton.setText(_translate("Dialog", ""))
+        self.toolButton_3.setText(_translate("Dialog", "..."))
+        self.toolButton_2.setText(_translate("Dialog", "..."))
+        self.toolButton_4.setText(_translate("Dialog", "..."))
+        self.toolButton.setText(_translate("Dialog", "..."))
         self.pushButton_4.setText(_translate("Dialog", "Show Ciphertext"))
         self.pushButton_8.setText(_translate("Dialog", "Send"))
 
-class mywindow(QtWidgets.QWidget,Ui_Dialog):    
+#登陆窗口对象
+class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):  
     def __init__(self):    
-        super(mywindow,self).__init__()    
-        self.setupUi(self) 
-        self.initUI()
+        super(LoginedChatWindow,self).__init__() 
+        self.chatwindow=None
+        self.loginwindow=None
+        self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint
+                            |QtCore.Qt.WindowCloseButtonHint
+                            |QtCore.Qt.MSWindowsFixedSizeDialogHint )        #只允许最小和关闭，不允许最大化,不允许调整大小
+        self.setupUi(self)  
+        self.DisplayTip()
+        
+
+        #控件映射
         self.pushButton_8.clicked.connect(self.EncryptPrint)
         self.pushButton_4.clicked.connect(self.ShowMessage)
-        self.toolButton_3.clicked.connect(self.ShowMessage)
-        #self.pushButton_2.clicked.connect(QCoreApplication.instance().quit)   
-        #self.pushButton.clicked.connect(self.EncryptPrint)
-        #self.pushButton_3.clicked.connect(self.DecryptPrint)
+        self.pushButton.clicked.connect(self.OpenSettingWindows)
+        self.toolButton_3.clicked.connect(self.OpenEncryptionSettingWindows)
+        self.toolButton_2.clicked.connect(self.OpenDecryptionSettingWindows)
+        self.toolButton_4.clicked.connect(self.ReadFile)
+        self.toolButton.clicked.connect(self.SaveFile) 
+        self.pushButton_2.clicked.connect(self.Logout)
+    
 
-    def initUI(self): 
-        QToolTip.setFont(QFont('SansSerif', 10)) 
+    #设置返回窗口
+    def setWindow(self,chatwindow,loginwindow):
+        self.chatwindow=chatwindow
+        self.loginwindow=loginwindow
+
+    #显示悬停提示
+    def DisplayTip(self): 
+        QtWidgets.QToolTip.setFont(QtGui.QFont('SansSerif', 10)) 
         self.toolButton_3.setToolTip('encryption setting')
         self.toolButton_2.setToolTip('decryption setting')
         self.toolButton_4.setToolTip('export file')
         self.toolButton.setToolTip('download file')
-        #self.pushButton_4.setToolTip(self.textEdit.toPlainText())
 
+
+    #读取文件
+    def ReadFile(self):
+        openFile = QtWidgets.QFileDialog()
+        self.path, filetype = openFile.getOpenFileName(self,  
+                                    "选取文件",  
+                                    "C:/",  
+                                    "Text Files (*.txt)")   
+        if self.path != '':
+            document = open(self.path,"r")
+            self.content = document.readlines()
+            self.content = ''.join(self.content)
+            self.textEdit.setText(self.content)
+            document.close()
+
+    #保存文件
+    def SaveFile(self):
+        savefile = QtWidgets.QFileDialog()
+        filepath,filetype= savefile.getSaveFileName(self,  
+                                    "文件保存",  
+                                    "C:/",
+                                    "Text Files (*.txt)")
+        if filepath != '':
+            document = open(filepath,"w+")
+            document.write(self.filetext)
+            document.close()
+
+    #发送对象
+    def GetToPersonName(self):
+        self.toPersonName = self.lineEdit.text()
+
+    #打印双机加密信息
     def ShowMessage(self):
         message = QtWidgets.QMessageBox()
         str = self.textEdit.toPlainText()
@@ -206,31 +250,130 @@ class mywindow(QtWidgets.QWidget,Ui_Dialog):
         for i in range(int(l/20)):
             str = str[:i*22+20]+'\n'+str[i*22+20:]
         message.information(self,"Ciphertext",str)
-
-    def keyPressEvent(self,QKeyEvent):
-        if QKeyEvent.key() == QtCore.Qt.Key_Space:
-            #self.textEdit.setToolTip('aaa')
-            print('aaa')
-        return super().keyPressEvent(QKeyEvent)
-
+    #打印单机加解密信息
     def EncryptPrint(self):
         if(self.comboBox.currentText()=='Encryption'):
             self.Encryption()
         elif(self.comboBox.currentText()=='Decryption'):
             self.Decryption()
+
+    #根据不同加解密类型加解密
+    def DefineCipherType(self,text,endeMode):      #endeMode = 0 -> encryption/ endeMode = 1 -> decryption
+        Text = ''
+        if(endeMode==0):
+            if(EnDecryptionSetting.enCipherType=='Caesar'):
+                Text = Caesar.Encrypt(text,int(EnDecryptionSetting.encryptKey))
+            elif(EnDecryptionSetting.enCipherType=='Affine'):
+                Text = Affine.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Keyword'):
+                Text = Keyword.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Multiliteral'):
+                Text = Multiliteral.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Vigenere'):
+                Text = Vigenere.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Autokey Ciphertext'):
+                Text = AutokeyCiphertext.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Autokey Plaintext'):
+                Text = AutokeyPlaintext.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Playfair'):
+                Text = Playfair.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Permutation'):
+                Text = Permutation.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Column Permutation'):
+                Text = ColumnPermutation.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Double Transposition'):
+                Text = DoubleTransposition.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='RC4'):
+                Text = RC4.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='CA'):
+                Text = CA.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='DES'):
+                Text = DES.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='AES-128'|EnDecryptionSetting.enCipherType=='AES-192'|EnDecryptionSetting.enCipherType=='AES-256'):
+                Text = AES.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='RSA'):
+                Text = RSA.Encrypt(text,EnDecryptionSetting.encryptKey)
+            #elif(EnDecryptionSetting.enCipherType=='ECC'):
+                #Text = ECC.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='MD5'):
+                Text = MD5.Encrypt(text,EnDecryptionSetting.encryptKey)
+            #elif(EnDecryptionSetting.enCipherType=='DSA'):
+                #Text = DSA.Encrypt(text,EnDecryptionSetting.encryptKey)
+            #elif(EnDecryptionSetting.enCipherType=='DH'):
+                #Text = DH.Encrypt(text,EnDecryptionSetting.encryptKey)
+        elif(endeMode==1):
+            if(EnDecryptionSetting.deCipherType=='Caesar'):
+                Text = Caesar.Decrypt(text,int(EnDecryptionSetting.decryptKey))
+            elif(EnDecryptionSetting.deCipherType=='Affine'):
+                Text = Affine.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Keyword'):
+                Text = Keyword.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Multiliteral'):
+                Text = Multiliteral.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Vigenere'):
+                Text = Vigenere.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Autokey Ciphertext'):
+                Text = AutokeyCiphertext.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Autokey Plaintext'):
+                Text = AutokeyPlaintext.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Playfair'):
+                Text = Playfair.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Permutation'):
+                Text = Permutation.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Column Permutation'):
+                Text = ColumnPermutation.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Double Transposition'):
+                Text = DoubleTransposition.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='RC4'):
+                Text = RC4.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='CA'):
+                Text = CA.Encrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='DES'):
+                DES.DESDecryption(text,EnDecryptionSetting.decryptKey)
+            #elif(EnDecryptionSetting.deCipherType=='AES'):
+                #Text = AES.Ddecrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='RSA'):
+                Text = RSA.Decrypt(text,EnDecryptionSetting.decryptKey)
+            #elif(EnDecryptionSetting.deCipherType=='ECC'):
+                #Text = ECC.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='MD5'):
+                Text = MD5.Decrypt(text,EnDecryptionSetting.decryptKey)
+            #elif(EnDecryptionSetting.deCipherType=='DSA'):
+                #Text = DSA.Decrypt(text,EnDecryptionSetting.decryptKey)
+            #elif(EnDecryptionSetting.deCipherType=='DH'):
+                #Text = DH.Decrypt(text,EnDecryptionSetting.decryptKey)
+        return Text 
+
+    #加密
     def Encryption(self):
-        Global()
         plaintext = self.textEdit.toPlainText()
-        self.textBrowser.setText(self.textBrowser.toPlainText()+'Plaintext: '+plaintext+'\n'+'Ciphertext: '+Caesar.Encrypt(plaintext,int(encryptKey))+'\n\n')
-
+        ciphertext = self.DefineCipherType(plaintext,0)
+        self.filetext = 'Plaintext: '+plaintext+'\n'+'Ciphertext: '+ciphertext
+        self.textBrowser.setText(self.textBrowser.toPlainText()+'Plaintext: '+plaintext+'\n'+'Ciphertext: '+ciphertext+'\n\n')
+    
+    #解密
     def Decryption(self):
-        Global()
         ciphertext = self.textEdit.toPlainText()
-        self.textBrowser.setText(self.textBrowser.toPlainText()+'Ciphertext: '+ciphertext+'\n'+'Plaintext: '+Caesar.Decrypt(ciphertext,int(decryptKey))+'\n\n')
+        plaintext = self.DefineCipherType(ciphertext,1)
+        filetext = plaintext
+        self.textBrowser.setText(self.textBrowser.toPlainText()+'Ciphertext: '+ciphertext+'\n'+'Plaintext: '+plaintext+'\n\n')  
 
-if __name__=="__main__":  
-    import sys  
-    app=QtWidgets.QApplication(sys.argv)
-    myshow=mywindow()  
-    myshow.show()
-    sys.exit(app.exec_())
+    #打开设置窗口
+    def OpenSettingWindows(self):
+        self.settingWindows = Setting.SettingWindow()
+        self.settingWindows.show()
+
+    #打开加密设置窗口
+    def OpenEncryptionSettingWindows(self):
+        self.EnSettingWindows = EnDecryptionSetting.EncryptionSettingWindow()
+        self.EnSettingWindows.show()
+
+    #打开解密设置窗口
+    def OpenDecryptionSettingWindows(self):
+        self.DeSettingWindows = EnDecryptionSetting.DecryptionSettingWindow()
+        self.DeSettingWindows.show()
+
+    #退出已登录窗口
+    def Logout(self):
+        GlobalWindow.globalWindow.chatwindow.show()
+        self.close()
