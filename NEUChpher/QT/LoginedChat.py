@@ -403,6 +403,8 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
 
     def writeToTextBrowser(self, str):
         self.textBrowser.insertPlainText("[" + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "]" + str + "\n")
+        vb = self.textBrowser.verticalScrollBar() 
+        vb.setValue(vb.maximum()) 
         return
 
     def showEvent(self, QShowEvent):
