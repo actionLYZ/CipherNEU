@@ -83,8 +83,11 @@ class Ui_Login(object):
 
     #判断用户是否允许登陆
     def IfLogin(self):
+        if self.line_nickname.text() == "" or self.line_password.text() == "":
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","用户名或密码不能为空！",QtWidgets.QMessageBox.Yes)
 
-        if not self.line_nickname.text().isalnum() and self.line_password.text().isalnum():
+        elif not self.line_nickname.text().isalnum() and self.line_password.text().isalnum():
             message = QtWidgets.QMessageBox()
             message.warning(self,"Error","用户名和密码必须由字母与数字组成！",QtWidgets.QMessageBox.Yes)
             ifpass = False
