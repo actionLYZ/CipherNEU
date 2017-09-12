@@ -5,8 +5,10 @@
 # Created by: PyQt5 UI code generator 5.9
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import Resource.LogedResource
-from QT import Login
+from QT import Login,Register,Setting,FilePath,LoginedChat,EnDecryptionSetting,LoginedChat
+import Resource.ChatResource
+from Cipher import RSA #ECC
+from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere#, AES
 
 class Ui_Dialog(object):
     def setupUi(self,Dialog):
@@ -178,3 +180,195 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
                             |QtCore.Qt.WindowCloseButtonHint
                             |QtCore.Qt.MSWindowsFixedSizeDialogHint )        #只允许最小和关闭，不允许最大化,不允许调整大小
         self.setupUi(self)  
+        #self.DisplayTip()
+
+        ''' #控件映射
+        self.pushButton_8.clicked.connect(self.EncryptPrint)
+        self.pushButton_4.clicked.connect(self.ShowMessage)
+        self.pushButton_2.clicked.connect(self.OpenLoginWindows)
+        self.pushButton_3.clicked.connect(self.OpenRegisterWindows)
+        self.pushButton.clicked.connect(self.OpenSettingWindows)
+        self.toolButton_3.clicked.connect(self.OpenEncryptionSettingWindows)
+        self.toolButton_2.clicked.connect(self.OpenDecryptionSettingWindows)
+        self.toolButton_4.clicked.connect(self.ReadFile)
+        self.toolButton.clicked.connect(self.SaveFile) 
+           
+    #显示悬停提示
+    def DisplayTip(self): 
+        QtWidgets.QToolTip.setFont(QtGui.QFont('SansSerif', 10)) 
+        self.toolButton_3.setToolTip('encryption setting')
+        self.toolButton_2.setToolTip('decryption setting')
+        self.toolButton_4.setToolTip('export file')
+        self.toolButton.setToolTip('download file')
+
+
+    #读取文件
+    def ReadFile(self):
+        openFile = QtWidgets.QFileDialog()
+        self.path, filetype = openFile.getOpenFileName(self,  
+                                    "选取文件",  
+                                    "C:/",  
+                                    "Text Files (*.txt)")   
+        if self.path != '':
+            document = open(self.path,"r")
+            self.content = document.readlines()
+            self.content = ''.join(self.content)
+            self.textEdit.setText(self.content)
+            document.close()
+
+    #保存文件
+    def SaveFile(self):
+        savefile = QtWidgets.QFileDialog()
+        filepath,filetype= savefile.getSaveFileName(self,  
+                                    "文件保存",  
+                                    "C:/",
+                                    "Text Files (*.txt)")
+        if filepath != '':
+            document = open(filepath,"w+")
+            document.write(self.filetext)
+            document.close()
+
+    #发送对象
+    def GetToPersonName(self):
+        self.toPersonName = self.lineEdit.text()
+
+    #打印双机加密信息
+    def ShowMessage(self):
+        message = QtWidgets.QMessageBox()
+        str = self.textEdit.toPlainText()
+        l = len(self.textEdit.toPlainText())
+        for i in range(int(l/20)):
+            str = str[:i*22+20]+'\n'+str[i*22+20:]
+        message.information(self,"Ciphertext",str)
+    #打印单机加解密信息
+    def EncryptPrint(self):
+        if(self.comboBox.currentText()=='Encryption'):
+            self.Encryption()
+        elif(self.comboBox.currentText()=='Decryption'):
+            self.Decryption()
+
+    #根据不同加解密类型加解密
+    def DefineCipherType(self,text,endeMode):      #endeMode = 0 -> encryption/ endeMode = 1 -> decryption
+        Text = ''
+        if(endeMode==0):
+            if(EnDecryptionSetting.enCipherType=='Caesar'):
+                Text = Caesar.Encrypt(text,int(EnDecryptionSetting.encryptKey))
+            elif(EnDecryptionSetting.enCipherType=='Affine'):
+                Text = Affine.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Keyword'):
+                Text = Keyword.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Multiliteral'):
+                Text = Multiliteral.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Vigenere'):
+                Text = Vigenere.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Autokey Ciphertext'):
+                Text = AutokeyCiphertext.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Autokey Plaintext'):
+                Text = AutokeyPlaintext.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Playfair'):
+                Text = Playfair.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Permutation'):
+                Text = Permutation.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Column Permutation'):
+                Text = ColumnPermutation.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='Double Transposition'):
+                Text = DoubleTransposition.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='RC4'):
+                Text = RC4.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='CA'):
+                Text = CA.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='DES'):
+                Text = DES.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='AES-128'|EnDecryptionSetting.enCipherType=='AES-192'|EnDecryptionSetting.enCipherType=='AES-256'):
+                Text = AES.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='RSA'):
+                Text = RSA.Encrypt(text,EnDecryptionSetting.encryptKey)
+            #elif(EnDecryptionSetting.enCipherType=='ECC'):
+                #Text = ECC.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='MD5'):
+                Text = MD5.Encrypt(text,EnDecryptionSetting.encryptKey)
+            #elif(EnDecryptionSetting.enCipherType=='DSA'):
+                #Text = DSA.Encrypt(text,EnDecryptionSetting.encryptKey)
+            #elif(EnDecryptionSetting.enCipherType=='DH'):
+                #Text = DH.Encrypt(text,EnDecryptionSetting.encryptKey)
+        elif(endeMode==1):
+            if(EnDecryptionSetting.deCipherType=='Caesar'):
+                Text = Caesar.Decrypt(text,int(EnDecryptionSetting.decryptKey))
+            elif(EnDecryptionSetting.deCipherType=='Affine'):
+                Text = Affine.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Keyword'):
+                Text = Keyword.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Multiliteral'):
+                Text = Multiliteral.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Vigenere'):
+                Text = Vigenere.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Autokey Ciphertext'):
+                Text = AutokeyCiphertext.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Autokey Plaintext'):
+                Text = AutokeyPlaintext.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Playfair'):
+                Text = Playfair.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Permutation'):
+                Text = Permutation.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Column Permutation'):
+                Text = ColumnPermutation.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='Double Transposition'):
+                Text = DoubleTransposition.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='RC4'):
+                Text = RC4.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='CA'):
+                Text = CA.Encrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='DES'):
+                DES.DESDecryption(text,EnDecryptionSetting.decryptKey)
+            #elif(EnDecryptionSetting.deCipherType=='AES'):
+                #Text = AES.Ddecrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='RSA'):
+                Text = RSA.Decrypt(text,EnDecryptionSetting.decryptKey)
+            #elif(EnDecryptionSetting.deCipherType=='ECC'):
+                #Text = ECC.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='MD5'):
+                Text = MD5.Decrypt(text,EnDecryptionSetting.decryptKey)
+            #elif(EnDecryptionSetting.deCipherType=='DSA'):
+                #Text = DSA.Decrypt(text,EnDecryptionSetting.decryptKey)
+            #elif(EnDecryptionSetting.deCipherType=='DH'):
+                #Text = DH.Decrypt(text,EnDecryptionSetting.decryptKey)
+        return Text 
+
+    #加密
+    def Encryption(self):
+        plaintext = self.textEdit.toPlainText()
+        ciphertext = self.DefineCipherType(plaintext,0)
+        self.filetext = 'Plaintext: '+plaintext+'\n'+'Ciphertext: '+ciphertext
+        self.textBrowser.setText(self.textBrowser.toPlainText()+'Plaintext: '+plaintext+'\n'+'Ciphertext: '+ciphertext+'\n\n')
+    
+    #解密
+    def Decryption(self):
+        ciphertext = self.textEdit.toPlainText()
+        plaintext = self.DefineCipherType(ciphertext,1)
+        filetext = plaintext
+        self.textBrowser.setText(self.textBrowser.toPlainText()+'Ciphertext: '+ciphertext+'\n'+'Plaintext: '+plaintext+'\n\n')  
+    #打开注册窗口
+    def OpenRegisterWindows(self):
+        self.registerWindows = Register.RegisterWindow()
+        self.registerWindows.show()
+
+    #打开登陆窗口
+    def OpenLoginWindows(self):
+        self.loginWindows = Login.LoginWindow(self,self.logedWindow)
+        self.loginWindows.show()
+
+    #打开设置窗口
+    def OpenSettingWindows(self):
+        self.settingWindows = Setting.SettingWindow()
+        self.settingWindows.show()
+
+    #打开加密设置窗口
+    def OpenEncryptionSettingWindows(self):
+        self.EnSettingWindows = EnDecryptionSetting.EncryptionSettingWindow()
+        self.EnSettingWindows.show()
+
+    #打开解密设置窗口
+    def OpenDecryptionSettingWindows(self):
+        self.DeSettingWindows = EnDecryptionSetting.DecryptionSettingWindow()
+        self.DeSettingWindows.show()
+        '''

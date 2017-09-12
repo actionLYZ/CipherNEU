@@ -152,7 +152,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "NEUCryptolalia"))
         self.comboBox.setItemText(0, _translate("Dialog", "Encryption"))
         self.comboBox.setItemText(1, _translate("Dialog", "Decryption"))
         self.label_3.setText(_translate("Dialog", "Messages:"))
@@ -172,11 +172,12 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
     filetext = ''
     content = ''
     toPersonName = ''
+
     def __init__(self,logedWindow):    
         super(ChatWindows,self).__init__()    
         self.logedWindow = logedWindow
         self.setupUi(self) 
-        self.initUI()
+        self.DisplayTip()
         self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint
                     |QtCore.Qt.WindowCloseButtonHint
                     |QtCore.Qt.MSWindowsFixedSizeDialogHint )        #只允许最小和关闭，不允许最大化,不允许调整大小
@@ -191,8 +192,8 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
         self.toolButton_4.clicked.connect(self.ReadFile)
         self.toolButton.clicked.connect(self.SaveFile) 
 
-
-    def initUI(self): 
+    #显示悬停提示
+    def DisplayTip(self): 
         QtWidgets.QToolTip.setFont(QtGui.QFont('SansSerif', 10)) 
         self.toolButton_3.setToolTip('encryption setting')
         self.toolButton_2.setToolTip('decryption setting')
@@ -207,16 +208,10 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                                     "C:/",  
                                     "Text Files (*.txt)")   
         if self.path != '':
-            #print(self.path)
             document = open(self.path,"r")
             self.content = document.readlines()
-            #print('文件内容如下：')
-            #print(self.content)
-            #for context in document.readlines():
-            #   print(context)
             self.content = ''.join(self.content)
             self.textEdit.setText(self.content)
-            #print(self.textEdit.toPlainText())
             document.close()
 
     #保存文件
@@ -282,8 +277,8 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                 Text = CA.Encrypt(text,EnDecryptionSetting.encryptKey)
             elif(EnDecryptionSetting.enCipherType=='DES'):
                 Text = DES.Encrypt(text,EnDecryptionSetting.encryptKey)
-            #elif(EnDecryptionSetting.enCipherType=='AES'):
-                #Text = AES.Encrypt(text,EnDecryptionSetting.encryptKey)
+            elif(EnDecryptionSetting.enCipherType=='AES-128'|EnDecryptionSetting.enCipherType=='AES-192'|EnDecryptionSetting.enCipherType=='AES-256'):
+                Text = AES.Encrypt(text,EnDecryptionSetting.encryptKey)
             elif(EnDecryptionSetting.enCipherType=='RSA'):
                 Text = RSA.Encrypt(text,EnDecryptionSetting.encryptKey)
             #elif(EnDecryptionSetting.enCipherType=='ECC'):
@@ -322,13 +317,13 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
             elif(EnDecryptionSetting.deCipherType=='CA'):
                 Text = CA.Encrypt(text,EnDecryptionSetting.decryptKey)
             elif(EnDecryptionSetting.deCipherType=='DES'):
-                DES.DESDecryption(text,EnDecryptionSetting.decryptKey)
+                Text = DES.Decrypt(text,EnDecryptionSetting.decryptKey)
             #elif(EnDecryptionSetting.deCipherType=='AES'):
                 #Text = AES.Ddecrypt(text,EnDecryptionSetting.decryptKey)
             elif(EnDecryptionSetting.deCipherType=='RSA'):
                 Text = RSA.Decrypt(text,EnDecryptionSetting.decryptKey)
-            #elif(EnDecryptionSetting.deCipherType=='ECC'):
-                #Text = ECC.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='ECC'):
+                Text = ECC.Decrypt(text,EnDecryptionSetting.decryptKey)
             elif(EnDecryptionSetting.deCipherType=='MD5'):
                 Text = MD5.Decrypt(text,EnDecryptionSetting.decryptKey)
             #elif(EnDecryptionSetting.deCipherType=='DSA'):

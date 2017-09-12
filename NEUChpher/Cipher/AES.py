@@ -33,3 +33,9 @@ def Decrypt(ciphertext, key):
     iv = ciphertext[:16]
     cipher = AES.new(key, AES.MODE_CBC, iv)
     return bytes.decode(unpad(cipher.decrypt(ciphertext[16:])))
+
+key = "Sixteen byte key"
+plaintext = "Attack at dawn"
+ciphertext = Cipher.AES.Encrypt(plaintext, key)
+print(ciphertext)
+print(Decrypt(ciphertext, key))

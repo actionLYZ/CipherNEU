@@ -381,7 +381,35 @@ def DESDecryption(text,key):
     finalTextOfChar=unicode2char(finalTextOfUnicode,len(finalTextOfUnicode))
 #    print(finalTextOfChar)
     return finalTextOfChar     
-'''    
+
+def Encrypt(text,key):
+    length = len(text)
+    Result=""
+     #----------若输入文本的长度不是4的整数倍，即不是64字节的整数倍，用空格补全（此处为了加密中文，用的是unicode编码，即用16字节表示一个字符）-------
+    text=text+(4-(length%4))*" "
+    length=len(text)
+    for i in range(int(length/4)):
+        tempText=[text[j] for j in range(i*4,i*4+4)]
+        Result="".join([Result,DESEncryption(tempText,key)])  
+    # base64_text = base64.encodestring(Result)  
+    #        f.write(Result)
+    base64_text = (base64.b64encode(Result.encode())).decode()
+    return base64_text
+
+def Decrypt(text,key):
+    Result1 = ""
+    Result = base64.b64decode(text.encode())
+    Result = Result.decode()
+    #----------若输入文本的长度不是8的整数倍，即不是64字节的整数倍，用空格补全（此处解密出来的密文用的是每8bit转换为一个ascii码，所以生成的八位表示的字符）-------
+    length = len(Result)
+    if length % 8 != 0 :  
+        Result = Result +  (8-(length%8))*" "
+    length = len(Result)
+    for i in range(int(length/8)):
+        tempText=[Result[j] for j in range(i*8,i*8+8)]
+        Result1="".join([Result1,DESDecryption(tempText,key)])
+    return Result1
+'''   
 def main():
     
     text='helloeveryone'
@@ -408,6 +436,13 @@ def main():
         tempText=[Result[j] for j in range(i*8,i*8+8)]
         Result1="".join([Result1,DESDecryption(tempText,key)])
     print(Result1)
+'''
 
-main()
-'''  
+'''
+text='hello everyone'
+key='aaaaaaaa'
+a= Encrypt(text,key)
+print(a)
+b= Decrypt(a,key)
+print(b)
+'''
