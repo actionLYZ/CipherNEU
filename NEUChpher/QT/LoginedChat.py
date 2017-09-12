@@ -5,7 +5,7 @@
 # Created by: PyQt5 UI code generator 5.9
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import Resource.LogedResource
+import Resource.LogedResource,Resource.TitleResource
 import GlobalWindow
 from QT import Login,Register,Setting,FilePath,LoginedChat,EnDecryptionSetting,LoginedChat
 from Cipher import RSA #ECC
@@ -16,6 +16,9 @@ class Ui_Dialog(object):
     def setupUi(self,Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(707, 493)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/images/icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Dialog.setWindowIcon(icon)
         self.layoutWidget = QtWidgets.QWidget(Dialog)
         self.layoutWidget.setGeometry(QtCore.QRect(20, 20, 671, 453))
         self.layoutWidget.setObjectName("layoutWidget")
@@ -241,11 +244,19 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
     #打印双机加密信息
     def ShowMessage(self):
         message = QtWidgets.QMessageBox()
+        beforeStr = '----------- CipherText -----------\n'
         str = self.textEdit.toPlainText()
         length = len(self.textEdit.toPlainText())
         wideth = int(length * (3/5))
+        if wideth < 15:
+            wideth = 15
+        spacenum = (34 - wideth) // 2
+        spacestr = ' ' * spacenum
         for i in range(int(length/wideth)):
-            str = str[:i*22+wideth]+'\n'+str[i*22+wideth:]
+            str = spacestr + str[:i*22+wideth]+'\n'+spacestr + str[i*22+wideth:]
+        if length/wideth < 1:
+            str = spacestr +str[:]
+        str = beforeStr + str[:]
         message.about(self,"Ciphertext",str)
     #打印单机加解密信息
     def EncryptPrint(self):

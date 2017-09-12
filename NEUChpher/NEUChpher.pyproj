@@ -12,7 +12,7 @@
     <OutputPath>.</OutputPath>
     <Name>NEUChpher</Name>
     <RootNamespace>NEUChpher</RootNamespace>
-    <IsWindowsApplication>True</IsWindowsApplication>
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,6 +56,7 @@
     <Compile Include="Resource\ChatResource.py" />
     <Compile Include="Resource\LogedResource.py" />
     <Compile Include="Resource\LogResource.py" />
+    <Compile Include="Resource\TitleResource.py" />
     <Compile Include="Resource\__init__.py">
       <SubType>Code</SubType>
     </Compile>
