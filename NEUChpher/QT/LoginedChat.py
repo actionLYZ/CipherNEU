@@ -160,18 +160,18 @@ class Ui_Dialog(object):
 
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         #self.label_4.setText(_translate("Dialog", "Welcome!\n"))
-        self.comboBox.setItemText(0, _translate("Dialog", "Encryption"))
-        self.comboBox.setItemText(1, _translate("Dialog", "Decryption"))
+        self.comboBox.setItemText(0, _translate("Dialog", "Plaintext"))
+        self.comboBox.setItemText(1, _translate("Dialog", "Ciphertext"))
         self.label_3.setText(_translate("Dialog", "Messages:"))
         #self.pushButton.setText(_translate("Dialog", "Settings"))
         self.pushButton_2.setText(_translate("Dialog", "Logout"))
         self.label.setText(_translate("Dialog", "To:"))
         self.label_2.setText(_translate("Dialog", "My messages:"))
-        self.toolButton_3.setText(_translate("Dialog", "..."))
-        self.toolButton_2.setText(_translate("Dialog", "..."))
-        self.toolButton_4.setText(_translate("Dialog", "..."))
-        self.toolButton.setText(_translate("Dialog", "..."))
-        self.pushButton_4.setText(_translate("Dialog", "Show Ciphertext"))
+        self.toolButton_3.setText(_translate("Dialog", "   "))
+        self.toolButton_2.setText(_translate("Dialog", "   "))
+        self.toolButton_4.setText(_translate("Dialog", "   "))
+        self.toolButton.setText(_translate("Dialog", "   "))
+        self.pushButton_4.setText(_translate("Dialog", "Preview"))
         self.pushButton_8.setText(_translate("Dialog", "Send"))
 
 #登陆窗口对象
@@ -215,6 +215,7 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
             self.content = document.readlines()
             self.content = ''.join(self.content)
             self.textEdit.setText(self.content)
+            NEUChpher.isFile = True
             document.close()
 
     #保存文件
@@ -225,7 +226,7 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
                                     "C:/",
                                     "Text Files (*.txt)")
         if filepath != '':
-            document = open(filepath,"w+")
+            document = open(filepath,"wb")
             document.write(self.filetext)
             document.close()
 

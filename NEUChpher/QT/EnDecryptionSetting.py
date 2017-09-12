@@ -7,11 +7,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QCoreApplication
 import Resource.LogResource
-
-enCipherType = ''
-deCipherType = ''
-encryptKey = ''
-decryptKey = ''
+import NEUChpher
 
 class En_Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -28,6 +24,7 @@ class En_Ui_Dialog(object):
         self.gridLayout.addWidget(self.label_2, 0, 0, 1, 1)
         self.comboBox = QtWidgets.QComboBox(self.gridLayoutWidget)
         self.comboBox.setObjectName("comboBox")
+        self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
@@ -74,27 +71,30 @@ class En_Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.label_2.setText(_translate("Dialog", "Encryption Algorithm:"))
-        self.comboBox.setItemText(0, _translate("Dialog", "Caesar"))
-        self.comboBox.setItemText(1, _translate("Dialog", "Affine"))
-        self.comboBox.setItemText(2, _translate("Dialog", "Keyword"))
-        self.comboBox.setItemText(3, _translate("Dialog", "Multiliteral"))
-        self.comboBox.setItemText(4, _translate("Dialog", "Vigenere"))
-        self.comboBox.setItemText(5, _translate("Dialog", "Autokey Ciphertext"))
-        self.comboBox.setItemText(6, _translate("Dialog", "Autokey Plaintext"))
-        self.comboBox.setItemText(7, _translate("Dialog", "Playfair"))
-        self.comboBox.setItemText(8, _translate("Dialog", "Permutation"))
-        self.comboBox.setItemText(9, _translate("Dialog", "Column Permutation"))
-        self.comboBox.setItemText(10, _translate("Dialog", "Double Transposition"))
-        self.comboBox.setItemText(11, _translate("Dialog", "RC4"))
-        self.comboBox.setItemText(12, _translate("Dialog", "CA"))
-        self.comboBox.setItemText(13, _translate("Dialog", "DES"))
-        self.comboBox.setItemText(14, _translate("Dialog", "AES"))
-        self.comboBox.setItemText(15, _translate("Dialog", "RSA"))
-        self.comboBox.setItemText(16, _translate("Dialog", "ECC"))
-        self.comboBox.setItemText(17, _translate("Dialog", "MD5"))
-        self.comboBox.setItemText(18, _translate("Dialog", "DSA"))
-        self.comboBox.setItemText(19, _translate("Dialog", "DH"))
+        self.comboBox.setItemText(0, _translate("Dialog", "None"))
+        self.comboBox.setItemText(1, _translate("Dialog", "Caesar"))
+        self.comboBox.setItemText(2, _translate("Dialog", "Affine"))
+        self.comboBox.setItemText(3, _translate("Dialog", "Keyword"))
+        self.comboBox.setItemText(4, _translate("Dialog", "Multiliteral"))
+        self.comboBox.setItemText(5, _translate("Dialog", "Vigenere"))
+        self.comboBox.setItemText(6, _translate("Dialog", "Autokey Ciphertext"))
+        self.comboBox.setItemText(7, _translate("Dialog", "Autokey Plaintext"))
+        self.comboBox.setItemText(8, _translate("Dialog", "Playfair"))
+        self.comboBox.setItemText(9, _translate("Dialog", "Permutation"))
+        self.comboBox.setItemText(10, _translate("Dialog", "Column Permutation"))
+        self.comboBox.setItemText(11, _translate("Dialog", "Double Transposition"))
+        self.comboBox.setItemText(12, _translate("Dialog", "RC4"))
+        self.comboBox.setItemText(13, _translate("Dialog", "CA"))
+        self.comboBox.setItemText(14, _translate("Dialog", "DES"))
+        self.comboBox.setItemText(15, _translate("Dialog", "AES"))
+        self.comboBox.setItemText(16, _translate("Dialog", "RSA"))
+        self.comboBox.setItemText(17, _translate("Dialog", "ECC"))
+        self.comboBox.setItemText(18, _translate("Dialog", "MD5"))
+        self.comboBox.setItemText(19, _translate("Dialog", "DSA"))
+        self.comboBox.setItemText(20, _translate("Dialog", "DH"))
         self.label.setText(_translate("Dialog", "Secret Key:"))
+        self.comboBox.setCurrentText(_translate("Dialog", NEUChpher.enCipherType))
+        self.lineEdit.setText(_translate("Dialog", NEUChpher.encryptKey))
 
 
 class De_Ui_Dialog(object):
@@ -109,6 +109,8 @@ class De_Ui_Dialog(object):
         self.gridLayout.setObjectName("gridLayout")
         self.comboBox = QtWidgets.QComboBox(self.gridLayoutWidget)
         self.comboBox.setObjectName("comboBox")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
@@ -157,28 +159,31 @@ class De_Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.comboBox.setItemText(0, _translate("Dialog", "Caesar"))
-        self.comboBox.setItemText(1, _translate("Dialog", "Affine"))
-        self.comboBox.setItemText(2, _translate("Dialog", "Keyword"))
-        self.comboBox.setItemText(3, _translate("Dialog", "Multiliteral"))
-        self.comboBox.setItemText(4, _translate("Dialog", "Vigenere"))
-        self.comboBox.setItemText(5, _translate("Dialog", "Autokey Ciphertext"))
-        self.comboBox.setItemText(6, _translate("Dialog", "Autokey Plaintext"))
-        self.comboBox.setItemText(7, _translate("Dialog", "Playfair"))
-        self.comboBox.setItemText(8, _translate("Dialog", "Permutation"))
-        self.comboBox.setItemText(9, _translate("Dialog", "Column Permutation"))
-        self.comboBox.setItemText(10, _translate("Dialog", "Double Transposition"))
-        self.comboBox.setItemText(11, _translate("Dialog", "RC4"))
-        self.comboBox.setItemText(12, _translate("Dialog", "CA"))
-        self.comboBox.setItemText(13, _translate("Dialog", "DES"))
-        self.comboBox.setItemText(14, _translate("Dialog", "AES"))
-        self.comboBox.setItemText(15, _translate("Dialog", "RSA"))
-        self.comboBox.setItemText(16, _translate("Dialog", "ECC"))
-        self.comboBox.setItemText(17, _translate("Dialog", "MD5"))
-        self.comboBox.setItemText(18, _translate("Dialog", "DSA"))
-        self.comboBox.setItemText(19, _translate("Dialog", "DH"))
+        self.comboBox.setItemText(0, _translate("Dialog", "None"))
+        self.comboBox.setItemText(1, _translate("Dialog", "Caesar"))
+        self.comboBox.setItemText(2, _translate("Dialog", "Affine"))
+        self.comboBox.setItemText(3, _translate("Dialog", "Keyword"))
+        self.comboBox.setItemText(4, _translate("Dialog", "Multiliteral"))
+        self.comboBox.setItemText(5, _translate("Dialog", "Vigenere"))
+        self.comboBox.setItemText(6, _translate("Dialog", "Autokey Ciphertext"))
+        self.comboBox.setItemText(7, _translate("Dialog", "Autokey Plaintext"))
+        self.comboBox.setItemText(8, _translate("Dialog", "Playfair"))
+        self.comboBox.setItemText(9, _translate("Dialog", "Permutation"))
+        self.comboBox.setItemText(10, _translate("Dialog", "Column Permutation"))
+        self.comboBox.setItemText(11, _translate("Dialog", "Double Transposition"))
+        self.comboBox.setItemText(12, _translate("Dialog", "RC4"))
+        self.comboBox.setItemText(13, _translate("Dialog", "CA"))
+        self.comboBox.setItemText(14, _translate("Dialog", "DES"))
+        self.comboBox.setItemText(15, _translate("Dialog", "AES"))
+        self.comboBox.setItemText(16, _translate("Dialog", "RSA"))
+        self.comboBox.setItemText(17, _translate("Dialog", "ECC"))
+        self.comboBox.setItemText(18, _translate("Dialog", "MD5"))
+        self.comboBox.setItemText(19, _translate("Dialog", "DSA"))
+        self.comboBox.setItemText(20, _translate("Dialog", "DH"))
         self.label.setText(_translate("Dialog", "Secret Key:"))
         self.label_2.setText(_translate("Dialog", "Decryption Algorithm:"))
+        self.comboBox.setCurrentText(_translate("Dialog", NEUChpher.deCipherType))
+        self.lineEdit.setText(_translate("Dialog", NEUChpher.decryptKey))
 
 class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):    
     def __init__(self):    
@@ -186,10 +191,17 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
         self.setupUi(self) 
         self.buttonBox.accepted.connect(self.Accept)
         self.buttonBox.clicked.connect(self.close)
+        #self.comboBox.currentIndexChanged.connect(self.Change)
+
     def Accept(self):
-        global encryptKey,enCipherType
-        enCipherType = self.comboBox.currentText()
-        encryptKey = self.lineEdit.text()
+        NEUChpher.enCipherType = self.comboBox.currentText()
+        NEUChpher.encryptKey = self.lineEdit.text()
+
+    def Change(self):
+        if self.comboBox.currentText == "None":
+            self.lineEdit.setEnabled(self, False)
+        else:
+            self.lineEdit.setEnabled(self, True)
 
 class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):    
     def __init__(self):    
@@ -197,10 +209,14 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
         self.setupUi(self) 
         self.buttonBox.accepted.connect(self.Accept)
         self.buttonBox.clicked.connect(self.close)
+        #self.comboBox.currentIndexChanged.connect(self.Change)
+        
     def Accept(self):
-        global decryptKey,deCipherType
-        deCipherType = self.comboBox.currentText()
-        decryptKey = self.lineEdit.text()
+        NEUChpher.deCipherType = self.comboBox.currentText()
+        NEUChpher.decryptKey = self.lineEdit.text()
 
-
-
+    def Change(self):
+        if self.comboBox.currentText == "None":
+            self.lineEdit.setEnabled(self, False)
+        else:
+            self.lineEdit.setEnabled(self, True)

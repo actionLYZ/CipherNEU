@@ -8,6 +8,11 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = "127.0.0.1"
 port = 8080
 username = b""
+isFile = False
+enCipherType = "None"
+deCipherType = "None"
+encryptKey = ""
+decryptKey = ""
 
 if __name__=="__main__":  
     app=QtWidgets.QApplication(sys.argv)
