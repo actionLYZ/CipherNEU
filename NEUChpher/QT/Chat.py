@@ -10,11 +10,15 @@ from QT import Login,Register,Setting,FilePath,LoginedChat,EnDecryptionSetting,L
 import Resource.ChatResource
 from Cipher import RSA #ECC
 from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere#, AES
+import GlobalWindow
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(707, 493)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/images/background.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Dialog.setWindowIcon(icon)
         self.layoutWidget = QtWidgets.QWidget(Dialog)
         self.layoutWidget.setGeometry(QtCore.QRect(20, 20, 671, 453))
         self.layoutWidget.setObjectName("layoutWidget")
@@ -165,7 +169,7 @@ class Ui_Dialog(object):
         self.toolButton_2.setText(_translate("Dialog", ""))
         self.toolButton_4.setText(_translate("Dialog", ""))
         self.toolButton.setText(_translate("Dialog", ""))
-        self.pushButton_4.setText(_translate("Dialog", "Show Ciphertext"))
+        self.pushButton_4.setText(_translate("Dialog", "Preview"))
         self.pushButton_8.setText(_translate("Dialog", "Send"))
 
 class ChatWindows(QtWidgets.QWidget,Ui_Dialog):    
@@ -173,9 +177,10 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
     content = ''
     toPersonName = ''
 
-    def __init__(self,logedWindow):    
+    def __init__(self):    
         super(ChatWindows,self).__init__()    
-        self.logedWindow = logedWindow
+        self.logedWindow = None
+        self.loginWindow=None
         self.setupUi(self) 
         self.DisplayTip()
         self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint
@@ -234,10 +239,11 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
     def ShowMessage(self):
         message = QtWidgets.QMessageBox()
         str = self.textEdit.toPlainText()
-        l = len(self.textEdit.toPlainText())
-        for i in range(int(l/20)):
-            str = str[:i*22+20]+'\n'+str[i*22+20:]
-        message.information(self,"Ciphertext",str)
+        length = len(self.textEdit.toPlainText())
+        wideth = int(length * (3/5))
+        for i in range(int(length/wideth)):
+            str = str[:i*22+wideth]+'\n'+str[i*22+wideth:]
+        message.about(self,"Ciphertext",str)
     #打印单机加解密信息
     def EncryptPrint(self):
         if(self.comboBox.currentText()=='Encryption'):
@@ -352,8 +358,7 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
 
     #打开登陆窗口
     def OpenLoginWindows(self):
-        self.loginWindows = Login.LoginWindow(self,self.logedWindow)
-        self.loginWindows.show()
+        GlobalWindow.globalWindow.loginwindow.show()
 
     #打开设置窗口
     def OpenSettingWindows(self):

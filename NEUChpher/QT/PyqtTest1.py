@@ -5,12 +5,12 @@
 # Created by: PyQt5 UI code generator 5.9
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import Resource.LogedResource
-import GlobalWindow
 from QT import Login,Register,Setting,FilePath,LoginedChat,EnDecryptionSetting,LoginedChat
+import Resource.ChatResource
 from Cipher import RSA #ECC
 from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere#, AES
-from Socket.Packet import *
+import GlobalWindow
+
 
 class Ui_Dialog(object):
     def setupUi(self,Dialog):
@@ -67,10 +67,10 @@ class Ui_Dialog(object):
 "font: 87 12pt \"Lucida Handwriting\";")
         self.label_4.setObjectName("label_4")
         self.verticalLayout.addWidget(self.label_4)
-        #self.pushButton = QtWidgets.QPushButton(self.layoutWidget)
-        #self.pushButton.setMaximumSize(QtCore.QSize(100, 16777215))
-        #self.pushButton.setObjectName("pushButton")
-        #self.verticalLayout.addWidget(self.pushButton)
+        self.pushButton = QtWidgets.QPushButton(self.layoutWidget)
+        self.pushButton.setMaximumSize(QtCore.QSize(100, 16777215))
+        self.pushButton.setObjectName("pushButton")
+        self.verticalLayout.addWidget(self.pushButton)
         self.pushButton_2 = QtWidgets.QPushButton(self.layoutWidget)
         self.pushButton_2.setSizeIncrement(QtCore.QSize(100, 0))
         self.pushButton_2.setObjectName("pushButton_2")
@@ -160,45 +160,49 @@ class Ui_Dialog(object):
 
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         #self.label_4.setText(_translate("Dialog", "Welcome!\n"))
-        self.comboBox.setItemText(0, _translate("Dialog", "Plaintext"))
-        self.comboBox.setItemText(1, _translate("Dialog", "Ciphertext"))
+        self.comboBox.setItemText(0, _translate("Dialog", "Encryption"))
+        self.comboBox.setItemText(1, _translate("Dialog", "Decryption"))
         self.label_3.setText(_translate("Dialog", "Messages:"))
-        #self.pushButton.setText(_translate("Dialog", "Settings"))
+        self.pushButton.setText(_translate("Dialog", "Settings"))
         self.pushButton_2.setText(_translate("Dialog", "Logout"))
         self.label.setText(_translate("Dialog", "To:"))
         self.label_2.setText(_translate("Dialog", "My messages:"))
-        self.toolButton_3.setText(_translate("Dialog", "   "))
-        self.toolButton_2.setText(_translate("Dialog", "   "))
-        self.toolButton_4.setText(_translate("Dialog", "   "))
-        self.toolButton.setText(_translate("Dialog", "   "))
-        self.pushButton_4.setText(_translate("Dialog", "Preview"))
+        self.toolButton_3.setText(_translate("Dialog", "..."))
+        self.toolButton_2.setText(_translate("Dialog", "..."))
+        self.toolButton_4.setText(_translate("Dialog", "..."))
+        self.toolButton.setText(_translate("Dialog", "..."))
+        self.pushButton_4.setText(_translate("Dialog", "Show Ciphertext"))
         self.pushButton_8.setText(_translate("Dialog", "Send"))
 
 #登陆窗口对象
 class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):  
-    filetext = ''
-    content = ''
-    toPersonName = ''
-
     def __init__(self):    
-        super(LoginedChatWindow,self).__init__()    
-        self.logedWindow = None
-        self.loginWindow=None
-        self.setupUi(self) 
-        self.DisplayTip()
+        super(LoginedChatWindow,self).__init__() 
+        self.chatwindow=None
+        self.loginwindow=None
         self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint
                             |QtCore.Qt.WindowCloseButtonHint
                             |QtCore.Qt.MSWindowsFixedSizeDialogHint )        #只允许最小和关闭，不允许最大化,不允许调整大小
+        self.setupUi(self)  
+        self.DisplayTip()
+        
+
         #控件映射
         self.pushButton_8.clicked.connect(self.EncryptPrint)
         self.pushButton_4.clicked.connect(self.ShowMessage)
-        #self.pushButton.clicked.connect(self.OpenSettingWindows)
-        self.pushButton_2.clicked.connect(self.Logout)
+        self.pushButton.clicked.connect(self.OpenSettingWindows)
         self.toolButton_3.clicked.connect(self.OpenEncryptionSettingWindows)
         self.toolButton_2.clicked.connect(self.OpenDecryptionSettingWindows)
         self.toolButton_4.clicked.connect(self.ReadFile)
         self.toolButton.clicked.connect(self.SaveFile) 
-        
+        self.pushButton_2.clicked.connect(self.Logout)
+    
+
+    #设置返回窗口
+    def setWindow(self,chatwindow,loginwindow):
+        self.chatwindow=chatwindow
+        self.loginwindow=loginwindow
+
     #显示悬停提示
     def DisplayTip(self): 
         QtWidgets.QToolTip.setFont(QtGui.QFont('SansSerif', 10)) 
@@ -206,6 +210,7 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
         self.toolButton_2.setToolTip('decryption setting')
         self.toolButton_4.setToolTip('export file')
         self.toolButton.setToolTip('download file')
+
 
     #读取文件
     def ReadFile(self):
@@ -219,7 +224,6 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
             self.content = document.readlines()
             self.content = ''.join(self.content)
             self.textEdit.setText(self.content)
-            GlobalWindow.isFile = True
             document.close()
 
     #保存文件
@@ -230,7 +234,7 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
                                     "C:/",
                                     "Text Files (*.txt)")
         if filepath != '':
-            document = open(filepath,"wb")
+            document = open(filepath,"w+")
             document.write(self.filetext)
             document.close()
 
@@ -242,11 +246,10 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
     def ShowMessage(self):
         message = QtWidgets.QMessageBox()
         str = self.textEdit.toPlainText()
-        length = len(self.textEdit.toPlainText())
-        wideth = int(length * (3/5))
-        for i in range(int(length/wideth)):
-            str = str[:i*22+wideth]+'\n'+str[i*22+wideth:]
-        message.about(self,"Ciphertext",str)
+        l = len(self.textEdit.toPlainText())
+        for i in range(int(l/20)):
+            str = str[:i*22+20]+'\n'+str[i*22+20:]
+        message.information(self,"Ciphertext",str)
     #打印单机加解密信息
     def EncryptPrint(self):
         if(self.comboBox.currentText()=='Encryption'):
@@ -355,6 +358,10 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
         filetext = plaintext
         self.textBrowser.setText(self.textBrowser.toPlainText()+'Ciphertext: '+ciphertext+'\n'+'Plaintext: '+plaintext+'\n\n')  
 
+    #打开设置窗口
+    def OpenSettingWindows(self):
+        self.settingWindows = Setting.SettingWindow()
+        self.settingWindows.show()
 
     #打开加密设置窗口
     def OpenEncryptionSettingWindows(self):
@@ -368,16 +375,5 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
 
     #退出已登录窗口
     def Logout(self):
-        GlobalWindow.s.sendall(PktToBytes(Packet(TYP_LOO, GlobalWindow.username, b'server', b'')))
-        recv_tmp = GlobalWindow.s.recv(PKT_MAX_SIZE)
-        pkt = BytesToPkt(recv_tmp)
-        if pkt.typ != TYP_ACK:
-            message = QtWidgets.QMessageBox()
-            message.warning(self,"Error","登出失败！",QtWidgets.QMessageBox.Yes)
-            return
-        else:
-            message = QtWidgets.QMessageBox()
-            message.information(self,"Pass","登出成功！",QtWidgets.QMessageBox.Yes)
-            GlobalWindow.s.close()
-            GlobalWindow.globalWindow.chatwindow.show()
-            self.close()
+        GlobalWindow.globalWindow.chatwindow.show()
+        self.close()

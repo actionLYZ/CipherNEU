@@ -1,10 +1,13 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from QT import Register,Setting, Chat, LoginedChat
 import Resource.LogResource
+import GlobalWindow
 
+import socket
+from Socket.Packet import *
 
 class Ui_Login(object):
-    def setupUi(self, Login,logWindow,logedWindow):
+    def setupUi(self, Login):
         Login.setObjectName("Login")
         Login.resize(361, 185)
         Login.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
@@ -79,13 +82,14 @@ class Ui_Login(object):
         self.but_register.clicked.connect(self.OpenRegister)
         self.but_login.clicked.connect(self.IfLogin)
         QtCore.QMetaObject.connectSlotsByName(Login)
-        self.logWindow = logWindow
-        self.logedWindow = logedWindow
 
     #判断用户是否允许登陆
     def IfLogin(self):
+        if self.line_nickname.text() == "" or self.line_password.text() == "":
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","用户名或密码不能为空！",QtWidgets.QMessageBox.Yes)
 
-        if not self.line_nickname.text().isalnum() and self.line_password.text().isalnum():
+        elif not self.line_nickname.text().isalnum() and self.line_password.text().isalnum():
             message = QtWidgets.QMessageBox()
             message.warning(self,"Error","用户名和密码必须由字母与数字组成！",QtWidgets.QMessageBox.Yes)
             ifpass = False
@@ -95,23 +99,51 @@ class Ui_Login(object):
 
     #输入的用户名密码是否正确
     def IfLoginRight(self):
+        #s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            GlobalWindow.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            GlobalWindow.s.connect((GlobalWindow.host, GlobalWindow.port))
+        except socket.error:
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","无法连接至服务器！",QtWidgets.QMessageBox.Ok)
+            return False
+        GlobalWindow.s.sendall(PktToBytes(Packet(TYP_LOI, self.line_nickname.text(), b'server', self.line_password.text())))
+        recv_tmp = GlobalWindow.s.recv(PKT_MAX_SIZE)
+        pkt = BytesToPkt(recv_tmp)
+        if pkt.typ == TYP_ERR:
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error",pkt.data.decode(),QtWidgets.QMessageBox.Ok)
+            GlobalWindow.s.close()
+            return False
+        elif pkt.typ == TYP_ACK:
+            #print(recv_tmp)
+            message = QtWidgets.QMessageBox()
+            message.information(self,"Pass","登陆成功！")
+            message.setStandardButtons(QtWidgets.QMessageBox.Ok)
+            message.button(QtWidgets.QMessageBox.Ok).setText("确定")      #bug
+            GlobalWindow.username = self.line_nickname.text().encode()
+            GlobalWindow.globalWindow.logedwindow.label_4.setText("Welcome!\n\n" + self.line_nickname.text())
+            GlobalWindow.globalWindow.logedwindow.show()
+            GlobalWindow.globalWindow.chatwindow.close()
+            return True
+        else:
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","登陆异常！请检查服务器设置。",QtWidgets.QMessageBox.Ok)
+            return False
+        '''
         document = open("User.txt","r")
         for context in document.readlines():
             if self.line_nickname.text() == context[:context.find(' ')]:
                 if self.line_password.text() == context[context.find(' ')+1:-1]:
                     message = QtWidgets.QMessageBox()
-                    message.information(self,"Pass","登陆成功！")
+                    message.about(self,"Pass","登陆成功！")
                     message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-                    message.button(QtWidgets.QMessageBox.Ok).setText("确定")      #bug
-                    self.userName = self.line_nickname.text()
                     document.close()
-                    self.close()
-                    self.logWindow.close()
                     
-                    _translate = QtCore.QCoreApplication.translate
-                    self.logedWindow = LoginedChat.LoginedChatWindow()
-                    self.logedWindow.label_4.setText("Welcome!\n\n" + self.line_nickname.text())
-                    self.logedWindow.show()
+                    GlobalWindow.globalWindow.logedwindow.label_4.setText("Welcome!\n\n" + self.line_nickname.text())
+                    GlobalWindow.globalWindow.logedwindow.show()
+                    GlobalWindow.globalWindow.chatwindow.close()
+                    
                     return True
 
                 else:
@@ -124,6 +156,7 @@ class Ui_Login(object):
         message.warning(self,"Error","用户名不存在！",QtWidgets.QMessageBox.Ok)
         document.close()
         return False
+        '''
 
     def OpenRegister(self):
         self.registerWindow = Register.RegisterWindow()
@@ -147,13 +180,9 @@ class Ui_Login(object):
 
 #登陆窗口对象
 class LoginWindow(QtWidgets.QWidget,Ui_Login):  
-    def __init__(self,logWindow,logedWindow):    
+    def __init__(self):    
         super(LoginWindow,self).__init__()  
         self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint
                             |QtCore.Qt.WindowCloseButtonHint
                             |QtCore.Qt.MSWindowsFixedSizeDialogHint )        #只允许最小和关闭，不允许最大化,不允许调整大小
-        self.setupUi(self,logWindow,logedWindow)  
-
-   # def closeEvent(self, QCloseEvent):
-        #self.mainwindow.close()
-        #self.mainwindow.show() 
+        self.setupUi(self)

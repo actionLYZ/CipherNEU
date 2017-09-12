@@ -5,14 +5,14 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>844d2a15-538a-4e79-807f-1f82e95b43a0</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>NEUChpher.py</StartupFile>
+    <StartupFile>NEUChpher.pyw</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>NEUChpher</Name>
     <RootNamespace>NEUChpher</RootNamespace>
-    <IsWindowsApplication>False</IsWindowsApplication>
+    <IsWindowsApplication>True</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,13 +43,13 @@
     <Compile Include="Cipher\RSA.py" />
     <Compile Include="Cipher\Vigenere.py" />
     <Compile Include="Cipher\__init__.py" />
-    <Compile Include="NEUChpher.py" />
+    <Compile Include="GlobalWindow.py" />
+    <Compile Include="NEUChpher.pyw" />
     <Compile Include="QT\Chat.py" />
     <Compile Include="QT\EnDecryptionSetting.py" />
     <Compile Include="QT\FilePath.py" />
     <Compile Include="QT\Login.py" />
     <Compile Include="QT\LoginedChat.py" />
-    <Compile Include="QT\QTtest.py" />
     <Compile Include="QT\Register.py" />
     <Compile Include="QT\Setting.py" />
     <Compile Include="QT\__init__.py" />
@@ -59,11 +59,16 @@
     <Compile Include="Resource\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Socket\Client.py" />
+    <Compile Include="Socket\Packet.py" />
+    <Compile Include="Socket\Server.py" />
+    <Compile Include="Socket\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Cipher\" />
     <Folder Include="QT\" />
     <Folder Include="Resource\" />
+    <Folder Include="Socket\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
