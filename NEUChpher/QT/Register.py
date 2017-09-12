@@ -118,7 +118,6 @@ class Ui_register(object):
 
         else:
             try:
-               
                 NEUChpher.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 NEUChpher.s.connect((NEUChpher.host, NEUChpher.port))
             except socket.error:
@@ -128,10 +127,12 @@ class Ui_register(object):
             if self.AddUser2dir():
                 message = QtWidgets.QMessageBox()
                 message.information(self,"Pass","注册成功！",QtWidgets.QMessageBox.Yes)
+            else:
+                NEUChpher.s.close()
+                return
             NEUChpher.s.close()
             self.close()
-        
-            
+    
     #判断用户名是否已经被注册过
     '''
     def IfHasRegister(self):
