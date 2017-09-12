@@ -344,7 +344,7 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
         ciphertext = self.DefineCipherType(plaintext,0)
         self.filetext = 'Plaintext: '+plaintext+'\n'+'Ciphertext: '+ciphertext
         self.textBrowser.setText(self.textBrowser.toPlainText()+'Plaintext: '+plaintext+'\n'+'Ciphertext: '+ciphertext+'\n\n')
-    
+
     #解密
     def Decryption(self):
         ciphertext = self.textEdit.toPlainText()

@@ -202,7 +202,8 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
         self.buttonBox.accepted.connect(self.Accept)
         self.buttonBox.rejected.connect(self.close)
         self.comboBox.activated.connect(self.SetExample)
-        self.lineEdit.setDisabled(True)
+        if GlobalWindow.enCipherType == "None":
+            self.lineEdit.setDisabled(True)
 
     def SetExample(self):
         self.lineEdit.setDisabled(False)
@@ -210,7 +211,7 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
             self.lineEdit.setText('')
             self.lineEdit.setDisabled(True)
         elif(self.comboBox.currentText()=='Caesar'):
-            self.lineEdit.setText('0')
+            self.lineEdit.setText('3')
         elif(self.comboBox.currentText()=='Affine'):
             self.lineEdit.setText('3 1')
         elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "AutokeyCiphertext", "AutokeyPlaintext", "Playfair", "Permutation", "ColumnPermutation"]:
@@ -257,7 +258,7 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
         return False
 
     def Accept(self):
-        if(self.IsValid(self.lineEdit.text(),self.comboBox.currentText())==False):
+        if(self.IsValid(self.lineEdit.text(),self.comboBox.currentText()) == False):
             message = QtWidgets.QMessageBox()
             message.warning(self,"Error","Wrong Secretkey Format!",QtWidgets.QMessageBox.Ok)
             message.close()
@@ -274,7 +275,8 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
         self.buttonBox.accepted.connect(self.Accept)
         self.buttonBox.clicked.connect(self.close)
         self.comboBox.activated.connect(self.SetExample)
-        self.lineEdit.setDisabled(True)
+        if GlobalWindow.deCipherType == "None":
+            self.lineEdit.setDisabled(True)
 
     def SetExample(self):
         self.lineEdit.setDisabled(False)
@@ -282,7 +284,7 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
             self.lineEdit.setText('')
             self.lineEdit.setDisabled(True)
         elif(self.comboBox.currentText()=='Caesar'):
-            self.lineEdit.setText('0')
+            self.lineEdit.setText('3')
         elif(self.comboBox.currentText()=='Affine'):
             self.lineEdit.setText('3 1')
         elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "AutokeyCiphertext", "AutokeyPlaintext", "Playfair", "Permutation", "ColumnPermutation"]:
@@ -333,6 +335,6 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
             message.warning(self,"Error","Wrong Secretkey Format!",QtWidgets.QMessageBox.Ok)
             message.close()
         else:
-            GlobalWindow.enCipherType = self.comboBox.currentText()
-            GlobalWindow.encryptKey = self.lineEdit.text()
+            GlobalWindow.deCipherType = self.comboBox.currentText()
+            GlobalWindow.decryptKey = self.lineEdit.text()
             self.close()

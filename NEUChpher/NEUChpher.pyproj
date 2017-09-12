@@ -12,7 +12,8 @@
     <OutputPath>.</OutputPath>
     <Name>NEUChpher</Name>
     <RootNamespace>NEUChpher</RootNamespace>
-    <IsWindowsApplication>True</IsWindowsApplication>
+    <IsWindowsApplication>False</IsWindowsApplication>
+    <PublishUrl>file:///C:/Users/AI/Desktop/Release</PublishUrl>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,7 +60,6 @@
     <Compile Include="Resource\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Socket\Client.py" />
     <Compile Include="Socket\Packet.py" />
     <Compile Include="Socket\Server.py" />
     <Compile Include="Socket\__init__.py" />

@@ -5,6 +5,7 @@ import GlobalWindow
 
 import socket
 from Socket.Packet import *
+import _thread
 
 class Ui_Login(object):
     def setupUi(self, Login):
@@ -125,12 +126,14 @@ class Ui_Login(object):
             GlobalWindow.globalWindow.logedwindow.label_4.setText("Welcome!\n\n" + self.line_nickname.text())
             GlobalWindow.globalWindow.logedwindow.show()
             GlobalWindow.globalWindow.chatwindow.close()
+            self.close()
+            #_thread.start_new_thread(self.recvThread, ())
             return True
         else:
             message = QtWidgets.QMessageBox()
             message.warning(self,"Error","登陆异常！请检查服务器设置。",QtWidgets.QMessageBox.Ok)
             return False
-        '''
+        ''' 
         document = open("User.txt","r")
         for context in document.readlines():
             if self.line_nickname.text() == context[:context.find(' ')]:
@@ -175,6 +178,29 @@ class Ui_Login(object):
         self.but_login.setText(_translate("Login", "Login"))
         self.but_register.setText(_translate("Login", "Register"))
         self.but_cancel.setText(_translate("Login", "Cancel"))
+
+    def recvThread(self):
+        while True:
+            try:
+                recv_tmp = GlobalWindow.s.recv(PKT_MAX_SIZE)
+                if not recv_tmp:
+                    continue
+                pkt = BytesToPkt(recv_tmp)
+                if pkt.typ == TYP_PTX:
+                    GlobalWindow.globalWindow.logedwindow.writeToTextBrowser(pkt.src.decode() + ": " + pkt.data.decode())
+                elif pkt.typ == TYP_LOO:
+                    message = QtWidgets.QMessageBox()
+                    message.warning(self,"Error",pkt.data.decode(),QtWidgets.QMessageBox.Ok)
+                    sock.close()
+                    GlobalWindow.globalWindow.chatwindow.show()
+                    GlobalWindow.globalWindow.logedwindow.close()
+                    return
+                #elif pkt.typ == TYP_CTX:
+                    #GlobalWindow.globalWindow.logedWindow.textBrowser.append(pkt.src.decode() + ': ' + pkt.data.decode())
+                else:
+                    print(recv_tmp.decode())
+            except socket.error:
+                break
 
 
 

@@ -37,17 +37,26 @@ type>>>src>>>dest>>>data
 def PktToBytes(pkt):
     tmp = b''
     tmp += pkt.typ
-    tmp += b'>>>'
-    tmp += pkt.src
-    tmp += b'>>>'
-    tmp += pkt.dest
-    tmp += b'>>>'
-    tmp += pkt.data
+    tmp += b'>>>>>>'
+    if isinstance(pkt.src, str):
+        tmp += pkt.src.encode()
+    else:
+        tmp += pkt.src
+    tmp += b'>>>>>>'
+    if isinstance(pkt.dest, str):
+        tmp += pkt.dest.encode()
+    else:
+        tmp += pkt.dest
+    tmp += b'>>>>>>'
+    if isinstance(pkt.data, str):
+        tmp += pkt.data.encode()
+    else:
+        tmp += pkt.data
     return tmp
 
 def BytesToPkt(tmp):
-    sep = b'>>>'
-    typ, sep, tmp  = tmp.partition(b'>>>')
-    src, sep, tmp  = tmp.partition(b'>>>')
-    dest, sep, data  = tmp.partition(b'>>>')
+    sep = b'>>>>>>'
+    typ, sep, tmp  = tmp.partition(b'>>>>>>')
+    src, sep, tmp  = tmp.partition(b'>>>>>>')
+    dest, sep, data  = tmp.partition(b'>>>>>>')
     return Packet(typ, src, dest, data)
