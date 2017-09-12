@@ -72,7 +72,7 @@ class En_Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Encryption Setting"))
         self.label_2.setText(_translate("Dialog", "Encryption Algorithm:"))
         self.comboBox.setItemText(0, _translate("Dialog", "Caesar"))
         self.comboBox.setItemText(1, _translate("Dialog", "Affine"))
@@ -158,7 +158,7 @@ class De_Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Decryption Setting"))
         self.comboBox.setItemText(0, _translate("Dialog", "Caesar"))
         self.comboBox.setItemText(1, _translate("Dialog", "Affine"))
         self.comboBox.setItemText(2, _translate("Dialog", "Keyword"))
@@ -179,8 +179,8 @@ class De_Ui_Dialog(object):
         self.comboBox.setItemText(17, _translate("Dialog", "RSA"))
         self.comboBox.setItemText(18, _translate("Dialog", "ECC"))
         self.comboBox.setItemText(19, _translate("Dialog", "MD5"))
-        self.comboBox.setItemText(20, _translate("Dialog", "DSA"))
-        self.comboBox.setItemText(21, _translate("Dialog", "DH"))
+        #self.comboBox.setItemText(20, _translate("Dialog", "DSA"))
+        self.comboBox.setItemText(20, _translate("Dialog", "DH"))
         self.label.setText(_translate("Dialog", "Secret Key:"))
         self.label_2.setText(_translate("Dialog", "Decryption Algorithm:"))
 
@@ -188,18 +188,42 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
     def __init__(self):    
         super(EncryptionSettingWindow,self).__init__()    
         self.setupUi(self) 
+        #self.SetExample()
         self.buttonBox.accepted.connect(self.Accept)
         self.buttonBox.rejected.connect(self.close)
+
+    #def SetExample(self):
+    #    if(self.comboBox.currentText()=='Caesar'):
+    #        self.lineEdit.setText('0')
+    #    elif(self.comboBox.currentText()=='Affine'):
+    #        self.lineEdit.setText('3 1')
+    #    elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "AutokeyCiphertext", "AutokeyPlaintext", "Playfair", "Permutation", "ColumnPermutation"]:
+    #        self.lineEdit.setText("hello")
+    #    elif(self.comboBox.currentText()=='Double Transposition'):
+    #        self.lineEdit.setText('')
+    #    elif(self.comboBox.currentText()=='CA'):
+    #        self.lineEdit.setText('23')
+    #    elif(self.comboBox.currentText()=='DES'):
+    #        self.lineEdit.setText('abcdefgh')
+
     # Check out if the key is valid, such as AES-128(16 bytes), AES-192(24 bytes), AES-256(32 bytes), etc.
     def IsValid(self,key, type):
         if type == "Caesar":
             if key.isdigit():
                 if int(key) > 0 and int(key) < 26:
                     return True
-        elif ["Keyword", "Multiliteral", "Vigenere", "AutokeyCiphertext", "AutokeyPlaintext", "Playfair", "Permutation", "ColumnPermutation"].index(type) != -1:
-            return isinstance(key, str) and str.isalpha()
+        elif type == "DES":
+            return key.isalpha() and len(key)==8
         elif type == "Affine":
-            return isinstance(key, tuple) and len(tuple) == 2 and isinstance(key[0], int) and key[0] > 0 and isinstance(key[1], int) and key[1] > 0 and GCD(key[0], key[1]) == 1
+            for i in range(len(key)):
+                if(key[i]==' '):
+                    a = key[:i]
+                    b = key[i+1:]
+                    break
+                i = i+1
+            if(a.isdigit() and b.isdigit()):
+                if((0<int(a)<26)&(0<int(b)<26)):
+                    return True
         elif type == "DoubleTransposition":
             return isinstance(key, tuple) and len(tuple) == 2 and isinstance(key[0], str) and key[0].isalpha() and isinstance(key[1], str) and key[1].isalpha()
         elif type == "RC4":
@@ -210,6 +234,8 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
             return isinstance(key, str) and len(key) == 24
         elif type == "AES-256":
             return isinstance(key, str) and len(key) == 32
+        elif ["Keyword", "Multiliteral", "Vigenere", "AutokeyCiphertext", "AutokeyPlaintext", "Playfair", "Permutation", "ColumnPermutation"].index(type) != -1:
+            return isinstance(key, str) and key.isalpha()
         return False
 
     def Accept(self):
@@ -229,10 +255,46 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
         self.setupUi(self) 
         self.buttonBox.accepted.connect(self.Accept)
         self.buttonBox.clicked.connect(self.close)
+    def IsValid(self,key, type):
+        if type == "Caesar":
+            if key.isdigit():
+                if int(key) > 0 and int(key) < 26:
+                    return True
+        elif type == "DES":
+            return key.isalpha() and len(key)==8
+        elif type == "Affine":
+            for i in range(len(key)):
+                if(key[i]==' '):
+                    a = key[:i]
+                    b = key[i+1:]
+                    break
+                i = i+1
+            if(a.isdigit() and b.isdigit()):
+                if((0<int(a)<26)&(0<int(b)<26)):
+                    return True
+        elif type == "DoubleTransposition":
+            return isinstance(key, tuple) and len(tuple) == 2 and isinstance(key[0], str) and key[0].isalpha() and isinstance(key[1], str) and key[1].isalpha()
+        elif type == "RC4":
+            return isinstance(key, str)
+        elif type == "AES-128":
+            return isinstance(key, str) and len(key) == 16
+        elif type == "AES-192":
+            return isinstance(key, str) and len(key) == 24
+        elif type == "AES-256":
+            return isinstance(key, str) and len(key) == 32
+        elif ["Keyword", "Multiliteral", "Vigenere", "AutokeyCiphertext", "AutokeyPlaintext", "Playfair", "Permutation", "ColumnPermutation"].index(type) != -1:
+            return isinstance(key, str) and key.isalpha()
+        return False
     def Accept(self):
         global decryptKey,deCipherType
         deCipherType = self.comboBox.currentText()
         decryptKey = self.lineEdit.text()
+        if(self.IsValid(encryptKey,enCipherType)==False):
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","Wrong Secretkey Format!",QtWidgets.QMessageBox.Ok)
+            message.close()
+        else:
+            self.close()
 
 
 

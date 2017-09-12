@@ -43,9 +43,7 @@
     <Compile Include="Cipher\RSA.py" />
     <Compile Include="Cipher\Vigenere.py" />
     <Compile Include="Cipher\__init__.py" />
-    <Compile Include="GlobalWindow.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="GlobalWindow.py" />
     <Compile Include="NEUChpher.py" />
     <Compile Include="QT\Chat.py" />
     <Compile Include="QT\EnDecryptionSetting.py" />

@@ -104,14 +104,12 @@ class Ui_Login(object):
                     message = QtWidgets.QMessageBox()
                     message.about(self,"Pass","登陆成功！")
                     message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-                    message.button(QtWidgets.QMessageBox.Ok).setText("确定")      #bug
-                    self.userName = self.line_nickname.text()
                     document.close()
                     
                     GlobalWindow.globalWindow.logedwindow.label_4.setText("Welcome!\n\n" + self.line_nickname.text())
                     GlobalWindow.globalWindow.logedwindow.show()
                     GlobalWindow.globalWindow.chatwindow.close()
-                    self.close()
+                    
                     return True
 
                 else:
@@ -153,4 +151,3 @@ class LoginWindow(QtWidgets.QWidget,Ui_Login):
                             |QtCore.Qt.WindowCloseButtonHint
                             |QtCore.Qt.MSWindowsFixedSizeDialogHint )        #只允许最小和关闭，不允许最大化,不允许调整大小
         self.setupUi(self)
-     

@@ -6,8 +6,10 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import Resource.LogedResource
-from QT import Login,Setting
 import GlobalWindow
+from QT import Login,Register,Setting,FilePath,LoginedChat,EnDecryptionSetting,LoginedChat
+from Cipher import RSA #ECC
+from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere#, AES
 
 class Ui_Dialog(object):
     def setupUi(self,Dialog):

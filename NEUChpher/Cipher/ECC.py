@@ -22,12 +22,18 @@ import random
 
 # C = {rG,Pm+rPa} Pa=kG
 # creat 2 random num r,k
+C1x = []
+C1y = []
+C2x = []
+C2y = []
+Add = []
+str_len = 0
 
 r = random.randint(100,1000)
 k = random.randint(100,1000) # the k is private key
 
-#message = "Hello World"
-#result = ""
+message = "Hello World"
+result = ""
 
 def ECC_Decrypt(C1,C2,add):
     # print ("Finishing Encrypt")
@@ -48,7 +54,7 @@ def ECC_Decrypt(C1,C2,add):
 
     Mx = P[0] - add
     result += chr(Mx)
-    #print(chr(Mx))
+    # print(chr(Mx))
     return 0
 
 def ECC_Encrypt(message,index):
@@ -162,8 +168,51 @@ def Get_Py(p1):
      return result    
  #    print ("Can not find the y")
 
-for i in range(len(message)):
-    (M1,M2,add) = ECC_Encrypt(message,i)
-    ECC_Decrypt(M1,M2,add)
+def Encrypt(message):
+    global str_len
+    str_len = len(message)
+    for i in range(len(message)):
+        (M1,M2,add) = ECC_Encrypt(message,i)
+        C1x.append(M1[0])
+        C1y.append(M1[1])
+        C2x.append(M2[0])
+        C2y.append(M2[1])
+        Add.append(add)
+    return str(C1x)+' '+str(C1y)+' '+str(C2x)+' '+str(C2y)
+        
+def Decrypt(message):
+    for j in range(4):
+        for i in range(len(message)):
+            if(message[i]==' '):
+                C[j] = message[:i]
+                message = message[i:]
+                break
+    C[4] = message
+    for i in range(str_len):
+        M1 = [C[0][i],C[1][i]]
+        M2 = [C[2][i],C[3][i]]
+        add = C[4][i]
+        ECC_Decrypt(M1,M2,add)
+    return result
 
-print (result)
+
+def Enc_Dec(message):
+    for i in range(len(message)):
+        (M1,M2,add) = ECC_Encrypt(message,i)
+        C1x.append(M1[0])
+        C1y.append(M1[1])
+        C2x.append(M2[0])
+        C2y.append(M2[1])
+        ECC_Decrypt(M1,M2,add)
+
+def Print_Cip():
+    print(C1x)
+    print(C1y)
+    print(C2x)
+    print(C2y)
+
+print(Encrypt(message))
+print(Decrypt(Encrypt(message)))
+# Enc_Dec(message)
+#print (result)
+

@@ -156,7 +156,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "NEUCryptolalia"))
         self.comboBox.setItemText(0, _translate("Dialog", "Encryption"))
         self.comboBox.setItemText(1, _translate("Dialog", "Decryption"))
         self.label_3.setText(_translate("Dialog", "Messages:"))
@@ -196,10 +196,6 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
         self.toolButton_2.clicked.connect(self.OpenDecryptionSettingWindows)
         self.toolButton_4.clicked.connect(self.ReadFile)
         self.toolButton.clicked.connect(self.SaveFile) 
-    
-    def setWindow(self,logedWindow,loginwindow):
-        self.logedWindow=logedWindow
-        self.loginwindow=loginwindow
 
     #显示悬停提示
     def DisplayTip(self): 
@@ -327,13 +323,13 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
             elif(EnDecryptionSetting.deCipherType=='CA'):
                 Text = CA.Encrypt(text,EnDecryptionSetting.decryptKey)
             elif(EnDecryptionSetting.deCipherType=='DES'):
-                DES.DESDecryption(text,EnDecryptionSetting.decryptKey)
+                Text = DES.Decrypt(text,EnDecryptionSetting.decryptKey)
             #elif(EnDecryptionSetting.deCipherType=='AES'):
                 #Text = AES.Ddecrypt(text,EnDecryptionSetting.decryptKey)
             elif(EnDecryptionSetting.deCipherType=='RSA'):
                 Text = RSA.Decrypt(text,EnDecryptionSetting.decryptKey)
-            #elif(EnDecryptionSetting.deCipherType=='ECC'):
-                #Text = ECC.Decrypt(text,EnDecryptionSetting.decryptKey)
+            elif(EnDecryptionSetting.deCipherType=='ECC'):
+                Text = ECC.Decrypt(text,EnDecryptionSetting.decryptKey)
             elif(EnDecryptionSetting.deCipherType=='MD5'):
                 Text = MD5.Decrypt(text,EnDecryptionSetting.decryptKey)
             #elif(EnDecryptionSetting.deCipherType=='DSA'):
