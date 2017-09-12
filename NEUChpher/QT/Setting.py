@@ -9,6 +9,9 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import Resource.LogResource
 
+import GlobalWindow
+from Socket.Packet import *
+
 class Ui_Setting(object):
     def setupUi(self, Setting):
         Setting.setObjectName("Setting")
@@ -65,8 +68,8 @@ class Ui_Setting(object):
         self.background.setObjectName("background")
         self.background.raise_()
         self.layoutWidget.raise_()
-
         self.retranslateUi(Setting)
+        self.but_login.clicked.connect(self.setHostAndPort)
         QtCore.QMetaObject.connectSlotsByName(Setting)
 
     def retranslateUi(self, Setting):
@@ -75,6 +78,23 @@ class Ui_Setting(object):
         self.lab_IP.setText(_translate("Setting", "Server IP"))
         self.lab_Port.setText(_translate("Setting", "Server Port"))
         self.but_login.setText(_translate("Setting", "Enter"))
+        self.lineIp.setText(_translate("Setting", GlobalWindow.host))
+        self.line_Port.setText(_translate("Setting", str(GlobalWindow.port)))
+
+    def setHostAndPort(self):
+        if not isValidIpv4Address(self.lineIp.text()):
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","非法的IP地址！",QtWidgets.QMessageBox.Yes)
+            return
+        if not self.line_Port.text().isdigit():
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","非法的端口号！",QtWidgets.QMessageBox.Yes)
+            return
+        GlobalWindow.host = self.lineIp.text()
+        GlobalWindow.port = int(self.line_Port.text())
+        message = QtWidgets.QMessageBox()
+        message.information(self,"Pass","设置成功！",QtWidgets.QMessageBox.Yes)
+        self.close()
 
 
 #设置窗口对象

@@ -1,3 +1,4 @@
+import socket
 
 class MainWindow():
     def __init__(self):
@@ -9,5 +10,14 @@ class MainWindow():
         self.logedwindow=logedwindow
         self.chatwindow=chatwindow
 
-
 globalWindow=MainWindow()
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+host = "127.0.0.1"
+port = 8080
+username = b""
+isFile = False
+enCipherType = "None"
+deCipherType = "None"
+encryptKey = ""
+decryptKey = ""

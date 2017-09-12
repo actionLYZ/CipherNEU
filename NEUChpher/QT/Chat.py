@@ -169,7 +169,7 @@ class Ui_Dialog(object):
         self.toolButton_2.setText(_translate("Dialog", ""))
         self.toolButton_4.setText(_translate("Dialog", ""))
         self.toolButton.setText(_translate("Dialog", ""))
-        self.pushButton_4.setText(_translate("Dialog", "Show Ciphertext"))
+        self.pushButton_4.setText(_translate("Dialog", "Preview"))
         self.pushButton_8.setText(_translate("Dialog", "Send"))
 
 class ChatWindows(QtWidgets.QWidget,Ui_Dialog):    

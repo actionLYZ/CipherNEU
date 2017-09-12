@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets,QtCore
 from QT import Chat,Login,LoginedChat
 import sys
 import GlobalWindow
-
+import socket
 
 if __name__=="__main__":
     app=QtWidgets.QApplication(sys.argv)

@@ -7,11 +7,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QCoreApplication
 import Resource.LogResource
-
-enCipherType = ''
-deCipherType = ''
-encryptKey = ''
-decryptKey = ''
+import GlobalWindow
 
 class En_Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -28,6 +24,10 @@ class En_Ui_Dialog(object):
         self.gridLayout.addWidget(self.label_2, 0, 0, 1, 1)
         self.comboBox = QtWidgets.QComboBox(self.gridLayoutWidget)
         self.comboBox.setObjectName("comboBox")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
@@ -74,29 +74,32 @@ class En_Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Encryption Setting"))
         self.label_2.setText(_translate("Dialog", "Encryption Algorithm:"))
-        self.comboBox.setItemText(0, _translate("Dialog", "Caesar"))
-        self.comboBox.setItemText(1, _translate("Dialog", "Affine"))
-        self.comboBox.setItemText(2, _translate("Dialog", "Keyword"))
-        self.comboBox.setItemText(3, _translate("Dialog", "Multiliteral"))
-        self.comboBox.setItemText(4, _translate("Dialog", "Vigenere"))
-        self.comboBox.setItemText(5, _translate("Dialog", "Autokey Ciphertext"))
-        self.comboBox.setItemText(6, _translate("Dialog", "Autokey Plaintext"))
-        self.comboBox.setItemText(7, _translate("Dialog", "Playfair"))
-        self.comboBox.setItemText(8, _translate("Dialog", "Permutation"))
-        self.comboBox.setItemText(9, _translate("Dialog", "Column Permutation"))
-        self.comboBox.setItemText(10, _translate("Dialog", "Double Transposition"))
-        self.comboBox.setItemText(11, _translate("Dialog", "RC4"))
-        self.comboBox.setItemText(12, _translate("Dialog", "CA"))
-        self.comboBox.setItemText(13, _translate("Dialog", "DES"))
-        self.comboBox.setItemText(14, _translate("Dialog", "AES-128"))
-        self.comboBox.setItemText(15, _translate("Dialog", "AES-192"))
-        self.comboBox.setItemText(16, _translate("Dialog", "AES-256"))
-        self.comboBox.setItemText(17, _translate("Dialog", "RSA"))
-        self.comboBox.setItemText(18, _translate("Dialog", "ECC"))
-        self.comboBox.setItemText(19, _translate("Dialog", "MD5"))
-        self.comboBox.setItemText(20, _translate("Dialog", "DSA"))
-        self.comboBox.setItemText(21, _translate("Dialog", "DH"))
+        self.comboBox.setItemText(0, _translate("Dialog", "None"))
+        self.comboBox.setItemText(1, _translate("Dialog", "Caesar"))
+        self.comboBox.setItemText(2, _translate("Dialog", "Affine"))
+        self.comboBox.setItemText(3, _translate("Dialog", "Keyword"))
+        self.comboBox.setItemText(4, _translate("Dialog", "Multiliteral"))
+        self.comboBox.setItemText(5, _translate("Dialog", "Vigenere"))
+        self.comboBox.setItemText(6, _translate("Dialog", "Autokey Ciphertext"))
+        self.comboBox.setItemText(7, _translate("Dialog", "Autokey Plaintext"))
+        self.comboBox.setItemText(8, _translate("Dialog", "Playfair"))
+        self.comboBox.setItemText(9, _translate("Dialog", "Permutation"))
+        self.comboBox.setItemText(10, _translate("Dialog", "Column Permutation"))
+        self.comboBox.setItemText(11, _translate("Dialog", "Double Transposition"))
+        self.comboBox.setItemText(12, _translate("Dialog", "RC4"))
+        self.comboBox.setItemText(13, _translate("Dialog", "CA"))
+        self.comboBox.setItemText(14, _translate("Dialog", "DES"))
+        self.comboBox.setItemText(15, _translate("Dialog", "AES-128"))
+        self.comboBox.setItemText(16, _translate("Dialog", "AES-192"))
+        self.comboBox.setItemText(17, _translate("Dialog", "AES-256"))
+        self.comboBox.setItemText(18, _translate("Dialog", "RSA"))
+        self.comboBox.setItemText(19, _translate("Dialog", "ECC"))
+        self.comboBox.setItemText(20, _translate("Dialog", "MD5"))
+        self.comboBox.setItemText(21, _translate("Dialog", "DSA"))
+        self.comboBox.setItemText(22, _translate("Dialog", "DH"))
         self.label.setText(_translate("Dialog", "Secret Key:"))
+        self.comboBox.setCurrentText(_translate("Dialog", GlobalWindow.enCipherType))
+        self.lineEdit.setText(_translate("Dialog", GlobalWindow.encryptKey))
 
 
 class De_Ui_Dialog(object):
@@ -111,6 +114,10 @@ class De_Ui_Dialog(object):
         self.gridLayout.setObjectName("gridLayout")
         self.comboBox = QtWidgets.QComboBox(self.gridLayoutWidget)
         self.comboBox.setObjectName("comboBox")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
@@ -159,30 +166,33 @@ class De_Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Decryption Setting"))
-        self.comboBox.setItemText(0, _translate("Dialog", "Caesar"))
-        self.comboBox.setItemText(1, _translate("Dialog", "Affine"))
-        self.comboBox.setItemText(2, _translate("Dialog", "Keyword"))
-        self.comboBox.setItemText(3, _translate("Dialog", "Multiliteral"))
-        self.comboBox.setItemText(4, _translate("Dialog", "Vigenere"))
-        self.comboBox.setItemText(5, _translate("Dialog", "Autokey Ciphertext"))
-        self.comboBox.setItemText(6, _translate("Dialog", "Autokey Plaintext"))
-        self.comboBox.setItemText(7, _translate("Dialog", "Playfair"))
-        self.comboBox.setItemText(8, _translate("Dialog", "Permutation"))
-        self.comboBox.setItemText(9, _translate("Dialog", "Column Permutation"))
-        self.comboBox.setItemText(10, _translate("Dialog", "Double Transposition"))
-        self.comboBox.setItemText(11, _translate("Dialog", "RC4"))
-        self.comboBox.setItemText(12, _translate("Dialog", "CA"))
-        self.comboBox.setItemText(13, _translate("Dialog", "DES"))
-        self.comboBox.setItemText(14, _translate("Dialog", "AES-128"))
-        self.comboBox.setItemText(15, _translate("Dialog", "AES-192"))
-        self.comboBox.setItemText(16, _translate("Dialog", "AES-256"))
-        self.comboBox.setItemText(17, _translate("Dialog", "RSA"))
-        self.comboBox.setItemText(18, _translate("Dialog", "ECC"))
-        self.comboBox.setItemText(19, _translate("Dialog", "MD5"))
-        #self.comboBox.setItemText(20, _translate("Dialog", "DSA"))
-        self.comboBox.setItemText(20, _translate("Dialog", "DH"))
+        self.comboBox.setItemText(0, _translate("Dialog", "None"))
+        self.comboBox.setItemText(1, _translate("Dialog", "Caesar"))
+        self.comboBox.setItemText(2, _translate("Dialog", "Affine"))
+        self.comboBox.setItemText(3, _translate("Dialog", "Keyword"))
+        self.comboBox.setItemText(4, _translate("Dialog", "Multiliteral"))
+        self.comboBox.setItemText(5, _translate("Dialog", "Vigenere"))
+        self.comboBox.setItemText(6, _translate("Dialog", "Autokey Ciphertext"))
+        self.comboBox.setItemText(7, _translate("Dialog", "Autokey Plaintext"))
+        self.comboBox.setItemText(8, _translate("Dialog", "Playfair"))
+        self.comboBox.setItemText(9, _translate("Dialog", "Permutation"))
+        self.comboBox.setItemText(10, _translate("Dialog", "Column Permutation"))
+        self.comboBox.setItemText(11, _translate("Dialog", "Double Transposition"))
+        self.comboBox.setItemText(12, _translate("Dialog", "RC4"))
+        self.comboBox.setItemText(13, _translate("Dialog", "CA"))
+        self.comboBox.setItemText(14, _translate("Dialog", "DES"))
+        self.comboBox.setItemText(15, _translate("Dialog", "AES-128"))
+        self.comboBox.setItemText(16, _translate("Dialog", "AES-192"))
+        self.comboBox.setItemText(17, _translate("Dialog", "AES-256"))
+        self.comboBox.setItemText(18, _translate("Dialog", "RSA"))
+        self.comboBox.setItemText(19, _translate("Dialog", "ECC"))
+        self.comboBox.setItemText(20, _translate("Dialog", "MD5"))
+        self.comboBox.setItemText(21, _translate("Dialog", "DSA"))
+        self.comboBox.setItemText(22, _translate("Dialog", "DH"))
         self.label.setText(_translate("Dialog", "Secret Key:"))
         self.label_2.setText(_translate("Dialog", "Decryption Algorithm:"))
+        self.comboBox.setCurrentText(_translate("Dialog", GlobalWindow.deCipherType))
+        self.lineEdit.setText(_translate("Dialog", GlobalWindow.decryptKey))
 
 class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):    
     def __init__(self):    
@@ -191,24 +201,32 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
         #self.SetExample()
         self.buttonBox.accepted.connect(self.Accept)
         self.buttonBox.rejected.connect(self.close)
+        self.comboBox.activated.connect(self.SetExample)
+        self.lineEdit.setDisabled(True)
 
-    #def SetExample(self):
-    #    if(self.comboBox.currentText()=='Caesar'):
-    #        self.lineEdit.setText('0')
-    #    elif(self.comboBox.currentText()=='Affine'):
-    #        self.lineEdit.setText('3 1')
-    #    elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "AutokeyCiphertext", "AutokeyPlaintext", "Playfair", "Permutation", "ColumnPermutation"]:
-    #        self.lineEdit.setText("hello")
-    #    elif(self.comboBox.currentText()=='Double Transposition'):
-    #        self.lineEdit.setText('')
-    #    elif(self.comboBox.currentText()=='CA'):
-    #        self.lineEdit.setText('23')
-    #    elif(self.comboBox.currentText()=='DES'):
-    #        self.lineEdit.setText('abcdefgh')
+    def SetExample(self):
+        self.lineEdit.setDisabled(False)
+        if (self.comboBox.currentText()=='None'):
+            self.lineEdit.setText('')
+            self.lineEdit.setDisabled(True)
+        elif(self.comboBox.currentText()=='Caesar'):
+            self.lineEdit.setText('0')
+        elif(self.comboBox.currentText()=='Affine'):
+            self.lineEdit.setText('3 1')
+        elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "AutokeyCiphertext", "AutokeyPlaintext", "Playfair", "Permutation", "ColumnPermutation"]:
+            self.lineEdit.setText("hello")
+        elif(self.comboBox.currentText()=='Double Transposition'):
+            self.lineEdit.setText('')
+        elif(self.comboBox.currentText()=='CA'):
+            self.lineEdit.setText('23')
+        elif(self.comboBox.currentText()=='DES'):
+            self.lineEdit.setText('abcdefgh')
 
     # Check out if the key is valid, such as AES-128(16 bytes), AES-192(24 bytes), AES-256(32 bytes), etc.
     def IsValid(self,key, type):
-        if type == "Caesar":
+        if type == "None":
+            return True
+        elif type == "Caesar":
             if key.isdigit():
                 if int(key) > 0 and int(key) < 26:
                     return True
@@ -239,15 +257,15 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
         return False
 
     def Accept(self):
-        global encryptKey,enCipherType
-        enCipherType = self.comboBox.currentText()
-        encryptKey = self.lineEdit.text()
-        if(self.IsValid(encryptKey,enCipherType)==False):
+        if(self.IsValid(self.lineEdit.text(),self.comboBox.currentText())==False):
             message = QtWidgets.QMessageBox()
             message.warning(self,"Error","Wrong Secretkey Format!",QtWidgets.QMessageBox.Ok)
             message.close()
         else:
+            GlobalWindow.enCipherType = self.comboBox.currentText()
+            GlobalWindow.encryptKey = self.lineEdit.text()
             self.close()
+
 
 class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):    
     def __init__(self):    
@@ -255,8 +273,31 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
         self.setupUi(self) 
         self.buttonBox.accepted.connect(self.Accept)
         self.buttonBox.clicked.connect(self.close)
+        self.comboBox.activated.connect(self.SetExample)
+        self.lineEdit.setDisabled(True)
+
+    def SetExample(self):
+        self.lineEdit.setDisabled(False)
+        if (self.comboBox.currentText()=='None'):
+            self.lineEdit.setText('')
+            self.lineEdit.setDisabled(True)
+        elif(self.comboBox.currentText()=='Caesar'):
+            self.lineEdit.setText('0')
+        elif(self.comboBox.currentText()=='Affine'):
+            self.lineEdit.setText('3 1')
+        elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "AutokeyCiphertext", "AutokeyPlaintext", "Playfair", "Permutation", "ColumnPermutation"]:
+            self.lineEdit.setText("hello")
+        elif(self.comboBox.currentText()=='Double Transposition'):
+            self.lineEdit.setText('')
+        elif(self.comboBox.currentText()=='CA'):
+            self.lineEdit.setText('23')
+        elif(self.comboBox.currentText()=='DES'):
+            self.lineEdit.setText('abcdefgh')
+
     def IsValid(self,key, type):
-        if type == "Caesar":
+        if type == "None":
+            return True
+        elif type == "Caesar":
             if key.isdigit():
                 if int(key) > 0 and int(key) < 26:
                     return True
@@ -285,16 +326,13 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
         elif ["Keyword", "Multiliteral", "Vigenere", "AutokeyCiphertext", "AutokeyPlaintext", "Playfair", "Permutation", "ColumnPermutation"].index(type) != -1:
             return isinstance(key, str) and key.isalpha()
         return False
+
     def Accept(self):
-        global decryptKey,deCipherType
-        deCipherType = self.comboBox.currentText()
-        decryptKey = self.lineEdit.text()
-        if(self.IsValid(encryptKey,enCipherType)==False):
+        if(self.IsValid(self.lineEdit.text(),self.comboBox.currentText())==False):
             message = QtWidgets.QMessageBox()
             message.warning(self,"Error","Wrong Secretkey Format!",QtWidgets.QMessageBox.Ok)
             message.close()
         else:
+            GlobalWindow.enCipherType = self.comboBox.currentText()
+            GlobalWindow.encryptKey = self.lineEdit.text()
             self.close()
-
-
-
