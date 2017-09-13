@@ -65,12 +65,18 @@
     <Compile Include="Socket\Packet.py" />
     <Compile Include="Socket\Server.py" />
     <Compile Include="Socket\__init__.py" />
+    <Compile Include="UKey\UKey.py" />
+    <Compile Include="UKey\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Cipher\" />
     <Folder Include="QT\" />
     <Folder Include="Resource\" />
     <Folder Include="Socket\" />
+    <Folder Include="UKey\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="UKey\UKey.dll" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
