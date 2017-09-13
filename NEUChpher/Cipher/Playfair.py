@@ -163,6 +163,7 @@ def Plain2Cipher(plainText,keyList):
     #判断是否为大写字母
     isUpper1 = False
     isUpper2 = False
+
     # 将密文长度与明文一致，并且初始化为0
     for i in range(len(plainText)):
         cipherText.append(0)
@@ -171,10 +172,9 @@ def Plain2Cipher(plainText,keyList):
     for loc in range(len(plainText)):
 
         #如果不是字母，直接赋值给密文
-        if plainText[loc].islower() or plainText[loc].isupper() == False:
+        if (plainText[loc].islower() or plainText[loc].isupper()) == False:
              cipherText[loc] = plainText[loc]
              continue
-
 
          #如果是字母，依次分配给letter1和letter2
         if exchange == 0:
@@ -219,31 +219,51 @@ def Plain2Cipher(plainText,keyList):
 def Cipher2Plain(cipherText,keyList):
     plainText = []
 
+    #判断是否为大写字母
+    isUpper1 = False
+    isUpper2 = False
+
     # 将明文长度与密文一致，并且初始化为0
     for i in range(len(cipherText)):
         plainText.append(0)
 
     exchange = 0
-    for loc in range(len(cipherText)):
+    print(cipherText)
+    print(type(cipherText))
 
+    for loc in range(len(cipherText)):
         #如果不是字母，直接赋值给明文
-        if cipherText[loc].isalpha() == False:
+        if (cipherText[loc].islower() or cipherText[loc].isupper()) == False:
              plainText[loc] = cipherText[loc]
              continue
 
          #如果是字母，依次分配给letter1和letter2
         if exchange == 0:
-            letter1 = cipherText[loc]
+            if cipherText[loc].isupper():
+                isUpper1 = True
+                letter1 = chr(ord(cipherText[loc]) + 32)
+            else:
+                isUpper1 = False
+                letter1 = cipherText[loc]
             loc1 = loc
             exchange = 0.5
         elif exchange == 0.5:
-            letter2 = cipherText[loc]
+            if cipherText[loc].isupper():
+                isUpper2 = True
+                letter2 = chr(ord(cipherText[loc]) + 32)
+            else:
+                isUpper2 = False
+                letter2 = cipherText[loc]
             loc2 = loc
             exchange = 1
 
         #将两个字母依据规则放到明文
         if exchange == 1:
             (letter1,letter2) = ChangePlainText(letter1,letter2,keyList)
+            if isUpper1 == True:
+                letter1  = chr(ord(letter1) - 32)
+            if isUpper2 == True:
+                letter2 = chr(ord(letter2) - 32)
             plainText[loc1] = letter1
             plainText[loc2] = letter2
             exchange = 0;
