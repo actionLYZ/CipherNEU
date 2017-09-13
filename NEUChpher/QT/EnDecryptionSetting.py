@@ -337,6 +337,6 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
             message.warning(self,"Error","Wrong Secretkey Format!",QtWidgets.QMessageBox.Ok)
             message.close()
         else:
-            GlobalWindow.enCipherType = self.comboBox.currentText()
-            GlobalWindow.encryptKey = self.lineEdit.text()
+            GlobalWindow.deCipherType = self.comboBox.currentText()
+            GlobalWindow.decryptKey = self.lineEdit.text()
             self.close()

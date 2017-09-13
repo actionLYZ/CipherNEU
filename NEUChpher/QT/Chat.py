@@ -239,7 +239,9 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
     def ShowMessage(self):
         message = QtWidgets.QMessageBox()
         str = self.textEdit.toPlainText()
-        length = len(self.textEdit.toPlainText())
+        if(str==''):
+            str = 'None'
+        length = len(str)
         wideth = int(length * (3/5))
         for i in range(int(length/wideth)):
             str = str[:i*22+wideth]+'\n'+str[i*22+wideth:]
@@ -367,7 +369,7 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
             message.warning(self,"Error","You haven't input ciphertext!",QtWidgets.QMessageBox.Ok)
             message.close()
         else:
-            if(self.DefineCipherType(plaintext,0)==False):
+            if(self.DefineCipherType(ciphertext,1)==False):
                 message = QtWidgets.QMessageBox()
                 message.warning(self,"Error","You haven't set secretkey!",QtWidgets.QMessageBox.Ok)
                 message.close()
