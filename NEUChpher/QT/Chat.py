@@ -7,7 +7,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from QT import Login,Register,Setting,FilePath,LoginedChat,EnDecryptionSetting,LoginedChat
-import Resource.ChatResource
+import Resource.ChatResource,Resource.TitleResource
 from Cipher import RSA #ECC
 from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere#, AES
 import GlobalWindow
@@ -17,7 +17,7 @@ class Ui_Dialog(object):
         Dialog.setObjectName("Dialog")
         Dialog.resize(707, 493)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/background.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Dialog.setWindowIcon(icon)
         self.layoutWidget = QtWidgets.QWidget(Dialog)
         self.layoutWidget.setGeometry(QtCore.QRect(20, 20, 671, 453))
@@ -214,6 +214,7 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                                     "Text Files (*.txt)")   
         if self.path != '':
             document = open(self.path,"r")
+            #print(document.readlines())
             self.content = document.readlines()
             self.content = ''.join(self.content)
             self.textEdit.setText(self.content)
@@ -238,12 +239,22 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
     #打印双机加密信息
     def ShowMessage(self):
         message = QtWidgets.QMessageBox()
+        beforeStr = '----------- CipherText -----------\n'
         str = self.textEdit.toPlainText()
-        length = len(self.textEdit.toPlainText())
+        if(str==''):
+            str = 'None'
+        length = len(str)
         wideth = int(length * (3/5))
+        if wideth < 15:
+            wideth = 15
+        spacenum = (34 - wideth) // 2
+        spacestr = ' ' * spacenum
         for i in range(int(length/wideth)):
-            str = str[:i*22+wideth]+'\n'+str[i*22+wideth:]
-        message.about(self,"Ciphertext",str)
+            str = spacestr + str[:i*22+wideth]+'\n'+spacestr + str[i*22+wideth:]
+        if length/wideth < 1:
+            str = spacestr +str[:]
+        str = beforeStr + str[:]
+        message.about(self,"Preview",str)
     #打印单机加解密信息
     def EncryptPrint(self):
         if(self.comboBox.currentText()=='Encryption'):
@@ -255,6 +266,8 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
     def DefineCipherType(self,text,endeMode):      #endeMode = 0 -> encryption/ endeMode = 1 -> decryption
         Text = ''
         if(endeMode==0):
+            if(GlobalWindow.encryptKey==''):
+                return False
             if(GlobalWindow.enCipherType=='Caesar'):
                 Text = Caesar.Encrypt(text,int(GlobalWindow.encryptKey))
             elif(GlobalWindow.enCipherType=='Affine'):
@@ -296,6 +309,8 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
             #elif(GlobalWindow.enCipherType=='DH'):
                 #Text = DH.Encrypt(text,GlobalWindow.encryptKey)
         elif(endeMode==1):
+            if(GlobalWindow.decryptKey==''):
+                return False
             if(GlobalWindow.deCipherType=='Caesar'):
                 Text = Caesar.Decrypt(text,int(GlobalWindow.decryptKey))
             elif(GlobalWindow.deCipherType=='Affine'):
@@ -341,16 +356,36 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
     #加密
     def Encryption(self):
         plaintext = self.textEdit.toPlainText()
-        ciphertext = self.DefineCipherType(plaintext,0)
-        self.filetext = 'Plaintext: '+plaintext+'\n'+'Ciphertext: '+ciphertext
-        self.textBrowser.setText(self.textBrowser.toPlainText()+'Plaintext: '+plaintext+'\n'+'Ciphertext: '+ciphertext+'\n\n')
-
+        if(plaintext == ''):
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","You haven't input plaintext!",QtWidgets.QMessageBox.Ok)
+            message.close()
+        else:
+            if(self.DefineCipherType(plaintext,0)==False):
+                message = QtWidgets.QMessageBox()
+                message.warning(self,"Error","You haven't set secretkey!",QtWidgets.QMessageBox.Ok)
+                message.close()
+            else:
+                ciphertext = self.DefineCipherType(plaintext,0)
+                self.filetext = 'Plaintext: '+plaintext+'\n'+'Ciphertext: '+ciphertext
+                self.textBrowser.setText(self.textBrowser.toPlainText()+'Plaintext: '+plaintext+'\n'+'Ciphertext: '+ciphertext+'\n\n')
+    
     #解密
     def Decryption(self):
         ciphertext = self.textEdit.toPlainText()
-        plaintext = self.DefineCipherType(ciphertext,1)
-        filetext = plaintext
-        self.textBrowser.setText(self.textBrowser.toPlainText()+'Ciphertext: '+ciphertext+'\n'+'Plaintext: '+plaintext+'\n\n')  
+        if(ciphertext == ''):
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error","You haven't input ciphertext!",QtWidgets.QMessageBox.Ok)
+            message.close()
+        else:
+            if(self.DefineCipherType(ciphertext,1)==False):
+                message = QtWidgets.QMessageBox()
+                message.warning(self,"Error","You haven't set secretkey!",QtWidgets.QMessageBox.Ok)
+                message.close()
+            else:
+                plaintext = self.DefineCipherType(ciphertext,1)
+                filetext = plaintext
+                self.textBrowser.setText(self.textBrowser.toPlainText()+'Ciphertext: '+ciphertext+'\n'+'Plaintext: '+plaintext+'\n\n')  
     #打开注册窗口
     def OpenRegisterWindows(self):
         self.registerWindows = Register.RegisterWindow()

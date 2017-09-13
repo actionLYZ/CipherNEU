@@ -215,7 +215,7 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
             self.lineEdit.setText('3')
         elif(self.comboBox.currentText()=='Affine'):
             self.lineEdit.setText('3 1')
-        elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "AutokeyCiphertext", "AutokeyPlaintext", "Playfair", "Permutation", "ColumnPermutation"]:
+        elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "ColumnPermutation"]:
             self.lineEdit.setText("hello")
         elif(self.comboBox.currentText()=='Double Transposition'):
             self.lineEdit.setText('')
@@ -235,6 +235,8 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
         elif type == "DES":
             return key.isalpha() and len(key)==8
         elif type == "Affine":
+            if(' ' not in key):
+                return False
             for i in range(len(key)):
                 if(key[i]==' '):
                     a = key[:i]
@@ -307,6 +309,8 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
         elif type == "DES":
             return key.isalpha() and len(key)==8
         elif type == "Affine":
+            if(' ' not in key):
+                return False
             for i in range(len(key)):
                 if(key[i]==' '):
                     a = key[:i]

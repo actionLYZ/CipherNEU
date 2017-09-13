@@ -121,45 +121,17 @@ class Ui_Login(object):
             message = QtWidgets.QMessageBox()
             message.information(self,"Pass","登陆成功！")
             message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-            message.button(QtWidgets.QMessageBox.Ok).setText("确定")      #bug
+
             GlobalWindow.username = self.line_nickname.text().encode()
             GlobalWindow.globalWindow.logedwindow.label_4.setText("Welcome!\n\n" + self.line_nickname.text())
             GlobalWindow.globalWindow.logedwindow.show()
             GlobalWindow.globalWindow.chatwindow.close()
             self.close()
-            #_thread.start_new_thread(self.recvThread, ())
             return True
         else:
             message = QtWidgets.QMessageBox()
             message.warning(self,"Error","登陆异常！请检查服务器设置。",QtWidgets.QMessageBox.Ok)
             return False
-        ''' 
-        document = open("User.txt","r")
-        for context in document.readlines():
-            if self.line_nickname.text() == context[:context.find(' ')]:
-                if self.line_password.text() == context[context.find(' ')+1:-1]:
-                    message = QtWidgets.QMessageBox()
-                    message.about(self,"Pass","登陆成功！")
-                    message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-                    document.close()
-                    
-                    GlobalWindow.globalWindow.logedwindow.label_4.setText("Welcome!\n\n" + self.line_nickname.text())
-                    GlobalWindow.globalWindow.logedwindow.show()
-                    GlobalWindow.globalWindow.chatwindow.close()
-                    
-                    return True
-
-                else:
-                    message = QtWidgets.QMessageBox()
-                    message.warning(self,"Error","用户名与密码不匹配！",QtWidgets.QMessageBox.Ok)
-                    document.close()
-                    return False
-
-        message = QtWidgets.QMessageBox()
-        message.warning(self,"Error","用户名不存在！",QtWidgets.QMessageBox.Ok)
-        document.close()
-        return False
-        '''
 
     def OpenRegister(self):
         self.registerWindow = Register.RegisterWindow()
