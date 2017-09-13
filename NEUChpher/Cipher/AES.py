@@ -16,6 +16,7 @@ print(Cipher.AES.Decrypt(ciphertext, key))
 
 from Crypto.Cipher import AES
 from Crypto import Random
+
 import base64
 
 BS = 16
@@ -34,8 +35,8 @@ def Decrypt(ciphertext, key):
     cipher = AES.new(key, AES.MODE_CBC, iv)
     return bytes.decode(unpad(cipher.decrypt(ciphertext[16:])))
 
-key = "Sixteen byte key"
-plaintext = "Attack at dawn"
-ciphertext = Cipher.AES.Encrypt(plaintext, key)
-print(ciphertext)
-print(Decrypt(ciphertext, key))
+#key = "Sixteen byte key"
+#plaintext = "Attack at dawn"
+#ciphertext = Cipher.AES.Encrypt(plaintext, key)
+#print(ciphertext)
+#print(Decrypt(ciphertext, key))

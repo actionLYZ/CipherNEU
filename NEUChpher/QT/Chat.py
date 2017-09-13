@@ -9,7 +9,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from QT import Login,Register,Setting,FilePath,LoginedChat,EnDecryptionSetting,LoginedChat
 import Resource.ChatResource,Resource.TitleResource
 from Cipher import RSA #ECC
-from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere#, AES
+from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere, AES
 import GlobalWindow
 import time
 
@@ -329,7 +329,7 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                 Text = CA.OneDEncrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.enCipherType=='DES'):
                 Text = DES.Encrypt(text,GlobalWindow.encryptKey)
-            elif(GlobalWindow.enCipherType=='AES-128'|GlobalWindow.enCipherType=='AES-192'|GlobalWindow.enCipherType=='AES-256'):
+            elif(GlobalWindow.enCipherType=='AES-128'or GlobalWindow.enCipherType=='AES-192'or GlobalWindow.enCipherType=='AES-256'):
                 Text = AES.Encrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.enCipherType=='RSA'):
                 Text = RSA.Encrypt(text,GlobalWindow.encryptKey)
@@ -337,10 +337,6 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                 #Text = ECC.Encrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.enCipherType=='MD5'):
                 Text = MD5.Encrypt(text,GlobalWindow.encryptKey)
-            #elif(GlobalWindow.enCipherType=='DSA'):
-                #Text = DSA.Encrypt(text,GlobalWindow.encryptKey)
-            #elif(GlobalWindow.enCipherType=='DH'):
-                #Text = DH.Encrypt(text,GlobalWindow.encryptKey)
         elif(endeMode==1):
             if GlobalWindow.deCipherType == "None":
                 Text = text
@@ -372,18 +368,14 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                 Text = CA.OneDEncrypt(text,GlobalWindow.decryptKey)
             elif(GlobalWindow.deCipherType=='DES'):
                 Text = DES.Decrypt(text,GlobalWindow.decryptKey)
-            #elif(GlobalWindow.deCipherType=='AES'):
-                #Text = AES.Ddecrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='AES-128'or GlobalWindow.deCipherType=='AES-192'or GlobalWindow.deCipherType=='AES-256'):
+                Text = AES.Decrypt(text,GlobalWindow.decryptKey)
             elif(GlobalWindow.deCipherType=='RSA'):
                 Text = RSA.Decrypt(text,GlobalWindow.decryptKey)
-            elif(GlobalWindow.deCipherType=='ECC'):
-                Text = ECC.Decrypt(text,GlobalWindow.decryptKey)
+            #elif(GlobalWindow.deCipherType=='ECC'):
+                #Text = ECC.Decrypt(text,GlobalWindow.decryptKey)
             elif(GlobalWindow.deCipherType=='MD5'):
                 Text = MD5.Decrypt(text,GlobalWindow.decryptKey)
-            #elif(GlobalWindow.deCipherType=='DSA'):
-                #Text = DSA.Decrypt(text,GlobalWindow.decryptKey)
-            #elif(GlobalWindow.deCipherType=='DH'):
-                #Text = DH.Decrypt(text,GlobalWindow.decryptKey)
         return Text 
 
     #打开注册窗口

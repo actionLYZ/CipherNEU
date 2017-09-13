@@ -45,8 +45,6 @@ class En_Ui_Dialog(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
-        #self.comboBox.addItem("")
-        #self.comboBox.addItem("")
         self.gridLayout.addWidget(self.comboBox, 0, 1, 1, 1)
         self.buttonBox = QtWidgets.QDialogButtonBox(self.gridLayoutWidget)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
@@ -95,8 +93,6 @@ class En_Ui_Dialog(object):
         self.comboBox.setItemText(18, _translate("Dialog", "RSA"))
         self.comboBox.setItemText(19, _translate("Dialog", "ECC"))
         self.comboBox.setItemText(20, _translate("Dialog", "MD5"))
-        #self.comboBox.setItemText(21, _translate("Dialog", "DSA"))
-        #self.comboBox.setItemText(22, _translate("Dialog", "DH"))
         self.label.setText(_translate("Dialog", "Secret Key:"))
         self.comboBox.setCurrentText(_translate("Dialog", GlobalWindow.enCipherType))
         self.lineEdit.setText(_translate("Dialog", GlobalWindow.encryptKey))
@@ -134,9 +130,7 @@ class De_Ui_Dialog(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
-        #self.comboBox.addItem("")
-        #self.comboBox.addItem("")
-        #self.comboBox.addItem("")
+        self.comboBox.addItem("")
         self.gridLayout.addWidget(self.comboBox, 0, 1, 1, 1)
         self.buttonBox = QtWidgets.QDialogButtonBox(self.gridLayoutWidget)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
@@ -186,9 +180,7 @@ class De_Ui_Dialog(object):
         self.comboBox.setItemText(17, _translate("Dialog", "AES-256"))
         self.comboBox.setItemText(18, _translate("Dialog", "RSA"))
         self.comboBox.setItemText(19, _translate("Dialog", "ECC"))
-        #self.comboBox.setItemText(20, _translate("Dialog", "MD5"))
-        #self.comboBox.setItemText(21, _translate("Dialog", "DSA"))
-        #self.comboBox.setItemText(22, _translate("Dialog", "DH"))
+        self.comboBox.setItemText(20, _translate("Dialog", "MD5"))
         self.label.setText(_translate("Dialog", "Secret Key:"))
         self.label_2.setText(_translate("Dialog", "Decryption Algorithm:"))
         self.comboBox.setCurrentText(_translate("Dialog", GlobalWindow.deCipherType))
@@ -221,7 +213,15 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
             self.lineEdit.setText('23')
         elif(self.comboBox.currentText()=='DES'):
             self.lineEdit.setText('abcdefgh')
-        elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation", "RC4"]:
+        elif(self.comboBox.currentText()=='AES-128'):
+            self.lineEdit.setText('abcdefghijklmnop')
+        elif(self.comboBox.currentText()=='AES-192'):
+            self.lineEdit.setText('abcdefghijklmnopqrstuvwx')
+        elif(self.comboBox.currentText()=='AES-256'):
+            self.lineEdit.setText('abcdefghijklmnopqrstuvwxyzabcdef')
+        elif(self.comboBox.currentText()=='RSA' or self.comboBox.currentText()=='ECC' or self.comboBox.currentText()=='MD5'):
+            self.lineEdit.setText('')
+        elif self.comboBox.currentText() in ['RC4', "Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation"]:
             self.lineEdit.setText("hello")
         
     # Check out if the key is valid, such as AES-128(16 bytes), AES-192(24 bytes), AES-256(32 bytes), etc.
@@ -260,6 +260,8 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
             return isinstance(key, str) and len(key) == 32
         elif type =='CA':
             return key.isdigit()
+        elif type =='RSA'or type =='ECC' or type == 'MD5':
+            return key == ''
         elif ["Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation"].index(type) != -1:
             return isinstance(key, str) and key.isalpha()
         return False
@@ -300,9 +302,18 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
             self.lineEdit.setText('23')
         elif(self.comboBox.currentText()=='DES'):
             self.lineEdit.setText('abcdefgh')
-        elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation", "RC4"]:
+        elif(self.comboBox.currentText()=='AES-128'):
+            self.lineEdit.setText('abcdefghijklmnop')
+        elif(self.comboBox.currentText()=='AES-192'):
+            self.lineEdit.setText('abcdefghijklmnopqrstuvwx')
+        elif(self.comboBox.currentText()=='AES-256'):
+            self.lineEdit.setText('abcdefghijklmnopqrstuvwxyzabcdef')
+        elif(self.comboBox.currentText()=='RSA'or self.comboBox.currentText()=='ECC'or self.comboBox.currentText()=='MD5'):
+            self.lineEdit.setText('')
+        elif self.comboBox.currentText() in ['RC4', "Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation"]:
             self.lineEdit.setText("hello")
 
+    # Check out if the key is valid, such as AES-128(16 bytes), AES-192(24 bytes), AES-256(32 bytes), etc.
     def IsValid(self,key, type):
         if type == "None" or type == "MD5":
             return True
@@ -336,6 +347,10 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
             return isinstance(key, str) and len(key) == 24
         elif type == "AES-256":
             return isinstance(key, str) and len(key) == 32
+        elif type =='CA':
+            return key.isdigit()
+        elif type =='RSA'or type =='ECC'or type == 'MD5':
+            return key == ''
         elif ["Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation"].index(type) != -1:
             return isinstance(key, str) and key.isalpha()
         return False
