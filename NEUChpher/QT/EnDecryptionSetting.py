@@ -201,7 +201,8 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
         #self.SetExample()
         self.buttonBox.accepted.connect(self.Accept)
         self.buttonBox.rejected.connect(self.close)
-        self.comboBox.activated.connect(self.SetExample)
+        self.comboBox.currentTextChanged.connect(self.SetExample)
+        #self.comboBox.activated.connect(self.SetExample)
         if GlobalWindow.enCipherType == "None":
             self.lineEdit.setDisabled(True)
 
