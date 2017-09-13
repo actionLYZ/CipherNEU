@@ -162,7 +162,7 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
 
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "NEUCryptolalia"))
         #self.label_4.setText(_translate("Dialog", "Welcome!\n"))
         self.comboBox.setItemText(0, _translate("Dialog", "Plaintext"))
         self.comboBox.setItemText(1, _translate("Dialog", "Ciphertext"))
