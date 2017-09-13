@@ -270,7 +270,7 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                     message.warning(self,"Error","内容不能为空！",QtWidgets.QMessageBox.Ok)
                     return
                 ciphertext = self.DefineCipherType(plaintext, 0)
-                self.writeToTextBrowser("\nPlaintext: " + plaintext + "\nCiphertext: " + ciphertext)
+                self.writeToTextBrowser("\nPlaintext: " + plaintext + "\nCiphertext: " + ciphertext + "\n")
             else:
                 ciphertext = self.textEdit.toPlainText()
                 if ciphertext == "":
@@ -278,20 +278,20 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                     message.warning(self,"Error","内容不能为空！",QtWidgets.QMessageBox.Ok)
                     return
                 plaintext = self.DefineCipherType(ciphertext, 1)
-                self.writeToTextBrowser("\nCiphertext: " + ciphertext + "\nPlaintext: " + plaintext)
+                self.writeToTextBrowser("\nCiphertext: " + ciphertext + "\nPlaintext: " + plaintext + "\n")
         else:
             if self.comboBox.currentText() == "Encryption":
                 plaintext = self.readFile(GlobalWindow.uploadPath)
                 ciphertext = self.DefineCipherType(plaintext, 0)
                 GlobalWindow.filedata = ciphertext
                 self.SaveFile()
-                self.writeToTextBrowser("\nPlaintext file: " + GlobalWindow.uploadPath + "\nCiphertext file: " + GlobalWindow.downloadPath)
+                self.writeToTextBrowser("\nPlaintext file: " + GlobalWindow.uploadPath + "\nCiphertext file: " + GlobalWindow.downloadPath + "\n")
             else:
                 ciphertext = self.readFile(GlobalWindow.uploadPath)
                 plaintext = self.DefineCipherType(ciphertext, 1)
                 GlobalWindow.filedata = plaintext
                 self.SaveFile()
-                self.writeToTextBrowser("\nCiphertext file: " + GlobalWindow.uploadPath + "\nPlaintext file: " + GlobalWindow.downloadPath)
+                self.writeToTextBrowser("\nCiphertext file: " + GlobalWindow.uploadPath + "\nPlaintext file: " + GlobalWindow.downloadPath + "\n")
             GlobalWindow.isFile = False
         self.textEdit.setText("")
 

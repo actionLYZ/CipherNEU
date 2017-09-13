@@ -221,7 +221,7 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
             self.lineEdit.setText('23')
         elif(self.comboBox.currentText()=='DES'):
             self.lineEdit.setText('abcdefgh')
-        elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation"]:
+        elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation", "RC4"]:
             self.lineEdit.setText("hello")
         
     # Check out if the key is valid, such as AES-128(16 bytes), AES-192(24 bytes), AES-256(32 bytes), etc.
@@ -300,9 +300,8 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
             self.lineEdit.setText('23')
         elif(self.comboBox.currentText()=='DES'):
             self.lineEdit.setText('abcdefgh')
-        elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation"]:
+        elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation", "RC4"]:
             self.lineEdit.setText("hello")
-        
 
     def IsValid(self,key, type):
         if type == "None" or type == "MD5":
