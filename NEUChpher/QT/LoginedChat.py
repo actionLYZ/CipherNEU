@@ -265,6 +265,10 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
     def Send(self):
         if not GlobalWindow.isFile:
             plaintext = self.textEdit.toPlainText()
+            if plaintext == "":
+                message = QtWidgets.QMessageBox()
+                message.warning(self,"Error","内容不能为空！",QtWidgets.QMessageBox.Ok)
+                return
             if self.comboBox.currentText() == "Plaintext":
                 self.writeToTextBrowser(GlobalWindow.username.decode() + ": " + plaintext)
                 pkt = Packet(TYP_PTX, GlobalWindow.username, self.lineEdit.text(), plaintext)
@@ -383,20 +387,6 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
                 #Text = DH.Decrypt(text,GlobalWindow.decryptKey)
         return Text 
 
-    #加密
-    def Encryption(self):
-        plaintext = self.textEdit.toPlainText()
-        ciphertext = self.DefineCipherType(plaintext,0)
-        self.filetext = 'Plaintext: '+plaintext+'\n'+'Ciphertext: '+ciphertext
-        self.textBrowser.setText(self.textBrowser.toPlainText()+'Plaintext: '+plaintext+'\n'+'Ciphertext: '+ciphertext+'\n\n')
-    
-    #解密
-    def Decryption(self):
-        ciphertext = self.textEdit.toPlainText()
-        plaintext = self.DefineCipherType(ciphertext,1)
-        filetext = plaintext
-        self.textBrowser.setText(self.textBrowser.toPlainText()+'Ciphertext: '+ciphertext+'\n'+'Plaintext: '+plaintext+'\n\n')  
-
     #打开加密设置窗口
     def OpenEncryptionSettingWindows(self):
         self.EnSettingWindows = EnDecryptionSetting.EncryptionSettingWindow()
@@ -453,6 +443,7 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
                     #temp, sep, GlobalWindow.filetype = name.rpartition(".")
                     GlobalWindow.filedata = data
                     self.writeToTextBrowser(pkt.src.decode() + ": (Receive file: " + name + ")")
+                    self.SaveFile()
                     #message = QtWidgets.QMessageBox()
                     #message.information(self,"Pass","已接收到明文文件，请下载！",QtWidgets.QMessageBox.Yes)
                 elif pkt.typ == TYP_CFL:
@@ -466,6 +457,7 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
                     self.writeToTextBrowser(pkt.src.decode() + ": (Receive file: " + name + ", encrypted)")
                     #message = QtWidgets.QMessageBox()
                     #message.information(self,"Pass","已接收到密文文件，请下载！",QtWidgets.QMessageBox.Yes)
+                    self.SaveFile()
                 else:
                     print(recv_tmp.decode())
             except socket.error:

@@ -11,6 +11,7 @@ import Resource.ChatResource,Resource.TitleResource
 from Cipher import RSA #ECC
 from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere#, AES
 import GlobalWindow
+import time
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -163,14 +164,14 @@ class Ui_Dialog(object):
         self.pushButton_2.setText(_translate("Dialog", "Login"))
         self.pushButton_3.setText(_translate("Dialog", "Register"))
         self.pushButton.setText(_translate("Dialog", "Settings"))
-        self.label.setText(_translate("Dialog", "To:"))
+        self.label.setText(_translate("Dialog", ""))
         self.label_2.setText(_translate("Dialog", "My messages:"))
         self.toolButton_3.setText(_translate("Dialog", ""))
         self.toolButton_2.setText(_translate("Dialog", ""))
         self.toolButton_4.setText(_translate("Dialog", ""))
         self.toolButton.setText(_translate("Dialog", ""))
         self.pushButton_4.setText(_translate("Dialog", "Preview"))
-        self.pushButton_8.setText(_translate("Dialog", "Send"))
+        self.pushButton_8.setText(_translate("Dialog", "Process"))
 
 class ChatWindows(QtWidgets.QWidget,Ui_Dialog):    
     filetext = ''
@@ -187,7 +188,7 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                     |QtCore.Qt.WindowCloseButtonHint
                     |QtCore.Qt.MSWindowsFixedSizeDialogHint )        #只允许最小和关闭，不允许最大化,不允许调整大小
         #控件映射
-        self.pushButton_8.clicked.connect(self.EncryptPrint)
+        self.pushButton_8.clicked.connect(self.Process)
         self.pushButton_4.clicked.connect(self.ShowMessage)
         self.pushButton_2.clicked.connect(self.OpenLoginWindows)
         self.pushButton_3.clicked.connect(self.OpenRegisterWindows)
@@ -196,6 +197,7 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
         self.toolButton_2.clicked.connect(self.OpenDecryptionSettingWindows)
         self.toolButton_4.clicked.connect(self.ReadFile)
         self.toolButton.clicked.connect(self.SaveFile) 
+        self.lineEdit.setVisible(False)
 
     #显示悬停提示
     def DisplayTip(self): 
@@ -213,11 +215,13 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                                     "C:/",  
                                     "Text Files (*.txt)")   
         if self.path != '':
-            document = open(self.path,"r")
+            GlobalWindow.uploadPath = self.path
+            document = open(self.path,"r+")
             #print(document.readlines())
             self.content = document.readlines()
             self.content = ''.join(self.content)
             self.textEdit.setText(self.content)
+            GlobalWindow.isFile = True
             document.close()
 
     #保存文件
@@ -228,13 +232,10 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                                     "C:/",
                                     "Text Files (*.txt)")
         if filepath != '':
+            GlobalWindow.downloadPath = filepath
             document = open(filepath,"w+")
-            document.write(self.filetext)
+            document.write(GlobalWindow.filedata)
             document.close()
-
-    #发送对象
-    def GetToPersonName(self):
-        self.toPersonName = self.lineEdit.text()
 
     #打印双机加密信息
     def ShowMessage(self):
@@ -259,12 +260,40 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
             str = spacestr +str[:]
         str = beforeStr + str[:]
         message.about(self,"Preview",str)
-    #打印单机加解密信息
-    def EncryptPrint(self):
-        if(self.comboBox.currentText()=='Encryption'):
-            self.Encryption()
-        elif(self.comboBox.currentText()=='Decryption'):
-            self.Decryption()
+
+    def Process(self):
+        if not GlobalWindow.isFile:
+            if self.comboBox.currentText() == "Encryption":
+                plaintext = self.textEdit.toPlainText()
+                if plaintext == "":
+                    message = QtWidgets.QMessageBox()
+                    message.warning(self,"Error","内容不能为空！",QtWidgets.QMessageBox.Ok)
+                    return
+                ciphertext = self.DefineCipherType(plaintext, 0)
+                self.writeToTextBrowser("\nPlaintext: " + plaintext + "\nCiphertext: " + ciphertext)
+            else:
+                ciphertext = self.textEdit.toPlainText()
+                if ciphertext == "":
+                    message = QtWidgets.QMessageBox()
+                    message.warning(self,"Error","内容不能为空！",QtWidgets.QMessageBox.Ok)
+                    return
+                plaintext = self.DefineCipherType(ciphertext, 1)
+                self.writeToTextBrowser("\nCiphertext: " + ciphertext + "\nPlaintext: " + plaintext)
+        else:
+            if self.comboBox.currentText() == "Encryption":
+                plaintext = self.readFile(GlobalWindow.uploadPath)
+                ciphertext = self.DefineCipherType(plaintext, 0)
+                GlobalWindow.filedata = ciphertext
+                self.SaveFile()
+                self.writeToTextBrowser("\nPlaintext file: " + GlobalWindow.uploadPath + "\nCiphertext file: " + GlobalWindow.downloadPath)
+            else:
+                ciphertext = self.readFile(GlobalWindow.uploadPath)
+                plaintext = self.DefineCipherType(ciphertext, 1)
+                GlobalWindow.filedata = plaintext
+                self.SaveFile()
+                self.writeToTextBrowser("\nCiphertext file: " + GlobalWindow.uploadPath + "\nPlaintext file: " + GlobalWindow.downloadPath)
+            GlobalWindow.isFile = False
+        self.textEdit.setText("")
 
     #根据不同加解密类型加解密
     def DefineCipherType(self,text,endeMode):      #endeMode = 0 -> encryption/ endeMode = 1 -> decryption
@@ -357,40 +386,6 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                 #Text = DH.Decrypt(text,GlobalWindow.decryptKey)
         return Text 
 
-    #加密
-    def Encryption(self):
-        plaintext = self.textEdit.toPlainText()
-        if(plaintext == ''):
-            message = QtWidgets.QMessageBox()
-            message.warning(self,"Error","You haven't input plaintext!",QtWidgets.QMessageBox.Ok)
-            message.close()
-        else:
-            if(self.DefineCipherType(plaintext,0)==False):
-                message = QtWidgets.QMessageBox()
-                message.warning(self,"Error","You haven't set secretkey!",QtWidgets.QMessageBox.Ok)
-                message.close()
-            else:
-                ciphertext = self.DefineCipherType(plaintext,0)
-                self.filetext = 'Plaintext: '+plaintext+'\n'+'Ciphertext: '+ciphertext
-                self.textBrowser.setText(self.textBrowser.toPlainText()+'Plaintext: '+plaintext+'\n'+'Ciphertext: '+ciphertext+'\n\n')
-                return ciphertext
-    
-    #解密
-    def Decryption(self):
-        ciphertext = self.textEdit.toPlainText()
-        if(ciphertext == ''):
-            message = QtWidgets.QMessageBox()
-            message.warning(self,"Error","You haven't input ciphertext!",QtWidgets.QMessageBox.Ok)
-            message.close()
-        else:
-            if(self.DefineCipherType(ciphertext,1)==False):
-                message = QtWidgets.QMessageBox()
-                message.warning(self,"Error","You haven't set secretkey!",QtWidgets.QMessageBox.Ok)
-                message.close()
-            else:
-                plaintext = self.DefineCipherType(ciphertext,1)
-                filetext = plaintext
-                self.textBrowser.setText(self.textBrowser.toPlainText()+'Ciphertext: '+ciphertext+'\n'+'Plaintext: '+plaintext+'\n\n')  
     #打开注册窗口
     def OpenRegisterWindows(self):
         self.registerWindows = Register.RegisterWindow()
@@ -414,3 +409,23 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
     def OpenDecryptionSettingWindows(self):
         self.DeSettingWindows = EnDecryptionSetting.DecryptionSettingWindow()
         self.DeSettingWindows.show()
+
+    def writeToTextBrowser(self, str):
+        self.textBrowser.insertPlainText("[" + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "]" + str + "\n")
+        vb = self.textBrowser.verticalScrollBar() 
+        vb.setValue(vb.maximum()) 
+        return
+
+    # Read bytes from the file
+    def readFile(self, file):
+        fin = open(file, "r+")
+        text = fin.read()
+        fin.close()
+        return text
+
+    #Write bytes to a file
+    def writeFile(self, file, text):
+        fout = open(file, "w+")
+        fout.write(text)
+        fout.close()
+        return

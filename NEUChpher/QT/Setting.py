@@ -94,8 +94,6 @@ class Ui_Setting(object):
         GlobalWindow.port = int(self.line_Port.text())
         message = QtWidgets.QMessageBox()
         message.information(self,"Pass","设置成功！",QtWidgets.QMessageBox.Yes)
-        self.close()
-
 
 #设置窗口对象
 class SettingWindow(QtWidgets.QWidget,Ui_Setting):  

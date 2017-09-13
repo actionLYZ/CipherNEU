@@ -188,3 +188,4 @@ class RegisterWindow(QtWidgets.QWidget,Ui_register):
                             |QtCore.Qt.WindowCloseButtonHint
                             |QtCore.Qt.MSWindowsFixedSizeDialogHint)        #只允许最小和关闭，不允许最大化,不允许调整大小
         self.setupUi(self) 
+        self.but_register.setDefault(True)

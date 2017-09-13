@@ -208,7 +208,7 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
 
     def SetExample(self):
         self.lineEdit.setDisabled(False)
-        if (self.comboBox.currentText()=='None'):
+        if (self.comboBox.currentText()=='None' or self.comboBox.currentText()=='MD5'):
             self.lineEdit.setText('')
             self.lineEdit.setDisabled(True)
         elif(self.comboBox.currentText()=='Caesar'):
@@ -226,7 +226,7 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
         
     # Check out if the key is valid, such as AES-128(16 bytes), AES-192(24 bytes), AES-256(32 bytes), etc.
     def IsValid(self,key, type):
-        if type == "None":
+        if type == "None" or type == "MD5":
             return True
         elif type == "Caesar":
             if key.isdigit():
@@ -287,7 +287,7 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
 
     def SetExample(self):
         self.lineEdit.setDisabled(False)
-        if (self.comboBox.currentText()=='None'):
+        if (self.comboBox.currentText()=='None' or self.comboBox.currentText()=='MD5'):
             self.lineEdit.setText('')
             self.lineEdit.setDisabled(True)
         elif(self.comboBox.currentText()=='Caesar'):
@@ -305,7 +305,7 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
         
 
     def IsValid(self,key, type):
-        if type == "None":
+        if type == "None" or type == "MD5":
             return True
         elif type == "Caesar":
             if key.isdigit():
