@@ -32,8 +32,9 @@ str_len = 0
 r = random.randint(100,1000)
 k = random.randint(100,1000) # the k is private key
 
-message = "Hello World"
+
 result = ""
+ciphertext = ""
 
 def ECC_Decrypt(C1,C2,add):
     # print ("Finishing Encrypt")
@@ -55,7 +56,7 @@ def ECC_Decrypt(C1,C2,add):
     Mx = P[0] - add
     result += chr(Mx)
     # print(chr(Mx))
-    return 0
+    return result
 
 def ECC_Encrypt(message,index):
     x = ord(message[index]) # char to int
@@ -178,22 +179,43 @@ def Encrypt(message):
         C2x.append(M2[0])
         C2y.append(M2[1])
         Add.append(add)
-    return str(C1x)+' '+str(C1y)+' '+str(C2x)+' '+str(C2y)
+    for e in (C1x):
+        e = str(e)
+    for e in (C1y):
+        e = str(e)
+    for e in (C2x):
+        e = str(e)
+    for e in (C2y):
+        e = str(e)
+
+
+# input the ciphertext to get plaintext
+def Decrypt_Point(P):
+    # The P is a string includes space which divides 
+    # to 5 points to decrypt (you should write correct points first)
+    P = P.spilt()
+    M1 = [int(P[0]),int(P[1])]
+    M2 = [int(P[2]),int(P[3])]
+    add = int(P[4])
+    ECC_Decrypt(M1,M2,add)
+
+
         
-def Decrypt(message):
-    for j in range(4):
-        for i in range(len(message)):
-            if(message[i]==' '):
-                C[j] = message[:i]
-                message = message[i:]
-                break
-    C[4] = message
+def Decrypt(C1x,C1y,C2x,C2y,Add):
+
+    for e in (C1x):
+        e = int(e)
+    for e in (C1y):
+        e = int(e)
+    for e in (C2x):
+        e = int(e)
+    for e in (C2y):
+        e = int(e)
     for i in range(str_len):
-        M1 = [C[0][i],C[1][i]]
-        M2 = [C[2][i],C[3][i]]
-        add = C[4][i]
+        M1 = [C1x[i],C1y[i]]
+        M2 = [C2x[i],C2y[i]]
+        add = Add[i]
         ECC_Decrypt(M1,M2,add)
-    return result
 
 
 def Enc_Dec(message):
@@ -206,13 +228,23 @@ def Enc_Dec(message):
         ECC_Decrypt(M1,M2,add)
 
 def Print_Cip():
-    print(C1x)
-    print(C1y)
-    print(C2x)
-    print(C2y)
+    ciphertext = ''
+    for i in range(len(C1x)):
+        ciphertext = ciphertext + str(C1x[i]) + ','
+    for i in range(len(C1y)):
+        ciphertext = ciphertext + str(C1y[i]) + ','
+    for i in range(len(C2x)):
+        ciphertext = ciphertext + str(C2x[i]) + ','
+    for i in range(len(C2y)):
+        ciphertext = ciphertext + str(C2y[i]) + ','
+    return ciphertext
 
-print(Encrypt(message))
-print(Decrypt(Encrypt(message)))
-# Enc_Dec(message)
-#print (result)
 
+def ECC_Endecrypt(message):
+    global result
+    Encrypt(message)
+    Decrypt(C1x,C1y,C2x,C2y,Add)
+    result = Print_Cip()+'Plaintext: '+result
+    return result
+
+#print(ECC('HELLO'))

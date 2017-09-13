@@ -8,7 +8,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 from QT import Login,Register,Setting,FilePath,LoginedChat,EnDecryptionSetting,LoginedChat
 import Resource.ChatResource,Resource.TitleResource
-from Cipher import RSA #ECC
+from Cipher import RSA, ECC
 from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere, AES
 import GlobalWindow
 import time
@@ -333,8 +333,8 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                 Text = AES.Encrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.enCipherType=='RSA'):
                 Text = RSA.Encrypt(text,GlobalWindow.encryptKey)
-            #elif(GlobalWindow.enCipherType=='ECC'):
-                #Text = ECC.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='ECC'):
+                Text = ECC.ECC_Endecrypt(text)
             elif(GlobalWindow.enCipherType=='MD5'):
                 Text = MD5.Encrypt(text,GlobalWindow.encryptKey)
         elif(endeMode==1):
