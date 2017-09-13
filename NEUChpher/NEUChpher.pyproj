@@ -13,8 +13,7 @@
     <Name>NEUChpher</Name>
     <RootNamespace>NEUChpher</RootNamespace>
     <IsWindowsApplication>False</IsWindowsApplication>
-    <PublishUrl>
-    </PublishUrl>
+    <PublishUrl>file:///C:/Users/AI/Desktop/Release</PublishUrl>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,6 +34,7 @@
     <Compile Include="Cipher\DES.py" />
     <Compile Include="Cipher\DH.py" />
     <Compile Include="Cipher\DoubleTransposition.py" />
+    <Compile Include="Cipher\DSA.py" />
     <Compile Include="Cipher\ECC.py" />
     <Compile Include="Cipher\Keyword.py" />
     <Compile Include="Cipher\MD5.py" />
