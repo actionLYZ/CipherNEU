@@ -17,7 +17,10 @@ print(Cipher.DoubleTransposition.Decrypt(c, k))
 
 import Cipher.ColumnPermutation
 
+
+
 def Encrypt(plaintext, key):
+    key = key.split()
     newKey = key[0]
     newCiphertext = Cipher.ColumnPermutation.Encrypt(plaintext, newKey)
     newKey = key[1]
@@ -25,6 +28,7 @@ def Encrypt(plaintext, key):
     return ciphertext
 
 def Decrypt(ciphertext, key):
+    key = key.split()
     newKey = key[1]
     newPlaintext = Cipher.ColumnPermutation.Decrypt(ciphertext, newKey)
     newKey = key[0]
