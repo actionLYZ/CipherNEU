@@ -21,3 +21,10 @@ enCipherType = "None"
 deCipherType = "None"
 encryptKey = ""
 decryptKey = ""
+
+uploadPath = ""
+downloadPath = ""
+
+filetype = ""
+filedata = ""
+fileIsEncrypted = False

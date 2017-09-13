@@ -89,22 +89,13 @@ def conn_thread(conn, addr):
             pkt = BytesToPkt(recv_tmp)
             if pkt.typ == TYP_LOO:
                 connlist.pop(pkt.src)
-                try:
-                    conn.sendall(PktToBytes(Packet(TYP_ACK, b'server', name, b'Logout successfully!')))
-                    conn.close()
-                except socket.error:
-                    return
+                conn.close()
                 break
-            elif pkt.typ == TYP_PTX:
+            else:
                 if pkt.dest not in connlist:
                     conn.sendall(PktToBytes(Packet(TYP_ERR, b'server', name, b'Destination user is not online!')))
                 else:
                     connlist[pkt.dest].sendall(recv_tmp)
-        except socket.error:
-            pass
-        try:
-            conn.sendall(send_tmp)
-            send_tmp = b''
         except socket.error:
             pass
     return

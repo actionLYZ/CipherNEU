@@ -23,9 +23,9 @@ def Encrypt(plaintext, key):
 
 #一维CA加密
 def OneDEncrypt(plaintext, key):
-    ciphertext = ['\0',]*50
-    tempPlaintext = ['\0',]*50
-    tempCiphertext = ['\0',]*50
+    ciphertext = ['\0',]*6400
+    tempPlaintext = ['\0',]*6400
+    tempCiphertext = ['\0',]*6400
 
     #处理原始明文字符串
     num = 0;    #有效明文字数
@@ -45,6 +45,7 @@ def OneDEncrypt(plaintext, key):
         plaintextStream = plaintextStream + tempStream
 
     #加密规则
+    key = int(key)
     ruleStr = str(bin(key))
     ruleStr = "0"*(10-len(ruleStr))+ruleStr[2:]
      
@@ -58,8 +59,11 @@ def OneDEncrypt(plaintext, key):
     #转换密文字符串
     num = 0
     for i in range(0,len(plaintext)):
-        if((97<=ord(plaintext[i])<=122)|(65<=ord(plaintext[i])<=90)):
+        if(97<=ord(plaintext[i])<=122):
             ciphertext[i] = tempCiphertext[num]
+            num += 1
+        elif(65<=ord(plaintext[i])<=90):
+            ciphertext[i] = chr(ord(tempCiphertext[num])-32)
             num += 1
         else:
             ciphertext[i] = plaintext[i]
@@ -89,6 +93,7 @@ def TwoDEncrypt(plaintext, key):
     return ciphertext
 
 #测试数据
+#print(OneDEncrypt('hello','23'))
 #plaintext = [[0,0,1],[0,0,0],[0,1,0]]
 #ciphertext = TwoDEncrypt(plaintext,14)
 #print(ciphertext)

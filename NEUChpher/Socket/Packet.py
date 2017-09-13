@@ -18,6 +18,7 @@ TYP_ACK = b'ack' # acknowledgement
 TYP_ERR = b'err' # error
 
 PKT_MAX_SIZE = 4096
+DOWNLOAD_PATH = "downloads/"
 
 class Packet:
     def __init__(self, typ, src, dest, data):

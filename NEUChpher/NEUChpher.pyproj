@@ -60,7 +60,6 @@
     <Compile Include="Resource\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Socket\Client.py" />
     <Compile Include="Socket\Packet.py" />
     <Compile Include="Socket\Server.py" />
     <Compile Include="Socket\__init__.py" />

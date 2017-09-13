@@ -11,6 +11,7 @@ from QT import Login,Register,Setting,FilePath,LoginedChat,EnDecryptionSetting,L
 from Cipher import RSA #ECC
 from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere#, AES
 from Socket.Packet import *
+import socket, _thread, time
 
 class Ui_Dialog(object):
     def setupUi(self,Dialog):
@@ -154,7 +155,7 @@ class Ui_Dialog(object):
         self.frame.setObjectName("frame")
         self.frame.raise_()
         self.layoutWidget.raise_()
-
+        
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
@@ -193,14 +194,14 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
                             |QtCore.Qt.WindowCloseButtonHint
                             |QtCore.Qt.MSWindowsFixedSizeDialogHint )        #只允许最小和关闭，不允许最大化,不允许调整大小
         #控件映射
-        self.pushButton_8.clicked.connect(self.EncryptPrint)
+        self.pushButton_8.clicked.connect(self.Send)
         self.pushButton_4.clicked.connect(self.ShowMessage)
         #self.pushButton.clicked.connect(self.OpenSettingWindows)
         self.pushButton_2.clicked.connect(self.Logout)
         self.toolButton_3.clicked.connect(self.OpenEncryptionSettingWindows)
         self.toolButton_2.clicked.connect(self.OpenDecryptionSettingWindows)
         self.toolButton_4.clicked.connect(self.ReadFile)
-        self.toolButton.clicked.connect(self.SaveFile) 
+        self.toolButton.clicked.connect(self.SaveFile)
         
     #显示悬停提示
     def DisplayTip(self): 
@@ -218,6 +219,7 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
                                     "C:/",  
                                     "Text Files (*.txt)")   
         if self.path != '':
+            GlobalWindow.uploadPath = self.path
             document = open(self.path,"r")
             self.content = document.readlines()
             self.content = ''.join(self.content)
@@ -233,20 +235,20 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
                                     "C:/",
                                     "Text Files (*.txt)")
         if filepath != '':
-            document = open(filepath,"wb")
-            document.write(self.filetext)
+            document = open(filepath,"w+")
+            document.write(GlobalWindow.filedata)
             document.close()
-
-    #发送对象
-    def GetToPersonName(self):
-        self.toPersonName = self.lineEdit.text()
 
     #打印双机加密信息
     def ShowMessage(self):
         message = QtWidgets.QMessageBox()
         beforeStr = '----------- CipherText -----------\n'
         str = self.textEdit.toPlainText()
-        length = len(self.textEdit.toPlainText())
+        if(str==''):
+            str = 'None'
+        if self.comboBox.currentText() == "Ciphertext":
+            str = self.DefineCipherType(str, 0)
+        length = len(str)
         wideth = int(length * (3/5))
         if wideth < 15:
             wideth = 15
@@ -257,99 +259,128 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
         if length/wideth < 1:
             str = spacestr +str[:]
         str = beforeStr + str[:]
-        message.about(self,"Ciphertext",str)
-    #打印单机加解密信息
-    def EncryptPrint(self):
-        if(self.comboBox.currentText()=='Encryption'):
-            self.Encryption()
-        elif(self.comboBox.currentText()=='Decryption'):
-            self.Decryption()
+        message.about(self,"Preview",str)
+
+    #发送
+    def Send(self):
+        if not GlobalWindow.isFile:
+            plaintext = self.textEdit.toPlainText()
+            if self.comboBox.currentText() == "Plaintext":
+                self.writeToTextBrowser(GlobalWindow.username.decode() + ": " + plaintext)
+                pkt = Packet(TYP_PTX, GlobalWindow.username, self.lineEdit.text(), plaintext)
+                GlobalWindow.s.sendall(PktToBytes(pkt))
+            else:
+                ciphertext = self.DefineCipherType(plaintext, 0)
+                self.writeToTextBrowser(GlobalWindow.username.decode() + ": " + ciphertext + " (Plaintext: " + plaintext + ")")
+                pkt = Packet(TYP_CTX, GlobalWindow.username, self.lineEdit.text(), ciphertext)
+                GlobalWindow.s.sendall(PktToBytes(pkt))
+        else:
+            plaintext = self.readFile(GlobalWindow.uploadPath)
+            if self.comboBox.currentText() == "Plaintext":
+                temp, sep, name = GlobalWindow.uploadPath.rpartition("/")
+                data = name.encode() + b">>>>>>" + plaintext.encode()
+                self.writeToTextBrowser(GlobalWindow.username.decode() + ": (Send file: " + name + ")")
+                pkt = Packet(TYP_PFL, GlobalWindow.username, self.lineEdit.text(), data)
+                GlobalWindow.s.sendall(PktToBytes(pkt))
+            else:
+                ciphertext = self.DefineCipherType(plaintext, 0)
+                temp, sep, name = GlobalWindow.uploadPath.rpartition("/")
+                data = name.encode() + b">>>>>>" + ciphertext.encode()
+                self.writeToTextBrowser(GlobalWindow.username.decode() + ": (Send file: " + name + ", encrypted)")
+                pkt = Packet(TYP_CFL, GlobalWindow.username, self.lineEdit.text(), data)
+                GlobalWindow.s.sendall(PktToBytes(pkt))
+            GlobalWindow.isFile = False
+        self.textEdit.setText("")
 
     #根据不同加解密类型加解密
     def DefineCipherType(self,text,endeMode):      #endeMode = 0 -> encryption/ endeMode = 1 -> decryption
         Text = ''
         if(endeMode==0):
-            if(EnDecryptionSetting.enCipherType=='Caesar'):
-                Text = Caesar.Encrypt(text,int(EnDecryptionSetting.encryptKey))
-            elif(EnDecryptionSetting.enCipherType=='Affine'):
-                Text = Affine.Encrypt(text,EnDecryptionSetting.encryptKey)
-            elif(EnDecryptionSetting.enCipherType=='Keyword'):
-                Text = Keyword.Encrypt(text,EnDecryptionSetting.encryptKey)
-            elif(EnDecryptionSetting.enCipherType=='Multiliteral'):
-                Text = Multiliteral.Encrypt(text,EnDecryptionSetting.encryptKey)
-            elif(EnDecryptionSetting.enCipherType=='Vigenere'):
-                Text = Vigenere.Encrypt(text,EnDecryptionSetting.encryptKey)
-            elif(EnDecryptionSetting.enCipherType=='Autokey Ciphertext'):
-                Text = AutokeyCiphertext.Encrypt(text,EnDecryptionSetting.encryptKey)
-            elif(EnDecryptionSetting.enCipherType=='Autokey Plaintext'):
-                Text = AutokeyPlaintext.Encrypt(text,EnDecryptionSetting.encryptKey)
-            elif(EnDecryptionSetting.enCipherType=='Playfair'):
-                Text = Playfair.Encrypt(text,EnDecryptionSetting.encryptKey)
-            elif(EnDecryptionSetting.enCipherType=='Permutation'):
-                Text = Permutation.Encrypt(text,EnDecryptionSetting.encryptKey)
-            elif(EnDecryptionSetting.enCipherType=='Column Permutation'):
-                Text = ColumnPermutation.Encrypt(text,EnDecryptionSetting.encryptKey)
-            elif(EnDecryptionSetting.enCipherType=='Double Transposition'):
-                Text = DoubleTransposition.Encrypt(text,EnDecryptionSetting.encryptKey)
-            elif(EnDecryptionSetting.enCipherType=='RC4'):
-                Text = RC4.Encrypt(text,EnDecryptionSetting.encryptKey)
-            elif(EnDecryptionSetting.enCipherType=='CA'):
-                Text = CA.Encrypt(text,EnDecryptionSetting.encryptKey)
-            elif(EnDecryptionSetting.enCipherType=='DES'):
-                Text = DES.Encrypt(text,EnDecryptionSetting.encryptKey)
-            elif(EnDecryptionSetting.enCipherType=='AES-128'|EnDecryptionSetting.enCipherType=='AES-192'|EnDecryptionSetting.enCipherType=='AES-256'):
-                Text = AES.Encrypt(text,EnDecryptionSetting.encryptKey)
-            elif(EnDecryptionSetting.enCipherType=='RSA'):
-                Text = RSA.Encrypt(text,EnDecryptionSetting.encryptKey)
-            #elif(EnDecryptionSetting.enCipherType=='ECC'):
-                #Text = ECC.Encrypt(text,EnDecryptionSetting.encryptKey)
-            elif(EnDecryptionSetting.enCipherType=='MD5'):
-                Text = MD5.Encrypt(text,EnDecryptionSetting.encryptKey)
-            #elif(EnDecryptionSetting.enCipherType=='DSA'):
-                #Text = DSA.Encrypt(text,EnDecryptionSetting.encryptKey)
-            #elif(EnDecryptionSetting.enCipherType=='DH'):
-                #Text = DH.Encrypt(text,EnDecryptionSetting.encryptKey)
+            if GlobalWindow.enCipherType == "None":
+                Text = text
+            elif(GlobalWindow.enCipherType=='Caesar'):
+                Text = Caesar.Encrypt(text,int(GlobalWindow.encryptKey))
+            elif(GlobalWindow.enCipherType=='Affine'):
+                Text = Affine.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='Keyword'):
+                Text = Keyword.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='Multiliteral'):
+                Text = Multiliteral.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='Vigenere'):
+                Text = Vigenere.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='Autokey Ciphertext'):
+                Text = AutokeyCiphertext.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='Autokey Plaintext'):
+                Text = AutokeyPlaintext.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='Playfair'):
+                Text = Playfair.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='Permutation'):
+                Text = Permutation.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='Column Permutation'):
+                Text = ColumnPermutation.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='Double Transposition'):
+                Text = DoubleTransposition.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='RC4'):
+                Text = RC4.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='CA'):
+                Text = CA.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='DES'):
+                Text = DES.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='AES-128'|GlobalWindow.enCipherType=='AES-192'|GlobalWindow.enCipherType=='AES-256'):
+                Text = AES.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='RSA'):
+                Text = RSA.Encrypt(text,GlobalWindow.encryptKey)
+            #elif(GlobalWindow.enCipherType=='ECC'):
+                #Text = ECC.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='MD5'):
+                Text = MD5.Encrypt(text,GlobalWindow.encryptKey)
+            #elif(GlobalWindow.enCipherType=='DSA'):
+                #Text = DSA.Encrypt(text,GlobalWindow.encryptKey)
+            #elif(GlobalWindow.enCipherType=='DH'):
+                #Text = DH.Encrypt(text,GlobalWindow.encryptKey)
         elif(endeMode==1):
-            if(EnDecryptionSetting.deCipherType=='Caesar'):
-                Text = Caesar.Decrypt(text,int(EnDecryptionSetting.decryptKey))
-            elif(EnDecryptionSetting.deCipherType=='Affine'):
-                Text = Affine.Decrypt(text,EnDecryptionSetting.decryptKey)
-            elif(EnDecryptionSetting.deCipherType=='Keyword'):
-                Text = Keyword.Decrypt(text,EnDecryptionSetting.decryptKey)
-            elif(EnDecryptionSetting.deCipherType=='Multiliteral'):
-                Text = Multiliteral.Decrypt(text,EnDecryptionSetting.decryptKey)
-            elif(EnDecryptionSetting.deCipherType=='Vigenere'):
-                Text = Vigenere.Decrypt(text,EnDecryptionSetting.decryptKey)
-            elif(EnDecryptionSetting.deCipherType=='Autokey Ciphertext'):
-                Text = AutokeyCiphertext.Decrypt(text,EnDecryptionSetting.decryptKey)
-            elif(EnDecryptionSetting.deCipherType=='Autokey Plaintext'):
-                Text = AutokeyPlaintext.Decrypt(text,EnDecryptionSetting.decryptKey)
-            elif(EnDecryptionSetting.deCipherType=='Playfair'):
-                Text = Playfair.Decrypt(text,EnDecryptionSetting.decryptKey)
-            elif(EnDecryptionSetting.deCipherType=='Permutation'):
-                Text = Permutation.Decrypt(text,EnDecryptionSetting.decryptKey)
-            elif(EnDecryptionSetting.deCipherType=='Column Permutation'):
-                Text = ColumnPermutation.Decrypt(text,EnDecryptionSetting.decryptKey)
-            elif(EnDecryptionSetting.deCipherType=='Double Transposition'):
-                Text = DoubleTransposition.Decrypt(text,EnDecryptionSetting.decryptKey)
-            elif(EnDecryptionSetting.deCipherType=='RC4'):
-                Text = RC4.Decrypt(text,EnDecryptionSetting.decryptKey)
-            elif(EnDecryptionSetting.deCipherType=='CA'):
-                Text = CA.Encrypt(text,EnDecryptionSetting.decryptKey)
-            elif(EnDecryptionSetting.deCipherType=='DES'):
-                DES.DESDecryption(text,EnDecryptionSetting.decryptKey)
-            #elif(EnDecryptionSetting.deCipherType=='AES'):
-                #Text = AES.Ddecrypt(text,EnDecryptionSetting.decryptKey)
-            elif(EnDecryptionSetting.deCipherType=='RSA'):
-                Text = RSA.Decrypt(text,EnDecryptionSetting.decryptKey)
-            #elif(EnDecryptionSetting.deCipherType=='ECC'):
-                #Text = ECC.Decrypt(text,EnDecryptionSetting.decryptKey)
-            elif(EnDecryptionSetting.deCipherType=='MD5'):
-                Text = MD5.Decrypt(text,EnDecryptionSetting.decryptKey)
-            #elif(EnDecryptionSetting.deCipherType=='DSA'):
-                #Text = DSA.Decrypt(text,EnDecryptionSetting.decryptKey)
-            #elif(EnDecryptionSetting.deCipherType=='DH'):
-                #Text = DH.Decrypt(text,EnDecryptionSetting.decryptKey)
+            if GlobalWindow.deCipherType == "None":
+                Text = text
+            elif(GlobalWindow.deCipherType=='Caesar'):
+                Text = Caesar.Decrypt(text,int(GlobalWindow.decryptKey))
+            elif(GlobalWindow.deCipherType=='Affine'):
+                Text = Affine.Decrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='Keyword'):
+                Text = Keyword.Decrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='Multiliteral'):
+                Text = Multiliteral.Decrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='Vigenere'):
+                Text = Vigenere.Decrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='Autokey Ciphertext'):
+                Text = AutokeyCiphertext.Decrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='Autokey Plaintext'):
+                Text = AutokeyPlaintext.Decrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='Playfair'):
+                Text = Playfair.Decrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='Permutation'):
+                Text = Permutation.Decrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='Column Permutation'):
+                Text = ColumnPermutation.Decrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='Double Transposition'):
+                Text = DoubleTransposition.Decrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='RC4'):
+                Text = RC4.Decrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='CA'):
+                Text = CA.Encrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='DES'):
+                DES.DESDecryption(text,GlobalWindow.decryptKey)
+            #elif(GlobalWindow.deCipherType=='AES'):
+                #Text = AES.Ddecrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='RSA'):
+                Text = RSA.Decrypt(text,GlobalWindow.decryptKey)
+            #elif(GlobalWindow.deCipherType=='ECC'):
+                #Text = ECC.Decrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='MD5'):
+                Text = MD5.Decrypt(text,GlobalWindow.decryptKey)
+            #elif(GlobalWindow.deCipherType=='DSA'):
+                #Text = DSA.Decrypt(text,GlobalWindow.decryptKey)
+            #elif(GlobalWindow.deCipherType=='DH'):
+                #Text = DH.Decrypt(text,GlobalWindow.decryptKey)
         return Text 
 
     #加密
@@ -366,7 +397,6 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
         filetext = plaintext
         self.textBrowser.setText(self.textBrowser.toPlainText()+'Ciphertext: '+ciphertext+'\n'+'Plaintext: '+plaintext+'\n\n')  
 
-
     #打开加密设置窗口
     def OpenEncryptionSettingWindows(self):
         self.EnSettingWindows = EnDecryptionSetting.EncryptionSettingWindow()
@@ -380,15 +410,77 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
     #退出已登录窗口
     def Logout(self):
         GlobalWindow.s.sendall(PktToBytes(Packet(TYP_LOO, GlobalWindow.username, b'server', b'')))
-        recv_tmp = GlobalWindow.s.recv(PKT_MAX_SIZE)
-        pkt = BytesToPkt(recv_tmp)
-        if pkt.typ != TYP_ACK:
-            message = QtWidgets.QMessageBox()
-            message.warning(self,"Error","登出失败！",QtWidgets.QMessageBox.Yes)
-            return
-        else:
-            message = QtWidgets.QMessageBox()
-            message.information(self,"Pass","登出成功！",QtWidgets.QMessageBox.Yes)
-            GlobalWindow.s.close()
-            GlobalWindow.globalWindow.chatwindow.show()
-            self.close()
+        message = QtWidgets.QMessageBox()
+        message.information(self,"Pass","登出成功！",QtWidgets.QMessageBox.Yes)
+        GlobalWindow.s.close()
+        GlobalWindow.globalWindow.chatwindow.show()
+        self.close()
+
+    def writeToTextBrowser(self, str):
+        self.textBrowser.insertPlainText("[" + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "]" + str + "\n")
+        vb = self.textBrowser.verticalScrollBar() 
+        vb.setValue(vb.maximum()) 
+        return
+
+    def showEvent(self, QShowEvent):
+        _thread.start_new_thread(self.recvThread, ())
+        return super().showEvent(QShowEvent)
+
+    def recvThread(self):
+        while True:
+            try:
+                recv_tmp = GlobalWindow.s.recv(PKT_MAX_SIZE)
+                if not recv_tmp:
+                    return
+                pkt = BytesToPkt(recv_tmp)
+                if pkt.typ == TYP_PTX:
+                    self.writeToTextBrowser(pkt.src.decode() + ": " + pkt.data.decode())
+                elif pkt.typ == TYP_LOO:
+                    message = QtWidgets.QMessageBox()
+                    message.warning(self,"Error",pkt.data.decode(),QtWidgets.QMessageBox.Ok)
+                    sock.close()
+                    GlobalWindow.globalWindow.chatwindow.show()
+                    self.close()
+                    return
+                elif pkt.typ == TYP_CTX:
+                    plaintext = self.DefineCipherType(pkt.data.decode(), 1)
+                    self.writeToTextBrowser(pkt.src.decode() + ": " + pkt.data.decode() + " (Plaintext: " + plaintext + ")")
+                elif pkt.typ == TYP_PFL:
+                    name, sep, data = pkt.data.decode().partition(">>>>>>")
+                    path = DOWNLOAD_PATH + name
+                    downloadPath = path
+                    #self.writeFile(path, data)
+                    #temp, sep, GlobalWindow.filetype = name.rpartition(".")
+                    GlobalWindow.filedata = data
+                    self.writeToTextBrowser(pkt.src.decode() + ": (Receive file: " + name + ")")
+                    #message = QtWidgets.QMessageBox()
+                    #message.information(self,"Pass","已接收到明文文件，请下载！",QtWidgets.QMessageBox.Yes)
+                elif pkt.typ == TYP_CFL:
+                    name, sep, data = pkt.data.decode().partition(">>>>>>")
+                    path = DOWNLOAD_PATH + name
+                    downloadPath = path
+                    #self.writeFile(path, self.DefineCipherType(data, 1))
+                    #temp, sep, GlobalWindow.filetype = name.rpartition(".")
+                    GlobalWindow.filedata = data
+                    GlobalWindow.fileIsEncrypted = True
+                    self.writeToTextBrowser(pkt.src.decode() + ": (Receive file: " + name + ", encrypted)")
+                    #message = QtWidgets.QMessageBox()
+                    #message.information(self,"Pass","已接收到密文文件，请下载！",QtWidgets.QMessageBox.Yes)
+                else:
+                    print(recv_tmp.decode())
+            except socket.error:
+                break
+
+    # Read bytes from the file
+    def readFile(self, file):
+        fin = open(file, "r+")
+        text = fin.read()
+        fin.close()
+        return text
+
+    #Write bytes to a file
+    def writeFile(self, file, text):
+        fout = open(file, "w+")
+        fout.write(text)
+        fout.close()
+        return
