@@ -238,7 +238,7 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
     #打印双机加密信息
     def ShowMessage(self):
         message = QtWidgets.QMessageBox()
-        str = self.textEdit.toPlainText()
+        str = self.Encryption()
         if(str==''):
             str = 'None'
         length = len(str)
@@ -284,7 +284,7 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
             elif(GlobalWindow.enCipherType=='RC4'):
                 Text = RC4.Encrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.enCipherType=='CA'):
-                Text = CA.Encrypt(text,GlobalWindow.encryptKey)
+                Text = CA.OneDEncrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.enCipherType=='DES'):
                 Text = DES.Encrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.enCipherType=='AES-128'|GlobalWindow.enCipherType=='AES-192'|GlobalWindow.enCipherType=='AES-256'):
@@ -327,7 +327,7 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
             elif(GlobalWindow.deCipherType=='RC4'):
                 Text = RC4.Decrypt(text,GlobalWindow.decryptKey)
             elif(GlobalWindow.deCipherType=='CA'):
-                Text = CA.Encrypt(text,GlobalWindow.decryptKey)
+                Text = CA.OneDEncrypt(text,GlobalWindow.decryptKey)
             elif(GlobalWindow.deCipherType=='DES'):
                 Text = DES.Decrypt(text,GlobalWindow.decryptKey)
             #elif(GlobalWindow.deCipherType=='AES'):
@@ -360,6 +360,7 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                 ciphertext = self.DefineCipherType(plaintext,0)
                 self.filetext = 'Plaintext: '+plaintext+'\n'+'Ciphertext: '+ciphertext
                 self.textBrowser.setText(self.textBrowser.toPlainText()+'Plaintext: '+plaintext+'\n'+'Ciphertext: '+ciphertext+'\n\n')
+                return ciphertext
     
     #解密
     def Decryption(self):

@@ -213,15 +213,15 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
             self.lineEdit.setText('3')
         elif(self.comboBox.currentText()=='Affine'):
             self.lineEdit.setText('3 1')
-        elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "AutokeyCiphertext", "AutokeyPlaintext", "Playfair", "Permutation", "ColumnPermutation"]:
-            self.lineEdit.setText("hello")
         elif(self.comboBox.currentText()=='Double Transposition'):
-            self.lineEdit.setText('')
+            self.lineEdit.setText('hello world')
         elif(self.comboBox.currentText()=='CA'):
             self.lineEdit.setText('23')
         elif(self.comboBox.currentText()=='DES'):
             self.lineEdit.setText('abcdefgh')
-
+        elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation"]:
+            self.lineEdit.setText("hello")
+        
     # Check out if the key is valid, such as AES-128(16 bytes), AES-192(24 bytes), AES-256(32 bytes), etc.
     def IsValid(self,key, type):
         if type == "None":
@@ -244,8 +244,10 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
             if(a.isdigit() and b.isdigit()):
                 if((0<int(a)<26)&(0<int(b)<26)):
                     return True
-        elif type == "DoubleTransposition":
-            return isinstance(key, tuple) and len(tuple) == 2 and isinstance(key[0], str) and key[0].isalpha() and isinstance(key[1], str) and key[1].isalpha()
+        elif type == "Double Transposition":
+            key = key.split()
+            if(key[0].isalpha() and key[1].isalpha()):
+                return True
         elif type == "RC4":
             return isinstance(key, str)
         elif type == "AES-128":
@@ -254,7 +256,9 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
             return isinstance(key, str) and len(key) == 24
         elif type == "AES-256":
             return isinstance(key, str) and len(key) == 32
-        elif ["Keyword", "Multiliteral", "Vigenere", "AutokeyCiphertext", "AutokeyPlaintext", "Playfair", "Permutation", "ColumnPermutation"].index(type) != -1:
+        elif type =='CA':
+            return key.isdigit()
+        elif ["Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation"].index(type) != -1:
             return isinstance(key, str) and key.isalpha()
         return False
 
@@ -287,14 +291,15 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
             self.lineEdit.setText('0')
         elif(self.comboBox.currentText()=='Affine'):
             self.lineEdit.setText('3 1')
-        elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "AutokeyCiphertext", "AutokeyPlaintext", "Playfair", "Permutation", "ColumnPermutation"]:
-            self.lineEdit.setText("hello")
         elif(self.comboBox.currentText()=='Double Transposition'):
-            self.lineEdit.setText('')
+            self.lineEdit.setText('hello world')
         elif(self.comboBox.currentText()=='CA'):
             self.lineEdit.setText('23')
         elif(self.comboBox.currentText()=='DES'):
             self.lineEdit.setText('abcdefgh')
+        elif self.comboBox.currentText() in ["Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation"]:
+            self.lineEdit.setText("hello")
+        
 
     def IsValid(self,key, type):
         if type == "None":
@@ -317,8 +322,10 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
             if(a.isdigit() and b.isdigit()):
                 if((0<int(a)<26)&(0<int(b)<26)):
                     return True
-        elif type == "DoubleTransposition":
-            return isinstance(key, tuple) and len(tuple) == 2 and isinstance(key[0], str) and key[0].isalpha() and isinstance(key[1], str) and key[1].isalpha()
+        elif type == "Double Transposition":
+            key = key.split()
+            if(key[0].isalpha() and key[1].isalpha()):
+                return True
         elif type == "RC4":
             return isinstance(key, str)
         elif type == "AES-128":
@@ -327,7 +334,7 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
             return isinstance(key, str) and len(key) == 24
         elif type == "AES-256":
             return isinstance(key, str) and len(key) == 32
-        elif ["Keyword", "Multiliteral", "Vigenere", "AutokeyCiphertext", "AutokeyPlaintext", "Playfair", "Permutation", "ColumnPermutation"].index(type) != -1:
+        elif ["Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation"].index(type) != -1:
             return isinstance(key, str) and key.isalpha()
         return False
 
