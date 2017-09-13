@@ -239,14 +239,14 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
     #打印双机加密信息
     def ShowMessage(self):
         message = QtWidgets.QMessageBox()
-<<<<<<< HEAD
-        str = self.Encryption()
-=======
         beforeStr = '----------- CipherText -----------\n'
         str = self.textEdit.toPlainText()
->>>>>>> 34bfa6b5d7a9c46dd3cc6f5b47989993bf096974
         if(str==''):
             str = 'None'
+        if self.comboBox.currentText() == "Encryption":
+            str = self.DefineCipherType(str, 0)
+        else:
+            str = self.DefineCipherType(str, 1)
         length = len(str)
         wideth = int(length * (3/5))
         if wideth < 15:
@@ -270,9 +270,9 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
     def DefineCipherType(self,text,endeMode):      #endeMode = 0 -> encryption/ endeMode = 1 -> decryption
         Text = ''
         if(endeMode==0):
-            if(GlobalWindow.encryptKey==''):
-                return False
-            if(GlobalWindow.enCipherType=='Caesar'):
+            if GlobalWindow.enCipherType == "None":
+                Text = text
+            elif(GlobalWindow.enCipherType=='Caesar'):
                 Text = Caesar.Encrypt(text,int(GlobalWindow.encryptKey))
             elif(GlobalWindow.enCipherType=='Affine'):
                 Text = Affine.Encrypt(text,GlobalWindow.encryptKey)
@@ -313,9 +313,9 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
             #elif(GlobalWindow.enCipherType=='DH'):
                 #Text = DH.Encrypt(text,GlobalWindow.encryptKey)
         elif(endeMode==1):
-            if(GlobalWindow.decryptKey==''):
-                return False
-            if(GlobalWindow.deCipherType=='Caesar'):
+            if GlobalWindow.deCipherType == "None":
+                Text = text
+            elif(GlobalWindow.deCipherType=='Caesar'):
                 Text = Caesar.Decrypt(text,int(GlobalWindow.decryptKey))
             elif(GlobalWindow.deCipherType=='Affine'):
                 Text = Affine.Decrypt(text,GlobalWindow.decryptKey)

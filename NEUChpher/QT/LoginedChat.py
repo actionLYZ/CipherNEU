@@ -246,6 +246,8 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
         str = self.textEdit.toPlainText()
         if(str==''):
             str = 'None'
+        if self.comboBox.currentText() == "Ciphertext":
+            str = self.DefineCipherType(str, 0)
         length = len(str)
         wideth = int(length * (3/5))
         if wideth < 15:
