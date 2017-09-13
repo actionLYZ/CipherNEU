@@ -7,7 +7,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 from QT import Login,Register,Setting,FilePath,LoginedChat,EnDecryptionSetting,LoginedChat
-import Resource.ChatResource
+import Resource.ChatResource,Resource.TitleResource
 from Cipher import RSA #ECC
 from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere#, AES
 import GlobalWindow
@@ -17,7 +17,7 @@ class Ui_Dialog(object):
         Dialog.setObjectName("Dialog")
         Dialog.resize(707, 493)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/images/background.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/icon.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Dialog.setWindowIcon(icon)
         self.layoutWidget = QtWidgets.QWidget(Dialog)
         self.layoutWidget.setGeometry(QtCore.QRect(20, 20, 671, 453))
@@ -214,6 +214,7 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                                     "Text Files (*.txt)")   
         if self.path != '':
             document = open(self.path,"r")
+            #print(document.readlines())
             self.content = document.readlines()
             self.content = ''.join(self.content)
             self.textEdit.setText(self.content)
@@ -238,13 +239,25 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
     #打印双机加密信息
     def ShowMessage(self):
         message = QtWidgets.QMessageBox()
+<<<<<<< HEAD
         str = self.Encryption()
+=======
+        beforeStr = '----------- CipherText -----------\n'
+        str = self.textEdit.toPlainText()
+>>>>>>> 34bfa6b5d7a9c46dd3cc6f5b47989993bf096974
         if(str==''):
             str = 'None'
         length = len(str)
         wideth = int(length * (3/5))
+        if wideth < 15:
+            wideth = 15
+        spacenum = (34 - wideth) // 2
+        spacestr = ' ' * spacenum
         for i in range(int(length/wideth)):
-            str = str[:i*22+wideth]+'\n'+str[i*22+wideth:]
+            str = spacestr + str[:i*22+wideth]+'\n'+spacestr + str[i*22+wideth:]
+        if length/wideth < 1:
+            str = spacestr +str[:]
+        str = beforeStr + str[:]
         message.about(self,"Ciphertext",str)
     #打印单机加解密信息
     def EncryptPrint(self):

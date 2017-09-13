@@ -34,10 +34,14 @@ def Encrypt(plainText,key): #key = "a b"
         sys.exit()
     else:
         for letter in plainText:
-            if ord(letter) >= 97 and ord(letter) <= 122:  #保留空格，标点符号等
+            if ord(letter) >= 97 and ord(letter) <= 122 :  #保留空格，标点符号等
                 ordPaint    = ord(letter) - ord('a')
                 ordCipher   = (ordPaint * a + b) % 26
                 cipherText += chr(ordCipher + ord('a'))
+            elif (ord(letter) >= 65 and ord(letter) <= 90):
+                ordPaint    = ord(letter) - ord('A')
+                ordCipher   = (ordPaint * a + b) % 26
+                cipherText += chr(ordCipher + ord('A'))
             else:
                 cipherText += letter
         return cipherText
@@ -66,6 +70,10 @@ def Decrypt(cipherText,key):
                 ordCipher   = ord(letter) - ord('a')
                 ordPlain    = (Euclidean(a,26) * (ordCipher - b)) % 26
                 plainText  += chr(ordPlain + ord('a'))
+            elif (ord(letter) >= 65 and ord(letter) <= 90):
+                ordPaint    = ord(letter) - ord('A')
+                ordCipher   = (ordPaint * a + b) % 26
+                cipherText += chr(ordCipher + ord('A'))
             else:
                 plainText  += letter
         return plainText
