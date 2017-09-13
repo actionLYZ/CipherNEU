@@ -34,3 +34,4 @@ def Decrypt(ciphertext, key):
     newKey = key[0]
     plaintext = Cipher.ColumnPermutation.Decrypt(newPlaintext, newKey)
     return plaintext
+

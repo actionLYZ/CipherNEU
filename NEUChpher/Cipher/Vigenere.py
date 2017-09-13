@@ -8,9 +8,9 @@ Decrypt(ciphertext, key)
 '''
 #加密函数
 def Encrypt(plaintext, key):
-    ciphertext = ['\0',]*50
-    tempPlaintext = ['\0',]*50
-    tempCiphertext = ['\0',]*50
+    ciphertext = ['\0',]*6400
+    tempPlaintext = ['\0',]*6400
+    tempCiphertext = ['\0',]*6400
     #建立Vigenere Table
     table = [([0] * 26) for i in range(26)]
     for i in range(0,26):
