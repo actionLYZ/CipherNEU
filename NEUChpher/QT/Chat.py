@@ -270,7 +270,7 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                     message.warning(self,"Error","内容不能为空！",QtWidgets.QMessageBox.Ok)
                     return
                 ciphertext = self.DefineCipherType(plaintext, 0)
-                self.writeToTextBrowser("\nPlaintext: " + plaintext + "\nCiphertext: " + ciphertext + "\n")
+                self.writeToTextBrowser("\nPlaintext: " + plaintext + "\nCiphertext: " + ciphertext)
             else:
                 ciphertext = self.textEdit.toPlainText()
                 if ciphertext == "":
