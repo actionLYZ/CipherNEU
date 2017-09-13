@@ -30,6 +30,8 @@ def Encrypt(plainText,key):
 函数返回值  ：    加密后结果(string)
 --------------------------------------------------------------------------------------'''
 def Decrypt(cipherText,key):
+    if len(cipherText) // 2 == 1:
+        cipherText = cipherText + 'q'
     plainText = ""
     keyList = makeKeyList(key)                      #生成密钥二维列表
     plainText = Cipher2Plain(cipherText,keyList)    #将密文解密成明文
