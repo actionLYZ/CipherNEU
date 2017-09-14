@@ -198,7 +198,11 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
 
     def SetExample(self):
         self.lineEdit.setDisabled(False)
+<<<<<<< HEAD
         if (self.comboBox.currentText()=='None'):
+=======
+        if (self.comboBox.currentText()=='None' or self.comboBox.currentText()=='MD5' or self.comboBox.currentText()=='RSA' or self.comboBox.currentText()=='ECC'):
+>>>>>>> parent of 56f1515... 加入DSA传输文件
             self.lineEdit.setText('')
             self.lineEdit.setDisabled(True)
         elif(self.comboBox.currentText()=='Caesar'):
@@ -224,7 +228,11 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
         
     # Check out if the key is valid, such as AES-128(16 bytes), AES-192(24 bytes), AES-256(32 bytes), etc.
     def IsValid(self,key, type):
+<<<<<<< HEAD
         if type == "None":
+=======
+        if type == "None" or type == "MD5":
+>>>>>>> parent of 56f1515... 加入DSA传输文件
             return True
         elif type == "Caesar":
             if key.isdigit():
