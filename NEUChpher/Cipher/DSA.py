@@ -106,8 +106,8 @@ def SHA1(message):
          #����512bit�ֳ�16�����M(MΪint)
         for i in range(16):
             for j in range(4):
-                plainText[4*i+j] = int(plainText[4*i+j],16)     #��16�����ַ���ת��Ϊʮ��������
-                M[i] = M[i] * 256 + plainText[4*i+j]              #�������ĸ����κϲ���M
+                plainText[64*num+4*i+j] = int(plainText[64*num + 4*i+j],16)     #��16�����ַ���ת��Ϊʮ��������
+                M[i] = M[i] * 256 + plainText[64*num + 4*i+j]              #�������ĸ����κϲ���M
         for t in range(16):
                 W[t] = M[t]
         for t in range (16,80):
