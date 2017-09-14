@@ -49,11 +49,13 @@ def Decrypt(cipherText,key):
 def Norm(plainText):
 
     numOfLetter = 0             #字符串中字母的数量(用于判断字母奇偶)
-
+    while plainText.find('j') != -1:
+        jLoc = plainText.find('j')
+        plainText = plainText[:jLoc] + 'i' + plainText[jLoc+1:]
     #在两个相同字母之间加入'q'或't'
     i = 0
     while i < len(plainText) - 1:
-        if not plainText[i].isalpha():            #取到了非字母的值
+        if not (plainText[i].islower() or plainText[i].isupper()):            #取到了非字母的值
             i += 1
             continue
 
@@ -65,7 +67,7 @@ def Norm(plainText):
                 plainText = plainText[:i+1] + 't' + plainText[i+1:]       #插入't'
         i += 1
 
-    if plainText[-1].isalpha():
+    if (plainText[-1].islower() or plainText[-1].isupper()):
         numOfLetter += 1
     if numOfLetter % 2 == 1:
         if plainText[-1:-1] != 'q':
@@ -84,6 +86,10 @@ def Norm(plainText):
 规范方式    ：    当q两边字母相同时，删掉q。当最后一个字符为q时，删除q
 --------------------------------------------------------------------------------------'''
 def DeNorm(plainText):
+
+    while plainText.find('j') != -1:
+        jLoc = plainText.find('j')
+        plainText = plainText[:jLoc] + 'i' + plainText[jLoc+1:]
     plainText = list(plainText)
     num = 1
     while num < len(plainText) - 1 :

@@ -18,13 +18,20 @@ with open('public.pem','r') as f:
     pubkey = rsa.PublicKey.load_pkcs1(f.read().encode())
 
 with open('private.pem','r') as f:
-    privkey = rsa.PrivateKey.load_pkcs1(f.read().encode())
+    prikey = rsa.PrivateKey.load_pkcs1(f.read().encode())
 
 #message = "Hello World!"
 
 #ciphertext = rsa.encrypt(message.encode(),pubkey)
 
-#plaintext = rsa.decrypt(ciphertext,privkey).decode() # the plaintext is bytes
+#plaintext = rsa.decrypt(ciphertext,prikey).decode() # the plaintext is bytes
 
 #print (plaintext)
 
+def Encrypt(plaintext):
+    ciphertext = base64.b64encode(rsa.encrypt(plaintext.encode(), pubkey)).decode()
+    return ciphertext
+
+def Decrypt(ciphertext):
+    plaintext = rsa.decrypt(base64.b64decode(ciphertext.encode()), prikey).decode()
+    return plaintext

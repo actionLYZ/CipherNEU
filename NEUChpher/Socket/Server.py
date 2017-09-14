@@ -48,7 +48,6 @@ def conn_thread(conn, addr):
             if not recv_tmp:
                 conn.close()
                 break
-            #print(recv_tmp)
             pkt = BytesToPkt(recv_tmp)
             name = pkt.src
             passwd = pkt.data
@@ -83,9 +82,11 @@ def conn_thread(conn, addr):
     while True:
         try:
             recv_tmp = conn.recv(PKT_MAX_SIZE)
+            '''
             if not recv_tmp:
                 conn.close()
                 return
+            '''
             pkt = BytesToPkt(recv_tmp)
             if pkt.typ == TYP_LOO:
                 connlist.pop(pkt.src)
@@ -97,7 +98,14 @@ def conn_thread(conn, addr):
                 else:
                     connlist[pkt.dest].sendall(recv_tmp)
         except socket.error:
+            continue
+        '''
+        try:
+            conn.sendall(send_tmp)
+            send_tmp = b''
+        except socket.error:
             pass
+        '''
     return
 
 
