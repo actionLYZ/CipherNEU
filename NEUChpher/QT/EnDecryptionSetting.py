@@ -129,7 +129,7 @@ class De_Ui_Dialog(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
-        self.comboBox.addItem("")
+        #self.comboBox.addItem("")
         #self.comboBox.addItem("")
         self.gridLayout.addWidget(self.comboBox, 0, 1, 1, 1)
         self.buttonBox = QtWidgets.QDialogButtonBox(self.gridLayoutWidget)
@@ -180,7 +180,7 @@ class De_Ui_Dialog(object):
         self.comboBox.setItemText(17, _translate("Dialog", "AES-256"))
         self.comboBox.setItemText(18, _translate("Dialog", "RSA"))
         #self.comboBox.setItemText(19, _translate("Dialog", "ECC"))
-        self.comboBox.setItemText(19, _translate("Dialog", "MD5"))
+        #self.comboBox.setItemText(20, _translate("Dialog", "MD5"))
         self.label.setText(_translate("Dialog", "Secret Key:"))
         self.label_2.setText(_translate("Dialog", "Decryption Algorithm:"))
         self.comboBox.setCurrentText(_translate("Dialog", GlobalWindow.deCipherType))
@@ -287,7 +287,7 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
 
     def SetExample(self):
         self.lineEdit.setDisabled(False)
-        if (self.comboBox.currentText()=='None' or self.comboBox.currentText()=='MD5'):
+        if (self.comboBox.currentText()=='None' or self.comboBox.currentText()=='MD5' or self.comboBox.currentText()=='MD5' or self.comboBox.currentText()=='RSA' or self.comboBox.currentText()=='ECC'):
             self.lineEdit.setText('')
             self.lineEdit.setDisabled(True)
         elif(self.comboBox.currentText()=='Caesar'):
@@ -306,8 +306,6 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
             self.lineEdit.setText('abcdefghijklmnopqrstuvwx')
         elif(self.comboBox.currentText()=='AES-256'):
             self.lineEdit.setText('abcdefghijklmnopqrstuvwxyzabcdef')
-        elif(self.comboBox.currentText()=='RSA'or self.comboBox.currentText()=='ECC'or self.comboBox.currentText()=='MD5'):
-            self.lineEdit.setText('')
         elif self.comboBox.currentText() in ['RC4', "Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation"]:
             self.lineEdit.setText("hello")
 

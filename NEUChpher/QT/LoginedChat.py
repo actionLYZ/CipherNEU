@@ -9,7 +9,7 @@ import Resource.LogedResource,Resource.TitleResource
 import GlobalWindow
 from QT import Login,Register,Setting,FilePath,LoginedChat,EnDecryptionSetting,LoginedChat
 from Cipher import RSA #ECC
-from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere#, AES
+from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere, AES
 from Socket.Packet import *
 import socket, _thread, time
 
@@ -330,14 +330,14 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
                 Text = CA.Encrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.enCipherType=='DES'):
                 Text = DES.Encrypt(text,GlobalWindow.encryptKey)
-            elif(GlobalWindow.enCipherType=='AES-128'|GlobalWindow.enCipherType=='AES-192'|GlobalWindow.enCipherType=='AES-256'):
+            elif(GlobalWindow.enCipherType=='AES-128' or GlobalWindow.enCipherType=='AES-192' or GlobalWindow.enCipherType=='AES-256'):
                 Text = AES.Encrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.enCipherType=='RSA'):
-                Text = RSA.Encrypt(text,GlobalWindow.encryptKey)
+                Text = RSA.Encrypt(text)
             #elif(GlobalWindow.enCipherType=='ECC'):
                 #Text = ECC.Encrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.enCipherType=='MD5'):
-                Text = MD5.Encrypt(text,GlobalWindow.encryptKey)
+                Text = MD5.Encrypt(text)
             #elif(GlobalWindow.enCipherType=='DSA'):
                 #Text = DSA.Encrypt(text,GlobalWindow.encryptKey)
             #elif(GlobalWindow.enCipherType=='DH'):
@@ -376,11 +376,11 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
             #elif(GlobalWindow.deCipherType=='AES'):
                 #Text = AES.Ddecrypt(text,GlobalWindow.decryptKey)
             elif(GlobalWindow.deCipherType=='RSA'):
-                Text = RSA.Decrypt(text,GlobalWindow.decryptKey)
+                Text = RSA.Decrypt(text)
             #elif(GlobalWindow.deCipherType=='ECC'):
                 #Text = ECC.Decrypt(text,GlobalWindow.decryptKey)
-            elif(GlobalWindow.deCipherType=='MD5'):
-                Text = MD5.Decrypt(text,GlobalWindow.decryptKey)
+            #elif(GlobalWindow.deCipherType=='MD5'):
+                #Text = MD5.Decrypt(text)
             #elif(GlobalWindow.deCipherType=='DSA'):
                 #Text = DSA.Decrypt(text,GlobalWindow.decryptKey)
             #elif(GlobalWindow.deCipherType=='DH'):

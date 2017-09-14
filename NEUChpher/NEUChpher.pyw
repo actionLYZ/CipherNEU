@@ -4,6 +4,7 @@ import sys
 import GlobalWindow
 
 if __name__=="__main__":
+    #sys.setrecursionlimit(100000000000)
     app=QtWidgets.QApplication(sys.argv)
     loginedWindows = LoginedChat.LoginedChatWindow()
     chatWindows = Chat.ChatWindows()
