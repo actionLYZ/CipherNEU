@@ -41,6 +41,7 @@
     <Compile Include="Cipher\Multiliteral.py" />
     <Compile Include="Cipher\Permutation.py" />
     <Compile Include="Cipher\Playfair.py" />
+    <Compile Include="Cipher\Python.py" />
     <Compile Include="Cipher\RC4.py" />
     <Compile Include="Cipher\RSA.py" />
     <Compile Include="Cipher\Vigenere.py" />
@@ -65,18 +66,15 @@
     <Compile Include="Socket\Packet.py" />
     <Compile Include="Socket\Server.py" />
     <Compile Include="Socket\__init__.py" />
-    <Compile Include="UKey\UKey.py" />
-    <Compile Include="UKey\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Cipher\" />
     <Folder Include="QT\" />
     <Folder Include="Resource\" />
     <Folder Include="Socket\" />
-    <Folder Include="UKey\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="UKey\UKey.dll" />
+    <Content Include="Cipher\UKey.dll" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
