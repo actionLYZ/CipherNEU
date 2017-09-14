@@ -45,6 +45,7 @@ class En_Ui_Dialog(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
+        self.comboBox.addItem("")
         self.gridLayout.addWidget(self.comboBox, 0, 1, 1, 1)
         self.buttonBox = QtWidgets.QDialogButtonBox(self.gridLayoutWidget)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
@@ -93,6 +94,7 @@ class En_Ui_Dialog(object):
         self.comboBox.setItemText(18, _translate("Dialog", "RSA"))
         self.comboBox.setItemText(19, _translate("Dialog", "ECC"))
         self.comboBox.setItemText(20, _translate("Dialog", "MD5"))
+        self.comboBox.setItemText(21, _translate("Dialog", "DSA"))
         self.label.setText(_translate("Dialog", "Secret Key:"))
         self.comboBox.setCurrentText(_translate("Dialog", GlobalWindow.enCipherType))
         self.lineEdit.setText(_translate("Dialog", GlobalWindow.encryptKey))
@@ -200,7 +202,7 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
 
     def SetExample(self):
         self.lineEdit.setDisabled(False)
-        if (self.comboBox.currentText()=='None' or self.comboBox.currentText()=='MD5' or self.comboBox.currentText()=='RSA' or self.comboBox.currentText()=='ECC'):
+        if (self.comboBox.currentText()=='None' or self.comboBox.currentText()=='DSA' or self.comboBox.currentText()=='MD5' or self.comboBox.currentText()=='RSA' or self.comboBox.currentText()=='ECC'):
             self.lineEdit.setText('')
             self.lineEdit.setDisabled(True)
         elif(self.comboBox.currentText()=='Caesar'):
@@ -224,7 +226,7 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
         
     # Check out if the key is valid, such as AES-128(16 bytes), AES-192(24 bytes), AES-256(32 bytes), etc.
     def IsValid(self,key, type):
-        if type == "None" or type == "MD5":
+        if type == "None" or type == "MD5" or type=="DSA":
             return True
         elif type == "Caesar":
             if key.isdigit():

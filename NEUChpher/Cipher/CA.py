@@ -95,7 +95,10 @@ def TwoDEncrypt(plaintext, key):
 #测试数据
 #print(OneDEncrypt('hello','23'))
 #plaintext = [[0,0,1],[0,0,0],[0,1,0]]
+#print("Plaintext:")
+#print(plaintext)
 #ciphertext = TwoDEncrypt(plaintext,14)
+#print("Ciphertext:")
 #print(ciphertext)
 
 

@@ -28,6 +28,7 @@ def IsPrime(num):
 
 #生成DH密钥函数
 def Generate(num):
+    #print("------3 People Exchange SecretKey------")
     while(1):
         p = random.randint(1000,5000)
         if(IsPrime(p)):
@@ -39,17 +40,27 @@ def Generate(num):
         obj = Person()
         objs.append(obj)
     L = random.sample([i for i in range(100)],num)
+    #print("Each person choose a secret number:")
     for i in range(0,num):
         objs[i].secNum = L[i]
+        #print(chr(65+i),end=': ')
+        #print(objs[i].secNum)
         objs[i].known = pow(g,L[i]) % p
+    #print("----------------------------------")
     for i in range(0,num-1):
+        #print("Round",end=' ')
+        #print(i+1)
         for j in range(0,num):
             objs[j].get = objs[j-1].known
         for j in range(0,num):
             objs[j].known = pow(objs[j].get,objs[j].secNum)%p
+            #print(chr(65+j),end=': ')
+            #print(objs[j].known)
+        #print("----------------------------------")
     return objs[0].known
 
 #测试数据
-#a = Generate(4)
+#a = Generate(3)
+#print("Final Secretkey:",end=' ')
 #print(a)
 

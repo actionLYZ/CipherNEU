@@ -8,9 +8,11 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import Resource.LogedResource,Resource.TitleResource
 import GlobalWindow
 from QT import Login,Register,Setting,FilePath,LoginedChat,EnDecryptionSetting,LoginedChat
-from Cipher import RSA #ECC
-from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere#, AES
+from Cipher import RSA, DSA #ECC
+from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere, AES
 from Socket.Packet import *
+#from UKey.UKey import *
+
 import socket, _thread, time
 
 class Ui_Dialog(object):
@@ -281,6 +283,9 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
         else:
             plaintext = self.readFile(GlobalWindow.uploadPath)
             if self.comboBox.currentText() == "Plaintext":
+                if GlobalWindow.enCipherType == "DSA":
+                    #print("1")
+                    plaintext = self.DSA_SignProcess()
                 temp, sep, name = GlobalWindow.uploadPath.rpartition("/")
                 data = name.encode() + b">>>>>>" + plaintext.encode()
                 self.writeToTextBrowser(GlobalWindow.username.decode() + ": (Send file: " + name + ")")
@@ -295,6 +300,19 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
                 GlobalWindow.s.sendall(PktToBytes(pkt))
             GlobalWindow.isFile = False
         self.textEdit.setText("")
+
+    #DSA方式发送文件处理
+    def DSA_SignProcess(self):
+        #print("2")
+        plaintext = self.readFile(GlobalWindow.uploadPath)
+        key = (45765342401604687241128449772944733752990916022564027455790382055746256400541598197068931346511522461150446895744952616520086278134132978832871916005779068152320248430961052271558801557201924112195543438798171388390044569701508878757507381031997085133554835541412574591824296504065160930628980769756859931990,43376379741515098647985425804924879601418733263383850422598111312577593386358487364224325263259858969597179251430700334177085086070671449464377616596274930686913256608398943997830334161922260743497953638415364436460427838759705357463553196755185148779782007128058722284120672980828831033776489898432828082361,89884656743115797203643969326208167354925714643588468712364745929920911611342304769134404976757706776492814888985130026442956403037161947081508067139935189302454456558696954436501574072984903785582353419756739807211841909524953510682258535758101581242581094790592743585216465460932752002047977201839275936987,935386979343325361212450472438835748446251696899)
+        #key = Read_From()
+        key = list(key)
+        key.append(157431932338196084657629305270682047200580952750)
+        key = tuple(key)
+        sig_str = DSA.Sign(plaintext,key) 
+        plaintext = plaintext + '>>>>>>' + sig_str
+        return plaintext
 
     #根据不同加解密类型加解密
     def DefineCipherType(self,text,endeMode):      #endeMode = 0 -> encryption/ endeMode = 1 -> decryption
@@ -330,7 +348,7 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
                 Text = CA.Encrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.enCipherType=='DES'):
                 Text = DES.Encrypt(text,GlobalWindow.encryptKey)
-            elif(GlobalWindow.enCipherType=='AES-128'|GlobalWindow.enCipherType=='AES-192'|GlobalWindow.enCipherType=='AES-256'):
+            elif(GlobalWindow.enCipherType=='AES-128'or GlobalWindow.enCipherType=='AES-192' or GlobalWindow.enCipherType=='AES-256'):
                 Text = AES.Encrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.enCipherType=='RSA'):
                 Text = RSA.Encrypt(text,GlobalWindow.encryptKey)
@@ -338,8 +356,8 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
                 #Text = ECC.Encrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.enCipherType=='MD5'):
                 Text = MD5.Encrypt(text,GlobalWindow.encryptKey)
-            #elif(GlobalWindow.enCipherType=='DSA'):
-                #Text = DSA.Encrypt(text,GlobalWindow.encryptKey)
+            elif(GlobalWindow.enCipherType=='DSA'):
+                Text = DSA.Encrypt(text,GlobalWindow.encryptKey)
             #elif(GlobalWindow.enCipherType=='DH'):
                 #Text = DH.Encrypt(text,GlobalWindow.encryptKey)
         elif(endeMode==1):
@@ -373,16 +391,16 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
                 Text = CA.Encrypt(text,GlobalWindow.decryptKey)
             elif(GlobalWindow.deCipherType=='DES'):
                 DES.DESDecryption(text,GlobalWindow.decryptKey)
-            #elif(GlobalWindow.deCipherType=='AES'):
-                #Text = AES.Ddecrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.enCipherType=='AES-128'or GlobalWindow.enCipherType=='AES-192' or GlobalWindow.enCipherType=='AES-256'):
+                Text = AES.Encrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.deCipherType=='RSA'):
                 Text = RSA.Decrypt(text,GlobalWindow.decryptKey)
             #elif(GlobalWindow.deCipherType=='ECC'):
                 #Text = ECC.Decrypt(text,GlobalWindow.decryptKey)
             elif(GlobalWindow.deCipherType=='MD5'):
                 Text = MD5.Decrypt(text,GlobalWindow.decryptKey)
-            #elif(GlobalWindow.deCipherType=='DSA'):
-                #Text = DSA.Decrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='DSA'):
+                Text = DSA.Decrypt(text,GlobalWindow.decryptKey)
             #elif(GlobalWindow.deCipherType=='DH'):
                 #Text = DH.Decrypt(text,GlobalWindow.decryptKey)
         return Text 
@@ -437,6 +455,12 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
                     self.writeToTextBrowser(pkt.src.decode() + ": " + pkt.data.decode() + " (Plaintext: " + plaintext + ")")
                 elif pkt.typ == TYP_PFL:
                     name, sep, data = pkt.data.decode().partition(">>>>>>")
+                    if ">>>>>>" in data:
+                        #print("3")
+                        data = self.DSA_VerifyProcess(data)
+                        if data == False:
+                            self.writeToTextBrowser(pkt.src.decode() + ": (Receive file: " + name + "), DSA Verify fail!")
+                            return
                     path = DOWNLOAD_PATH + name
                     downloadPath = path
                     #self.writeFile(path, data)
@@ -462,6 +486,19 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
                     print(recv_tmp.decode())
             except socket.error:
                 break
+
+    #DSA方式传输文件接收处理
+    def DSA_VerifyProcess(self, data):
+        #print("4")
+        data, sep, sig_str = data.partition(">>>>>>")
+        key = (45765342401604687241128449772944733752990916022564027455790382055746256400541598197068931346511522461150446895744952616520086278134132978832871916005779068152320248430961052271558801557201924112195543438798171388390044569701508878757507381031997085133554835541412574591824296504065160930628980769756859931990,43376379741515098647985425804924879601418733263383850422598111312577593386358487364224325263259858969597179251430700334177085086070671449464377616596274930686913256608398943997830334161922260743497953638415364436460427838759705357463553196755185148779782007128058722284120672980828831033776489898432828082361,89884656743115797203643969326208167354925714643588468712364745929920911611342304769134404976757706776492814888985130026442956403037161947081508067139935189302454456558696954436501574072984903785582353419756739807211841909524953510682258535758101581242581094790592743585216465460932752002047977201839275936987,935386979343325361212450472438835748446251696899)
+        if DSA.Verify(data, sig_str, key):
+            print("true")
+            return data
+        else:
+            return False
+        
+
 
     # Read bytes from the file
     def readFile(self, file):
