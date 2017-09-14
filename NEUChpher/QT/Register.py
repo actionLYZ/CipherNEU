@@ -12,6 +12,7 @@ import Resource.LogResource
 import socket
 from Socket.Packet import *
 import GlobalWindow
+from Cipher import MD5
 
 class Ui_register(object):
 
@@ -147,7 +148,7 @@ class Ui_register(object):
     '''
     #将注册成功的用户登记在User.txt中
     def AddUser2dir(self):
-        GlobalWindow.s.sendall(PktToBytes(Packet(TYP_REG, self.line_nickname.text(), b'server', self.line_password.text())))
+        GlobalWindow.s.sendall(PktToBytes(Packet(TYP_REG, self.line_nickname.text(), b'server', MD5.Encrypt(self.line_password.text()))))
         recv_tmp = GlobalWindow.s.recv(PKT_MAX_SIZE)
         pkt = BytesToPkt(recv_tmp)
         if pkt.typ == TYP_ERR:

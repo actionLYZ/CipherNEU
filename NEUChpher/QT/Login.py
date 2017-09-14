@@ -6,6 +6,7 @@ import GlobalWindow
 import socket
 from Socket.Packet import *
 import _thread
+from Cipher import MD5
 
 class Ui_Login(object):
     def setupUi(self, Login):
@@ -108,7 +109,7 @@ class Ui_Login(object):
             message = QtWidgets.QMessageBox()
             message.warning(self,"Error","无法连接至服务器！",QtWidgets.QMessageBox.Ok)
             return False
-        GlobalWindow.s.sendall(PktToBytes(Packet(TYP_LOI, self.line_nickname.text(), b'server', self.line_password.text())))
+        GlobalWindow.s.sendall(PktToBytes(Packet(TYP_LOI, self.line_nickname.text(), b'server', MD5.Encrypt(self.line_password.text()))))
         recv_tmp = GlobalWindow.s.recv(PKT_MAX_SIZE)
         pkt = BytesToPkt(recv_tmp)
         if pkt.typ == TYP_ERR:
