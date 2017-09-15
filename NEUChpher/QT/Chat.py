@@ -326,7 +326,7 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
             elif(GlobalWindow.enCipherType=='RC4'):
                 Text = RC4.Encrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.enCipherType=='CA'):
-                Text = CA.OneDEncrypt(text,GlobalWindow.encryptKey)
+                Text = CA.Encrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.enCipherType=='DES'):
                 Text = DES.Encrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.enCipherType=='AES-128'or GlobalWindow.enCipherType=='AES-192'or GlobalWindow.enCipherType=='AES-256'):
@@ -367,7 +367,7 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
             elif(GlobalWindow.deCipherType=='RC4'):
                 Text = RC4.Decrypt(text,GlobalWindow.decryptKey)
             elif(GlobalWindow.deCipherType=='CA'):
-                Text = CA.OneDEncrypt(text,GlobalWindow.decryptKey)
+                Text = CA.Encrypt(text,GlobalWindow.decryptKey)
             elif(GlobalWindow.deCipherType=='DES'):
                 Text = DES.Decrypt(text,GlobalWindow.decryptKey)
             elif(GlobalWindow.deCipherType=='AES-128'or GlobalWindow.deCipherType=='AES-192'or GlobalWindow.deCipherType=='AES-256'):

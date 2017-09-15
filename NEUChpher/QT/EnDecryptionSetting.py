@@ -212,7 +212,7 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
         elif(self.comboBox.currentText()=='Double Transposition'):
             self.lineEdit.setText('hello world')
         elif(self.comboBox.currentText()=='CA'):
-            self.lineEdit.setText('23')
+            self.lineEdit.setText('1 23')
         elif(self.comboBox.currentText()=='DES'):
             self.lineEdit.setText('abcdefgh')
         elif(self.comboBox.currentText()=='AES-128'):
@@ -259,7 +259,10 @@ class EncryptionSettingWindow(QtWidgets.QWidget,En_Ui_Dialog):
         elif type == "AES-256":
             return isinstance(key, str) and len(key) == 32
         elif type =='CA':
-            return key.isdigit()
+            if " " not in key:
+                return False
+            head, sep, rear = key.partition(" ")
+            return head in ["1", "2"] and rear.isdigit()
         elif type =='RSA'or type =='ECC' or type == 'MD5':
             return key == ''
         elif ["Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation"].index(type) != -1:
@@ -299,7 +302,7 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
         elif(self.comboBox.currentText()=='Double Transposition'):
             self.lineEdit.setText('hello world')
         elif(self.comboBox.currentText()=='CA'):
-            self.lineEdit.setText('23')
+            self.lineEdit.setText('1 23')
         elif(self.comboBox.currentText()=='DES'):
             self.lineEdit.setText('abcdefgh')
         elif(self.comboBox.currentText()=='AES-128'):
@@ -346,7 +349,10 @@ class DecryptionSettingWindow(QtWidgets.QWidget,De_Ui_Dialog):
         elif type == "AES-256":
             return isinstance(key, str) and len(key) == 32
         elif type =='CA':
-            return key.isdigit()
+            if " " not in key:
+                return False
+            head, sep, rear = key.partition(" ")
+            return head in ["1", "2"] and rear.isdigit()
         elif type =='RSA'or type =='ECC'or type == 'MD5':
             return key == ''
         elif ["Keyword", "Multiliteral", "Vigenere", "Autokey Ciphertext", "Autokey Plaintext", "Playfair", "Permutation", "Column Permutation"].index(type) != -1:

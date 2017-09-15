@@ -127,7 +127,7 @@ def transmitPacket(bys, name):
         if pkt.dest not in connlist:
             conn.sendall(PktToBytes(Packet(TYP_ERR, b'server', name, b'Destination user is not online!')))
         else:
-            connlist[pkt.dest].sendall(recv_tmp)
+            connlist[pkt.dest].sendall(bys)
     return True
 
 def readUserData():

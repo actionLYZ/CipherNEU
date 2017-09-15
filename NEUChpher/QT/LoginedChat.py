@@ -393,9 +393,9 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
             elif(GlobalWindow.deCipherType=='CA'):
                 Text = CA.Encrypt(text,GlobalWindow.decryptKey)
             elif(GlobalWindow.deCipherType=='DES'):
-                DES.DESDecryption(text,GlobalWindow.decryptKey)
+                Text = DES.Decrypt(text,GlobalWindow.decryptKey)
             elif(GlobalWindow.enCipherType=='AES-128'or GlobalWindow.enCipherType=='AES-192' or GlobalWindow.enCipherType=='AES-256'):
-                Text = AES.Encrypt(text,GlobalWindow.encryptKey)
+                Text = AES.Decrypt(text,GlobalWindow.encryptKey)
             elif(GlobalWindow.deCipherType=='RSA'):
                 Text = RSA.Decrypt(text)
             #elif(GlobalWindow.deCipherType=='ECC'):
@@ -498,7 +498,8 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
             #message.information(self,"Pass","已接收到密文文件，请下载！",QtWidgets.QMessageBox.Yes)
             self.SaveFile()
         else:
-            print(recv_tmp.decode())
+            #print(head.decode())
+            pass
         if (rear != b""):
             self.packetProcess(rear);
         return

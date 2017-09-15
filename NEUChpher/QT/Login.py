@@ -111,7 +111,8 @@ class Ui_Login(object):
             return False
         GlobalWindow.s.sendall(PktToBytes(Packet(TYP_LOI, self.line_nickname.text(), b'server', MD5.Encrypt(self.line_password.text()))))
         recv_tmp = GlobalWindow.s.recv(PKT_MAX_SIZE)
-        pkt = BytesToPkt(recv_tmp)
+        head, sep, rear = recv_tmp.partition(b"<<<<<<")
+        pkt = BytesToPkt(head)
         if pkt.typ == TYP_ERR:
             message = QtWidgets.QMessageBox()
             message.warning(self,"Error",pkt.data.decode(),QtWidgets.QMessageBox.Ok)
