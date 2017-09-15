@@ -6,7 +6,7 @@
 # pip install numpy
 
 # SM2 standard paramater
-'''
+
 p = 0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF
 a = 0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFC
 b = 0x28E9FA9E9D9F5E344D5A9E4BCF6509A7F39789F515AB8F92DDBCBD414D940E93
@@ -20,28 +20,20 @@ import math
 import numpy as np
 import numpy.linalg as linalg
 import random
+import GlobalWindow
 
 # C = {rG,Pm+rPa} Pa=kG
 # creat 2 random num r,k
-C1x = []
-C1y = []
-C2x = []
-C2y = []
-Add = []
-str_len = 0
 
 r = random.randint(100,1000)
 k = random.randint(100,1000) # the k is private key
 
-
-result = ""
-ciphertext = ""
+#ciphertext = ""
 
 def ECC_Decrypt(C1,C2,add):
     # print ("Finishing Encrypt")
     C1[0] = int(int(C1[0])/r)
     C1[1] = int(int(C1[1])/r)
-    global result
     tmp = G
     for i in range(k):
         tmp = Plus(tmp,G)
@@ -55,9 +47,9 @@ def ECC_Decrypt(C1,C2,add):
     #P = C2 - tmp # P is Pm
 
     Mx = P[0] - add
-    result += chr(Mx)
+    GlobalWindow.result += chr(Mx)
     # print(chr(Mx))
-    return result
+    return GlobalWindow.result
 
 def ECC_Encrypt(message,index):
     x = ord(message[index]) # char to int
@@ -171,22 +163,21 @@ def Get_Py(p1):
  #    print ("Can not find the y")
 
 def Encrypt(message):
-    global str_len
-    str_len = len(message)
+    GlobalWindow.str_len = len(message)
     for i in range(len(message)):
         (M1,M2,add) = ECC_Encrypt(message,i)
-        C1x.append(M1[0])
-        C1y.append(M1[1])
-        C2x.append(M2[0])
-        C2y.append(M2[1])
-        Add.append(add)
-    for e in (C1x):
+        GlobalWindow.C1x.append(M1[0])
+        GlobalWindow.C1y.append(M1[1])
+        GlobalWindow.C2x.append(M2[0])
+        GlobalWindow.C2y.append(M2[1])
+        GlobalWindow.Add.append(add)
+    for e in (GlobalWindow.C1x):
         e = str(e)
-    for e in (C1y):
+    for e in (GlobalWindow.C1y):
         e = str(e)
-    for e in (C2x):
+    for e in (GlobalWindow.C2x):
         e = str(e)
-    for e in (C2y):
+    for e in (GlobalWindow.C2y):
         e = str(e)
 
 
@@ -202,51 +193,41 @@ def Decrypt_Point(P):
 
 
         
-def Decrypt(C1x,C1y,C2x,C2y,Add):
-
-    for e in (C1x):
+def Decrypt():
+    for e in (GlobalWindow.C1x):
         e = int(e)
-    for e in (C1y):
+    for e in (GlobalWindow.C1y):
         e = int(e)
-    for e in (C2x):
+    for e in (GlobalWindow.C2x):
         e = int(e)
-    for e in (C2y):
+    for e in (GlobalWindow.C2y):
         e = int(e)
-    for i in range(str_len):
-        M1 = [C1x[i],C1y[i]]
-        M2 = [C2x[i],C2y[i]]
-        add = Add[i]
+    for i in range(GlobalWindow.str_len):
+        M1 = [GlobalWindow.C1x[i],GlobalWindow.C1y[i]]
+        M2 = [GlobalWindow.C2x[i],GlobalWindow.C2y[i]]
+        add = GlobalWindow.Add[i]
         ECC_Decrypt(M1,M2,add)
 
 
 def Enc_Dec(message):
     for i in range(len(message)):
         (M1,M2,add) = ECC_Encrypt(message,i)
-        C1x.append(M1[0])
-        C1y.append(M1[1])
-        C2x.append(M2[0])
-        C2y.append(M2[1])
+        GlobalWindow.C1x.append(M1[0])
+        GlobalWindow.C1y.append(M1[1])
+        GlobalWindow.C2x.append(M2[0])
+        GlobalWindow.C2y.append(M2[1])
         ECC_Decrypt(M1,M2,add)
 
-def Print_Cip():
+def printCiphertext():
     ciphertext = ''
-    for i in range(len(C1x)):
-        ciphertext = ciphertext + str(C1x[i]) + ','
-    for i in range(len(C1y)):
-        ciphertext = ciphertext + str(C1y[i]) + ','
-    for i in range(len(C2x)):
-        ciphertext = ciphertext + str(C2x[i]) + ','
-    for i in range(len(C2y)):
-        ciphertext = ciphertext + str(C2y[i]) + ','
+    for i in range(len(GlobalWindow.C1x)):
+        ciphertext = ciphertext + str(GlobalWindow.C1x[i]) + ','
+    for i in range(len(GlobalWindow.C1y)):
+        ciphertext = ciphertext + str(GlobalWindow.C1y[i]) + ','
+    for i in range(len(GlobalWindow.C2x)):
+        ciphertext = ciphertext + str(GlobalWindow.C2x[i]) + ','
+    for i in range(len(GlobalWindow.C2y)):
+        ciphertext = ciphertext + str(GlobalWindow.C2y[i]) + ','
     return ciphertext
 
-
-def ECC_Endecrypt(message):
-    global result
-    Encrypt(message)
-    Decrypt(C1x,C1y,C2x,C2y,Add)
-    result = Print_Cip()+'Plaintext: '+result
-    return result
-
 #print(ECC('HELLO'))
-'''

@@ -9,7 +9,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from QT import Login,Register,Setting,FilePath,LoginedChat,EnDecryptionSetting,LoginedChat
 import Resource.ChatResource,Resource.TitleResource
 from Cipher import RSA, ECC
-from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere, AES
+from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere, AES
 import GlobalWindow
 import time
 
@@ -334,7 +334,9 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
             elif(GlobalWindow.enCipherType=='RSA'):
                 Text = RSA.Encrypt(text)
             elif(GlobalWindow.enCipherType=='ECC'):
-                Text = ECC.ECC_Endecrypt(text)
+                ECC.Encrypt(text)
+                Text = ECC.printCiphertext()
+                GlobalWindow.ecc_ciphertext = Text
             elif(GlobalWindow.enCipherType=='MD5'):
                 Text = MD5.Encrypt(text)
         elif(endeMode==1):
@@ -372,8 +374,12 @@ class ChatWindows(QtWidgets.QWidget,Ui_Dialog):
                 Text = AES.Decrypt(text,GlobalWindow.decryptKey)
             elif(GlobalWindow.deCipherType=='RSA'):
                 Text = RSA.Decrypt(text)
-            #elif(GlobalWindow.deCipherType=='ECC'):
-                #Text = ECC.Decrypt(text,GlobalWindow.decryptKey)
+            elif(GlobalWindow.deCipherType=='ECC'):
+                if text != GlobalWindow.ecc_ciphertext:
+                    return ""
+                ECC.Decrypt()
+                Text = GlobalWindow.result
+                GlobalWindow.result = ""
             #elif(GlobalWindow.deCipherType=='MD5'):
                 #Text = MD5.Decrypt(text)
         return Text 

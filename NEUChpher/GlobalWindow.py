@@ -28,3 +28,17 @@ downloadPath = ""
 filetype = ""
 filedata = ""
 fileIsEncrypted = False
+
+keylist = {}
+key = 0
+p = 0
+g = 0
+
+C1x = []
+C1y = []
+C2x = []
+C2y = []
+Add = []
+str_len = 0
+result = ""
+ecc_ciphertext = ""

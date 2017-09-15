@@ -32,7 +32,7 @@
     <Compile Include="Cipher\Caesar.py" />
     <Compile Include="Cipher\ColumnPermutation.py" />
     <Compile Include="Cipher\DES.py" />
-    <Compile Include="Cipher\DH.py" />
+    <Compile Include="Socket\DH.py" />
     <Compile Include="Cipher\DoubleTransposition.py" />
     <Compile Include="Cipher\DSA.py" />
     <Compile Include="Cipher\ECC.py" />
@@ -74,7 +74,12 @@
     <Folder Include="Socket\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Cipher\UKey.dll" />
+    <Content Include="lock.ico">
+      <Publish>True</Publish>
+    </Content>
+    <Content Include="UKey.dll">
+      <Publish>True</Publish>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

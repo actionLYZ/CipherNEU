@@ -8,13 +8,13 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import Resource.LogedResource,Resource.TitleResource
 import GlobalWindow
 from QT import Login,Register,Setting,FilePath,LoginedChat,EnDecryptionSetting,LoginedChat
-from Cipher import RSA, DSA #ECC
-from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DH, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere, AES
+from Cipher import RSA, DSA, ECC
+from Cipher import Caesar, Affine, Keyword, CA, ColumnPermutation, DES, DoubleTransposition, AutokeyPlaintext, AutokeyCiphertext, MD5, Multiliteral, Permutation, Playfair, RC4, Vigenere, AES
 from Socket.Packet import *
 from Cipher import Python
 #from UKey.UKey import *
 
-import socket, _thread, time
+import socket, _thread, time, random
 
 class Ui_Dialog(object):
     def setupUi(self,Dialog):
@@ -437,56 +437,79 @@ class LoginedChatWindow(QtWidgets.QWidget,Ui_Dialog):
         _thread.start_new_thread(self.recvThread, ())
         return super().showEvent(QShowEvent)
 
+    def packetProcess(self, bys):
+        head, sep, rear = bys.partition(b"<<<<<<")
+        pkt = BytesToPkt(head)
+        if pkt.typ == TYP_PTX:
+            self.writeToTextBrowser(pkt.src.decode() + ": " + pkt.data.decode())
+        elif pkt.typ == TYP_LOO:
+            message = QtWidgets.QMessageBox()
+            message.warning(self,"Error",pkt.data.decode(),QtWidgets.QMessageBox.Ok)
+            GlobalWindow.s.close()
+            GlobalWindow.globalWindow.chatwindow.show()
+            self.close()
+            if (rear != b""):
+                self.packetProcess(rear);
+            return
+        elif pkt.typ == TYP_KEY:
+            if pkt.src == b"server":
+                GlobalWindow.keylist = {}
+                ps, sep, gs = pkt.data.decode().partition(">>>>>>")
+                GlobalWindow.p = int(ps)
+                GlobalWindow.g = int(gs)
+                GlobalWindow.key = random.randint(0, GlobalWindow.p - 1)
+                GlobalWindow.s.sendall(PktToBytes(Packet(TYP_KEY, GlobalWindow.username, b"server", str(ECC.fast_pow(GlobalWindow.g, GlobalWindow.key, GlobalWindow.p)))))
+                self.writeToTextBrowser("(Get DH: p = " + str(GlobalWindow.p) + ", g = " + str(GlobalWindow.g) + ", key = " + str(GlobalWindow.key) + ")")
+            else:
+                GlobalWindow.keylist[pkt.src] = ECC.fast_pow(int(pkt.data.decode()), GlobalWindow.key, GlobalWindow.p)
+                self.writeToTextBrowser("(Get DH: Key from " + pkt.src.decode() + ", recvkey = " + pkt.data.decode() + ", gab = " + str(GlobalWindow.keylist[pkt.src]) + ")")
+        elif pkt.typ == TYP_CTX:
+            plaintext = self.DefineCipherType(pkt.data.decode(), 1)
+            self.writeToTextBrowser(pkt.src.decode() + ": " + pkt.data.decode() + " (Plaintext: " + plaintext + ")")
+        elif pkt.typ == TYP_PFL:
+            name, sep, data = pkt.data.decode().partition(">>>>>>")
+            if ">>>>>>" in data:
+                #print("3")
+                data = self.DSA_VerifyProcess(data)
+                if data == False:
+                    self.writeToTextBrowser(pkt.src.decode() + ": (Receive file: " + name + "), DSA Verify fail!")
+                    if (rear != b""):
+                        self.packetProcess(rear);
+                    return
+            path = DOWNLOAD_PATH + name
+            downloadPath = path
+            #self.writeFile(path, data)
+            #temp, sep, GlobalWindow.filetype = name.rpartition(".")
+            GlobalWindow.filedata = data
+            self.writeToTextBrowser(pkt.src.decode() + ": (Receive file: " + name + ")")
+            self.SaveFile()
+            #message = QtWidgets.QMessageBox()
+            #message.information(self,"Pass","已接收到明文文件，请下载！",QtWidgets.QMessageBox.Yes)
+        elif pkt.typ == TYP_CFL:
+            name, sep, data = pkt.data.decode().partition(">>>>>>")
+            path = DOWNLOAD_PATH + name
+            downloadPath = path
+            #self.writeFile(path, self.DefineCipherType(data, 1))
+            #temp, sep, GlobalWindow.filetype = name.rpartition(".")
+            GlobalWindow.filedata = data
+            GlobalWindow.fileIsEncrypted = True
+            self.writeToTextBrowser(pkt.src.decode() + ": (Receive file: " + name + ", encrypted)")
+            #message = QtWidgets.QMessageBox()
+            #message.information(self,"Pass","已接收到密文文件，请下载！",QtWidgets.QMessageBox.Yes)
+            self.SaveFile()
+        else:
+            print(recv_tmp.decode())
+        if (rear != b""):
+            self.packetProcess(rear);
+        return
+
     def recvThread(self):
         while True:
             try:
                 recv_tmp = GlobalWindow.s.recv(PKT_MAX_SIZE)
                 if not recv_tmp:
                     return
-                pkt = BytesToPkt(recv_tmp)
-                if pkt.typ == TYP_PTX:
-                    self.writeToTextBrowser(pkt.src.decode() + ": " + pkt.data.decode())
-                elif pkt.typ == TYP_LOO:
-                    message = QtWidgets.QMessageBox()
-                    message.warning(self,"Error",pkt.data.decode(),QtWidgets.QMessageBox.Ok)
-                    sock.close()
-                    GlobalWindow.globalWindow.chatwindow.show()
-                    self.close()
-                    return
-                elif pkt.typ == TYP_CTX:
-                    plaintext = self.DefineCipherType(pkt.data.decode(), 1)
-                    self.writeToTextBrowser(pkt.src.decode() + ": " + pkt.data.decode() + " (Plaintext: " + plaintext + ")")
-                elif pkt.typ == TYP_PFL:
-                    name, sep, data = pkt.data.decode().partition(">>>>>>")
-                    if ">>>>>>" in data:
-                        #print("3")
-                        data = self.DSA_VerifyProcess(data)
-                        if data == False:
-                            self.writeToTextBrowser(pkt.src.decode() + ": (Receive file: " + name + "), DSA Verify fail!")
-                            return
-                    path = DOWNLOAD_PATH + name
-                    downloadPath = path
-                    #self.writeFile(path, data)
-                    #temp, sep, GlobalWindow.filetype = name.rpartition(".")
-                    GlobalWindow.filedata = data
-                    self.writeToTextBrowser(pkt.src.decode() + ": (Receive file: " + name + ")")
-                    self.SaveFile()
-                    #message = QtWidgets.QMessageBox()
-                    #message.information(self,"Pass","已接收到明文文件，请下载！",QtWidgets.QMessageBox.Yes)
-                elif pkt.typ == TYP_CFL:
-                    name, sep, data = pkt.data.decode().partition(">>>>>>")
-                    path = DOWNLOAD_PATH + name
-                    downloadPath = path
-                    #self.writeFile(path, self.DefineCipherType(data, 1))
-                    #temp, sep, GlobalWindow.filetype = name.rpartition(".")
-                    GlobalWindow.filedata = data
-                    GlobalWindow.fileIsEncrypted = True
-                    self.writeToTextBrowser(pkt.src.decode() + ": (Receive file: " + name + ", encrypted)")
-                    #message = QtWidgets.QMessageBox()
-                    #message.information(self,"Pass","已接收到密文文件，请下载！",QtWidgets.QMessageBox.Yes)
-                    self.SaveFile()
-                else:
-                    print(recv_tmp.decode())
+                self.packetProcess(recv_tmp)
             except socket.error:
                 break
 

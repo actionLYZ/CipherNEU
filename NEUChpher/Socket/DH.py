@@ -8,6 +8,42 @@ Generate(num)   input number of people and output secretkey
 '''
 
 import random
+import math
+
+def calculatePrimitiveRoot(p):
+    p -= 1
+    re = p
+    for i in range(2, int(math.sqrt(p)) + 1):
+        if p % i == 0:
+            re -= (re / i)
+            while p % i == 0:
+                p /= i
+    if p > 1:
+        re -= (re / p)
+    return re
+
+def generate():
+    while True:
+        p = random.randint(2, 65535)
+        if isPrime(p):
+            break
+    g = int(calculatePrimitiveRoot(p))
+    return p, g
+
+def isPrime(num):
+    if num > 1:
+    # 查看因子
+        for i in range(2,num):
+            if (num % i) == 0:
+                return False
+            else:
+                return True
+     # 如果输入的数字小于或等于 1，不是质数
+    else:
+        return False
+
+'''
+import random
 
 #定义Person类
 class Person(object):
@@ -63,4 +99,4 @@ def Generate(num):
 #a = Generate(3)
 #print("Final Secretkey:",end=' ')
 #print(a)
-
+'''

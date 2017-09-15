@@ -34,7 +34,7 @@ class User:
         self.conn = conn
 
 '''
-type>>>>>>src>>>>>>dest>>>>>>data
+type>>>>>>src>>>>>>dest>>>>>>data<<<<<<
 '''
 
 def PktToBytes(pkt):
@@ -58,6 +58,7 @@ def PktToBytes(pkt):
         tmp += pkt.data.encode()
     else:
         tmp += pkt.data
+    tmp += b'<<<<<<'
     return tmp
 
 def BytesToPkt(tmp):

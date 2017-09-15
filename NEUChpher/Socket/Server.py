@@ -27,6 +27,7 @@ import socket
 import _thread
 from Packet import *
 import os
+from DH import *
 
 HOST = ''                 # Symbolic name meaning all available interfaces
 PORT = 8080               # Arbitrary non-privileged 
@@ -34,10 +35,13 @@ PATH = "userlist.txt"
 
 userlist = {}
 connlist = {}
+p = 0
+g = 0
 
 def conn_thread(conn, addr):
     global userlist
     global connlist
+    global p, g
     send_tmp = b''
     recv_tmp = b''
     name = b''
@@ -50,23 +54,27 @@ def conn_thread(conn, addr):
                 break
             pkt = BytesToPkt(recv_tmp)
             name = pkt.src
-            passwd = pkt.data
+            passwd, sep, temp = pkt.data.partition(b"<<<<<<")
         except socket.error:
             conn.close()
             return
         if pkt.typ == TYP_REG:
             if name in userlist:
                 conn.sendall(PktToBytes(Packet(TYP_ERR, b'server', name, b'Username exists!')))
+                return
             else:
                 userlist[name] = passwd
                 writeUserData(name, passwd)
                 conn.sendall(PktToBytes(Packet(TYP_ACK, b'server', name, b'Register successfully!')))
+                return
         elif pkt.typ == TYP_LOI:
             if name not in userlist:
                 conn.sendall(PktToBytes(Packet(TYP_ERR, b'server', name, b'Username does not exist!')))
+                return
             elif userlist[name] != passwd:
                 print(userlist[name])
                 conn.sendall(PktToBytes(Packet(TYP_ERR, b'server', name, b'Password error!')))
+                return
             else:
                 if name in connlist:
                     conn_tmp = connlist.pop(name)
@@ -74,9 +82,12 @@ def conn_thread(conn, addr):
                         conn_tmp.sendall(PktToBytes(Packet(TYP_LOO, b'server', name, b'Account login at another place!')))
                         conn_tmp.close()
                     except socket.error:
-                        return
+                        pass
                 connlist[name] = conn
                 conn.sendall(PktToBytes(Packet(TYP_ACK, b'server', name, b'Login successfully!')))
+                p, g = generate()
+                for user in connlist:
+                    connlist[user].sendall(PktToBytes(Packet(TYP_KEY, b'server', user, str(p) + ">>>>>>" + str(g))))
                 break
     conn.setblocking(False)
     while True:
@@ -87,16 +98,8 @@ def conn_thread(conn, addr):
                 conn.close()
                 return
             '''
-            pkt = BytesToPkt(recv_tmp)
-            if pkt.typ == TYP_LOO:
-                connlist.pop(pkt.src)
-                conn.close()
-                break
-            else:
-                if pkt.dest not in connlist:
-                    conn.sendall(PktToBytes(Packet(TYP_ERR, b'server', name, b'Destination user is not online!')))
-                else:
-                    connlist[pkt.dest].sendall(recv_tmp)
+            if transmitPacket(recv_tmp, name) == False:
+                return
         except socket.error:
             continue
         '''
@@ -108,6 +111,24 @@ def conn_thread(conn, addr):
         '''
     return
 
+
+def transmitPacket(bys, name):
+    bys, sep, temp = bys.partition(b"<<<<<<")
+    pkt = BytesToPkt(bys)
+    if pkt.typ == TYP_LOO:
+        connlist.pop(pkt.src)
+        conn.close()
+        return False
+    elif pkt.typ == TYP_KEY:
+        for user in connlist:
+            if user != name:
+                connlist[user].sendall(PktToBytes(Packet(TYP_KEY, name, user, pkt.data)))
+    else:
+        if pkt.dest not in connlist:
+            conn.sendall(PktToBytes(Packet(TYP_ERR, b'server', name, b'Destination user is not online!')))
+        else:
+            connlist[pkt.dest].sendall(recv_tmp)
+    return True
 
 def readUserData():
     global userlist
